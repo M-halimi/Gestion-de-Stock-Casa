@@ -6,6 +6,7 @@ import DataTable from '@/Components/ui/DataTable';
 import PageHeader from '@/Components/ui/PageHeader';
 import SearchInput from '@/Components/ui/SearchInput';
 import Select from '@/Components/ui/Select';
+import TableActions from '@/Components/ui/TableActions';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import { fmtDate, fmtMoney, fmtNumber } from '@/utils/format';
@@ -121,11 +122,9 @@ export default function OrdersIndex({ orders, filters }) {
                         pagination: orders,
                     }}
                     actions={(order) => (
-                        <div className="flex justify-end">
-                            <Button size="sm" variant="ghost" href={route('production.orders.show', order.id)}>
-                                {t('common.view')}
-                            </Button>
-                        </div>
+                        <TableActions
+                            viewHref={route('production.orders.show', order.id)}
+                        />
                     )}
                 />
             </Card>

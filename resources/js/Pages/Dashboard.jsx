@@ -6,7 +6,7 @@ import PageHeader from '@/Components/ui/PageHeader';
 import Pagination from '@/Components/ui/Pagination';
 import SearchInput from '@/Components/ui/SearchInput';
 import Select from '@/Components/ui/Select';
-import { formatDay, formatInt, formatMoney, formatQty } from '@/lib/format';
+import { fmtDate, fmtNumber, fmtMoney } from '@/utils/format';
 import usePageLoading from '@/hooks/usePageLoading';
 import { Head, Link, router } from '@inertiajs/react';
 import { useMemo, useState } from 'react';
@@ -45,7 +45,7 @@ function MoneyTooltip({ active, payload, label, names }) {
             {payload.map((entry) => (
                 <p key={entry.dataKey} className="flex items-center gap-2 text-ink-secondary">
                     <span className="inline-block h-2 w-2 rounded-full" style={{ background: entry.color }} />
-                    {names[entry.dataKey] ?? entry.dataKey}: {formatMoney(entry.value)}
+                    {names[entry.dataKey] ?? entry.dataKey}: {fmtMoney(entry.value)}
                 </p>
             ))}
         </div>
@@ -139,7 +139,7 @@ export default function Dashboard({
 
     const sortClass = (key) => {
         if (filters?.sort !== key) return 'text-ink-mute hover:text-ink';
-        return filters?.direction === 'desc' ? 'text-primary' : 'text-primary';
+        return filters?.direction === 'desc' ? 'text-primary' : 'text-ink';
     };
 
     const movementSign = (m) => {
@@ -229,7 +229,7 @@ export default function Dashboard({
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
                         <KpiCard
                             label={t('dashboard.kpis.total_products')}
-                            value={formatInt(kpis.total_products)}
+                            value={fmtNumber(kpis.total_products)}
                             icon={
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
@@ -238,7 +238,7 @@ export default function Dashboard({
                         />
                         <KpiCard
                             label={t('dashboard.kpis.stock_value')}
-value={formatMoney(kpis.stock_value)}
+value={fmtMoney(kpis.stock_value)}
                             icon={
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
@@ -247,7 +247,7 @@ value={formatMoney(kpis.stock_value)}
                         />
                         <KpiCard
                             label={t('dashboard.kpis.low_stock')}
-                            value={formatInt(kpis.low_stock)}
+                            value={fmtNumber(kpis.low_stock)}
                             tone="warning"
                             hint={t('dashboard.kpis.needs_attention')}
                             icon={
@@ -258,7 +258,7 @@ value={formatMoney(kpis.stock_value)}
                         />
                         <KpiCard
                             label={t('dashboard.kpis.out_of_stock')}
-                            value={formatInt(kpis.out_of_stock)}
+                            value={fmtNumber(kpis.out_of_stock)}
                             tone="danger"
                             icon={
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4">
@@ -278,7 +278,7 @@ value={formatMoney(kpis.stock_value)}
                                         <CartesianGrid strokeDasharray="3 3" stroke="#e5e3df" vertical={false} />
                                         <XAxis
                                             dataKey="day"
-                                            tickFormatter={formatDay}
+                                            tickFormatter={fmtDate}
                                             tick={{ fontSize: 11, fill: '#787671' }}
                                             tickLine={false}
                                             axisLine={{ stroke: '#e5e3df' }}
@@ -320,7 +320,7 @@ value={formatMoney(kpis.stock_value)}
                                             <CartesianGrid strokeDasharray="3 3" stroke="#e5e3df" vertical={false} />
                                             <XAxis
                                                 dataKey="day"
-                                                tickFormatter={formatDay}
+                                                tickFormatter={fmtDate}
                                                 tick={{ fontSize: 11, fill: '#787671' }}
                                                 tickLine={false}
                                                 axisLine={{ stroke: '#e5e3df' }}
@@ -394,7 +394,7 @@ value={formatMoney(kpis.stock_value)}
                                                             </Link>
                                                         </div>
                                                         <span className="shrink-0 text-[13px] text-ink-secondary tabular">
-                                                            {filters?.by === 'revenue' ? formatMoney(value) : `${formatQty(value)}`}
+                                                            {filters?.by === 'revenue' ? fmtMoney(value) : `${fmtNumber(value)}`}
                                                         </span>
                                                     </div>
                                                     <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-canvas-soft">
@@ -444,7 +444,7 @@ value={formatMoney(kpis.stock_value)}
                                             </PieChart>
                                         </ResponsiveContainer>
                                         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-                                            <span className="display-lg text-ink tabular">{formatInt(stockStatusTotal)}</span>
+                                            <span className="display-lg text-ink tabular">{fmtNumber(stockStatusTotal)}</span>
                                             <span className="text-[12px] text-ink-mute">{t('dashboard.kpis.total_products')}</span>
                                         </div>
                                     </div>
@@ -459,7 +459,7 @@ value={formatMoney(kpis.stock_value)}
                                                     <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: color }} />
                                                     {t(`dashboard.stock_status.${key}`)}
                                                 </span>
-                                                <span className="font-semibold text-ink tabular">{formatInt(stock_status[key])}</span>
+                                                <span className="font-semibold text-ink tabular">{fmtNumber(stock_status[key])}</span>
                                             </div>
 ))}
                                 </div>
@@ -539,8 +539,8 @@ value={formatMoney(kpis.stock_value)}
                                                     </td>
                                                     <td className="px-5 py-3 text-[14px] text-ink-mute tabular">{p.sku}</td>
                                                     <td className="px-5 py-3 text-[14px] text-ink-secondary">{p.category?.name ?? '—'}</td>
-                                                    <td className="px-5 py-3 text-[14px] text-ink tabular">{formatQty(qty)}</td>
-                                                    <td className="px-5 py-3 text-[14px] text-ink-mute tabular">{formatQty(min)}</td>
+                                                    <td className="px-5 py-3 text-[14px] text-ink tabular">{fmtNumber(qty)}</td>
+                                                    <td className="px-5 py-3 text-[14px] text-ink-mute tabular">{fmtNumber(min)}</td>
                                                     <td className="px-5 py-3">
                                                         <Badge status={qty <= 0 ? 'cancelled' : 'pending'} label={qty <= 0 ? t('dashboard.low_stock_table.out') : t('dashboard.low_stock_table.low')} />
                                                     </td>
@@ -600,7 +600,7 @@ value={formatMoney(kpis.stock_value)}
                                                 </td>
                                                 <td className={`px-5 py-3 text-[14px] tabular ${movementColor(m)}`}>
                                                     {movementSign(m)}
-                                                    {formatQty(m.quantity)}
+                                                    {fmtNumber(m.quantity)}
                                                 </td>
                                                 <td className="px-5 py-3 text-[13px] text-ink-mute tabular">{m.reference ?? m.reason ?? '—'}</td>
                                                 <td className="px-5 py-3 text-[13px] text-ink-mute">{m.user?.name ?? '—'}</td>
@@ -637,9 +637,9 @@ value={formatMoney(kpis.stock_value)}
                                                 <tr key={p.id} className="transition hover:bg-canvas-soft">
                                                     <td className="px-5 py-3 text-[13px] font-medium text-ink tabular">{p.reference}</td>
                                                     <td className="px-5 py-3 text-[14px] text-ink-secondary">{p.supplier?.name ?? '—'}</td>
-                                                    <td className="px-5 py-3 text-[13px] text-ink-mute tabular">{formatDay(p.date)}</td>
+                                                    <td className="px-5 py-3 text-[13px] text-ink-mute tabular">{fmtDate(p.date)}</td>
                                                     <td className="px-5 py-3 text-[13px] text-ink-mute tabular">{p.items_count}</td>
-                                                    <td className="px-5 py-3 text-[14px] text-ink tabular">{formatMoney(p.total_amount)}</td>
+                                                    <td className="px-5 py-3 text-[14px] text-ink tabular">{fmtMoney(p.total_amount)}</td>
                                                     <td className="px-5 py-3">
                                                         <Badge status={p.status} label={t(`dashboard.status.${p.status}`)} />
                                                     </td>
@@ -669,9 +669,9 @@ value={formatMoney(kpis.stock_value)}
                                                 <tr key={s.id} className="transition hover:bg-canvas-soft">
                                                     <td className="px-5 py-3 text-[13px] font-medium text-ink tabular">{s.reference}</td>
                                                     <td className="px-5 py-3 text-[14px] text-ink-secondary">{s.customer?.name ?? '—'}</td>
-                                                    <td className="px-5 py-3 text-[13px] text-ink-mute tabular">{formatDay(s.date)}</td>
+                                                    <td className="px-5 py-3 text-[13px] text-ink-mute tabular">{fmtDate(s.date)}</td>
                                                     <td className="px-5 py-3 text-[13px] text-ink-mute tabular">{s.items_count}</td>
-                                                    <td className="px-5 py-3 text-[14px] text-ink tabular">{formatMoney(s.total_amount)}</td>
+                                                    <td className="px-5 py-3 text-[14px] text-ink tabular">{fmtMoney(s.total_amount)}</td>
                                                     <td className="px-5 py-3">
                                                         <Badge status={s.status} label={t(`dashboard.status.${s.status}`)} />
                                                     </td>

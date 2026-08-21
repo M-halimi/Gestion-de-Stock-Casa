@@ -30,8 +30,9 @@
                    "choose_image":  "اختر صورة",
                    "loading":  "جارٍ التحميل…",
                    "currency":  "درهم",
-                   "view":  "عرض"
-               },
+                    "view":  "عرض",
+                    "more":  "المزيد"
+                },
     "nav":  {
                 "dashboard":  "لوحة التحكم",
                 "products":  "المنتجات",
@@ -501,7 +502,30 @@
                                                         "low":  "مخزون منخفض",
                                                         "out":  "نفاد"
                                                     }
-                                }
+                                },
+                "users":  {
+                    "title":  "المستخدمون",
+                    "subtitle":  "إدارة الحسابات والأدوار",
+                    "search_placeholder":  "البحث عن مستخدم…",
+                    "all_roles":  "جميع الأدوار",
+                    "name":  "الاسم",
+                    "email":  "البريد الإلكتروني",
+                    "role":  "الدور",
+                    "created_at":  "تاريخ الإنشاء",
+                    "create_title":  "مستخدم جديد",
+                    "edit_title":  "تعديل المستخدم",
+                    "password":  "كلمة المرور",
+                    "password_optional":  "كلمة المرور (اتركها فارغة لعدم التغيير)",
+                    "password_confirmation":  "تأكيد كلمة المرور"
+                },
+                "settings":  {
+                    "title":  "الإعدادات",
+                    "subtitle":  "الإعدادات العامة للتطبيق",
+                    "company_name":  "اسم الشركة",
+                    "currency_code":  "العملة",
+                    "currency_symbol":  "رمز العملة",
+                    "invoice_footer":  "تذييل (المستندات)"
+                }
 },
     "users":  {
                     "title":  "المستخدمون",
@@ -735,16 +759,51 @@
                                       "pending":  "قيد الانتظار",
                                       "received":  "مستلمة"
                                   },
-                      "insights":  {
-                                       "title":  "تحليلات وتنبيهات",
-                                       "out_of_stock":  "{{count}} منتجات في حالة نفاد.",
-                                       "low_stock":  "{{count}} منتجات تحت الحد الأدنى: {{names}}.",
-                                       "best_seller":  "{{name}} هو الأكثر مبيعًا في الفترة ({{quantity}} مباع).",
-                                       "sales_period":  "مبيعات الفترة: {{total}}.",
-                                       "no_sales":  "لا توجد مبيعات مسجلة في هذه الفترة.",
-                                       "purchases_period":  "مشتريات الفترة: {{total}}.",
-                                       "margin_positive":  "المبيعات تتجاوز المشتريات بنسبة {{percent}}% في هذه الفترة.",
-                                       "margin_negative":  "المشتريات تتجاوز المبيعات بنسبة {{percent}}% في هذه الفترة."
-                                   }
-                  }
+                       "insights":  {
+                                        "title":  "تحليلات وتنبيهات",
+                                        "out_of_stock":  "{{count}} منتجات في حالة نفاد.",
+                                        "low_stock":  "{{count}} منتجات تحت الحد الأدنى: {{names}}.",
+                                        "best_seller":  "{{name}} هو الأكثر مبيعًا في الفترة ({{quantity}} مباع).",
+                                        "sales_period":  "مبيعات الفترة: {{total}}.",
+                                        "no_sales":  "لا توجد مبيعات مسجلة في هذه الفترة.",
+                                        "purchases_period":  "مشتريات الفترة: {{total}}.",
+                                        "margin_positive":  "المبيعات تتجاوز المشتريات بنسبة {{percent}}% في هذه الفترة.",
+                                        "margin_negative":  "المشتريات تتجاوز المبيعات بنسبة {{percent}}% في هذه الفترة."
+                                    }
+                  },
+    "auth":  {
+                  "email":  "البريد الإلكتروني",
+                  "email_placeholder":  "you@example.com",
+                  "password":  "كلمة المرور",
+                  "password_placeholder":  "أدخل كلمة المرور",
+                  "password_confirmation":  "تأكيد كلمة المرور",
+                  "password_confirm_placeholder":  "أكد كلمة المرور",
+                  "name":  "الاسم",
+                  "name_placeholder":  "الاسم الكامل",
+                  "remember":  "تذكرني",
+                  "forgot_password":  "نسيت كلمة المرور؟",
+                  "login":  "تسجيل الدخول",
+                  "register":  "إنشاء حساب",
+                  "already_registered":  "لديك حساب بالفعل؟",
+                  "no_account":  "ليس لديك حساب؟"
+              },
+    "welcome":  {
+                    "title":  "إدارة مخزون الأزياء",
+                    "brand":  "إدارة المخزون",
+                    "redirecting":  "جارٍ التحويل إلى لوحة التحكم...",
+                    "go_dashboard":  "الذهاب إلى لوحة التحكم",
+                    "tab_login":  "تسجيل الدخول",
+                    "tab_register":  "إنشاء حساب",
+                    "login_title":  "مرحبًا بعودتك",
+                    "login_subtitle":  "سجّل الدخول لإدارة مخزونك",
+                    "register_title":  "إنشاء حساب",
+                    "register_subtitle":  "ابدأ في إدارة مخزونك اليوم",
+                    "footer":  "إدارة مخزون الأزياء — نظام إدارة المخزون",
+                    "feature_stock_title":  "إدارة ذكية للمخزون",
+                    "feature_stock_desc":  "تتبع منتجاتك بين المستودعات، وأدر الحدود الدنيا وحسّن مخزونك.",
+                    "feature_sales_title":  "تتبع المبيعات في الوقت الفعلي",
+                    "feature_sales_desc":  "أدر طلباتك وفواتيرك وإرجاعاتك بواجهة سريعة وبديهية.",
+                    "feature_analytics_title":  "تقارير وتحليلات متقدمة",
+                    "feature_analytics_desc":  "لوحات معلومات واتجاهات وتصدير لتوجيه نشاطك التجاري."
+                }
 }

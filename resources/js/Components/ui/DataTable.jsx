@@ -1,7 +1,9 @@
-﻿import EmptyState from './EmptyState';
+﻿import { useTranslation } from 'react-i18next';
+import EmptyState from './EmptyState';
 import Pagination from './Pagination';
 
-export default function DataTable({ columns = [], rows = [], empty = {}, actions }) {
+export default function DataTable({ columns = [], rows = [], empty = {}, actions, actionsLabel }) {
+    const { t } = useTranslation();
     return (
         <div className="overflow-hidden rounded-lg border border-hairline bg-canvas shadow-level-1">
             <div className="overflow-x-auto">
@@ -19,7 +21,7 @@ export default function DataTable({ columns = [], rows = [], empty = {}, actions
                             ))}
                             {actions && (
                                 <th scope="col" className="px-5 py-3 text-end text-[12px] font-normal uppercase tracking-wide text-ink-mute">
-                                    Actions
+                                    {actionsLabel ?? t('common.actions')}
                                 </th>
                             )}
                         </tr>

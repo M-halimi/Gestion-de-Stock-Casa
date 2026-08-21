@@ -8,6 +8,7 @@ import EmptyState from '@/Components/ui/EmptyState';
 import PageHeader from '@/Components/ui/PageHeader';
 import SearchInput from '@/Components/ui/SearchInput';
 import Select from '@/Components/ui/Select';
+import TableActions from '@/Components/ui/TableActions';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -139,24 +140,13 @@ export default function ProductsIndex({ products, categories, filters }) {
                         description: t('pages.products.no_products_description'),
                         pagination: products,
                     }}
-                    actions={
-                        canEdit || canDelete
-                            ? (product) => (
-                                  <div className="flex justify-end gap-1">
-                                      {canEdit && (
-                                          <Button size="sm" variant="ghost" href={route('products.edit', product.id)}>
-                                              {t('common.edit')}
-                                          </Button>
-                                      )}
-                                      {canDelete && (
-                                          <Button size="sm" variant="ghost" onClick={() => setDeleteTarget(product)}>
-                                              {t('common.delete')}
-                                          </Button>
-                                      )}
-                                  </div>
-                              )
-                            : undefined
-                    }
+                    actions={(product) => (
+                        <TableActions
+                            viewHref={route('products.show', product.id)}
+                            editHref={canEdit ? route('products.edit', product.id) : null}
+                            onDelete={canDelete ? () => setDeleteTarget(product) : null}
+                        />
+                    )}
                 />
             </Card>
 

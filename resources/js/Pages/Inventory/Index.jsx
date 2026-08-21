@@ -5,6 +5,7 @@ import Card from '@/Components/ui/Card';
 import DataTable from '@/Components/ui/DataTable';
 import PageHeader from '@/Components/ui/PageHeader';
 import Select from '@/Components/ui/Select';
+import TableActions from '@/Components/ui/TableActions';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import { fmtDateTime, fmtNumber } from '@/utils/format';
@@ -109,16 +110,19 @@ export default function InventoryIndex({ adjustments, filters }) {
                     }}
                     actions={(a) =>
                         a.status === 'draft' && (
-                            <div className="flex justify-end gap-1">
-                                <Button size="sm" variant="ghost" href={route('inventory.edit', a.id)}>
-                                    {t('common.edit')}
-                                </Button>
-                                {canValidate && (
-                                    <Button size="sm" variant="ghost" href={route('inventory.edit', a.id)}>
-                                        {t('pages.inventory.validate_action')}
-                                    </Button>
-                                )}
-                            </div>
+                            <TableActions
+                                editHref={route('inventory.edit', a.id)}
+                                moreActions={
+                                    canValidate
+                                        ? [
+                                              {
+                                                  label: t('pages.inventory.validate_action'),
+                                                  href: route('inventory.edit', a.id),
+                                              },
+                                          ]
+                                        : []
+                                }
+                            />
                         )
                     }
                 />

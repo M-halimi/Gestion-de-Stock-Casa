@@ -7,6 +7,7 @@ import DeleteModal from '@/Components/shared/DeleteModal';
 import PageHeader from '@/Components/ui/PageHeader';
 import SearchInput from '@/Components/ui/SearchInput';
 import Select from '@/Components/ui/Select';
+import TableActions from '@/Components/ui/TableActions';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -122,21 +123,11 @@ export default function SalesIndex({ sales, filters }) {
                         pagination: sales,
                     }}
                     actions={(sale) => (
-                        <div className="flex justify-end gap-1">
-                            <Button size="sm" variant="ghost" href={route('sales.show', sale.id)}>
-                                {t('common.view')}
-                            </Button>
-                            {canEdit && sale.status === 'draft' && (
-                                <Button size="sm" variant="ghost" href={route('sales.edit', sale.id)}>
-                                    {t('common.edit')}
-                                </Button>
-                            )}
-                            {canDelete && sale.status === 'draft' && (
-                                <Button size="sm" variant="ghost" onClick={() => setDeleteTarget(sale)}>
-                                    {t('common.delete')}
-                                </Button>
-                            )}
-                        </div>
+                        <TableActions
+                            viewHref={route('sales.show', sale.id)}
+                            editHref={canEdit && sale.status === 'draft' ? route('sales.edit', sale.id) : null}
+                            onDelete={canDelete && sale.status === 'draft' ? () => setDeleteTarget(sale) : null}
+                        />
                     )}
                 />
             </Card>

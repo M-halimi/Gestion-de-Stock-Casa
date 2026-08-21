@@ -30,8 +30,9 @@
                    "choose_image":  "Choose image",
                    "loading":  "Loadingâ€¦",
                    "currency":  "DH",
-                   "view":  "View"
-               },
+                    "view":  "View",
+                    "more":  "More"
+                },
     "nav":  {
                 "dashboard":  "Dashboard",
                 "products":  "Products",
@@ -501,7 +502,30 @@
                                                         "low":  "Low stock",
                                                         "out":  "Out of stock"
                                                     }
-                                }
+                                },
+                "users":  {
+                    "title":  "Users",
+                    "subtitle":  "Manage accounts and roles",
+                    "search_placeholder":  "Search users…",
+                    "all_roles":  "All roles",
+                    "name":  "Name",
+                    "email":  "Email",
+                    "role":  "Role",
+                    "created_at":  "Created at",
+                    "create_title":  "New user",
+                    "edit_title":  "Edit user",
+                    "password":  "Password",
+                    "password_optional":  "Password (leave blank to keep unchanged)",
+                    "password_confirmation":  "Confirm password"
+                },
+                "settings":  {
+                    "title":  "Settings",
+                    "subtitle":  "General application configuration",
+                    "company_name":  "Company name",
+                    "currency_code":  "Currency code",
+                    "currency_symbol":  "Currency symbol",
+                    "invoice_footer":  "Invoice footer"
+                }
 },
     "users":  {
                     "title":  "Users",
@@ -735,16 +759,51 @@
                                       "pending":  "Pending",
                                       "received":  "Received"
                                   },
-                      "insights":  {
-                                       "title":  "Insights \u0026 alerts",
-                                       "out_of_stock":  "{{count}} products are out of stock.",
-                                       "low_stock":  "{{count}} products below minimum stock: {{names}}.",
-                                       "best_seller":  "{{name}} is your best seller for the period ({{quantity}} sold).",
-                                       "sales_period":  "Sales for the period: {{total}}.",
-                                       "no_sales":  "No sales recorded for this period.",
-                                       "purchases_period":  "Purchases for the period: {{total}}.",
-                                       "margin_positive":  "Sales exceed purchases by {{percent}}% over the period.",
-                                       "margin_negative":  "Purchases exceed sales by {{percent}}% over the period."
-                                   }
-                  }
+                       "insights":  {
+                                        "title":  "Insights \u0026 alerts",
+                                        "out_of_stock":  "{{count}} products are out of stock.",
+                                        "low_stock":  "{{count}} products below minimum stock: {{names}}.",
+                                        "best_seller":  "{{name}} is your best seller for the period ({{quantity}} sold).",
+                                        "sales_period":  "Sales for the period: {{total}}.",
+                                        "no_sales":  "No sales recorded for this period.",
+                                        "purchases_period":  "Purchases for the period: {{total}}.",
+                                        "margin_positive":  "Sales exceed purchases by {{percent}}% over the period.",
+                                        "margin_negative":  "Purchases exceed sales by {{percent}}% over the period."
+                                    }
+                  },
+    "auth":  {
+                  "email":  "Email",
+                  "email_placeholder":  "you@example.com",
+                  "password":  "Password",
+                  "password_placeholder":  "Enter your password",
+                  "password_confirmation":  "Confirm password",
+                  "password_confirm_placeholder":  "Confirm your password",
+                  "name":  "Name",
+                  "name_placeholder":  "Your full name",
+                  "remember":  "Remember me",
+                  "forgot_password":  "Forgot password?",
+                  "login":  "Sign in",
+                  "register":  "Create account",
+                  "already_registered":  "Already have an account?",
+                  "no_account":  "Don't have an account?"
+              },
+    "welcome":  {
+                    "title":  "Gestion de Stock Couture",
+                    "brand":  "Gestion de Stock",
+                    "redirecting":  "Redirecting to dashboard...",
+                    "go_dashboard":  "Go to Dashboard",
+                    "tab_login":  "Sign in",
+                    "tab_register":  "Create account",
+                    "login_title":  "Welcome back",
+                    "login_subtitle":  "Sign in to manage your stock",
+                    "register_title":  "Create an account",
+                    "register_subtitle":  "Start managing your inventory today",
+                    "footer":  "Gestion de Stock Couture \u2014 Inventory Management System",
+                    "feature_stock_title":  "Intelligent stock management",
+                    "feature_stock_desc":  "Track your products across warehouses, manage minimum thresholds and optimize your inventory.",
+                    "feature_sales_title":  "Real-time sales tracking",
+                    "feature_sales_desc":  "Manage your orders, invoices and returns with an intuitive and fast interface.",
+                    "feature_analytics_title":  "Advanced reports \u0026 analytics",
+                    "feature_analytics_desc":  "Dashboards, trends and exports to drive your business."
+                }
 }

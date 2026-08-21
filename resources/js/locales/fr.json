@@ -30,7 +30,8 @@
                    "choose_image":  "Choisir une image",
                    "loading":  "Chargement…",
 "currency":  "DH",
-                    "view":  "Voir"
+                    "view":  "Voir",
+                    "more":  "Plus"
                 },
     "nav":  {
                 "dashboard":  "Tableau de bord",
@@ -501,7 +502,30 @@
                                                         "low":  "Stock faible",
                                                         "out":  "Rupture"
                                                     }
-                                }
+                                },
+                "users":  {
+                    "title":  "Utilisateurs",
+                    "subtitle":  "Gestion des comptes et des rôles",
+                    "search_placeholder":  "Rechercher un utilisateur…",
+                    "all_roles":  "Tous les rôles",
+                    "name":  "Nom",
+                    "email":  "Email",
+                    "role":  "Rôle",
+                    "created_at":  "Créé le",
+                    "create_title":  "Nouvel utilisateur",
+                    "edit_title":  "Modifier l'utilisateur",
+                    "password":  "Mot de passe",
+                    "password_optional":  "Mot de passe (laisser vide pour ne pas changer)",
+                    "password_confirmation":  "Confirmation du mot de passe"
+                },
+                "settings":  {
+                    "title":  "Paramètres",
+                    "subtitle":  "Configuration générale de l'application",
+                    "company_name":  "Nom de la société",
+                    "currency_code":  "Devise",
+                    "currency_symbol":  "Symbole monétaire",
+                    "invoice_footer":  "Pied de page (documents)"
+                }
 },
     "users":  {
                     "title":  "Utilisateurs",
@@ -735,16 +759,51 @@
                                       "pending":  "En attente",
                                       "received":  "Reçue"
                                   },
-                      "insights":  {
-                                       "title":  "Analyses et alertes",
-                                       "out_of_stock":  "{{count}} produits sont en rupture de stock.",
-                                       "low_stock":  "{{count}} produits sous le seuil minimum : {{names}}.",
-                                       "best_seller":  "{{name}} est votre meilleure vente de la période ({{quantity}} vendus).",
-                                       "sales_period":  "Ventes de la période : {{total}}.",
-                                       "no_sales":  "Aucune vente enregistrée sur cette période.",
-                                       "purchases_period":  "Achats de la période : {{total}}.",
-                                       "margin_positive":  "Les ventes dépassent les achats de {{percent}}% sur la période.",
-                                       "margin_negative":  "Les achats dépassent les ventes de {{percent}}% sur la période."
-                                   }
-                  }
+                       "insights":  {
+                                        "title":  "Analyses et alertes",
+                                        "out_of_stock":  "{{count}} produits sont en rupture de stock.",
+                                        "low_stock":  "{{count}} produits sous le seuil minimum : {{names}}.",
+                                        "best_seller":  "{{name}} est votre meilleure vente de la période ({{quantity}} vendus).",
+                                        "sales_period":  "Ventes de la période : {{total}}.",
+                                        "no_sales":  "Aucune vente enregistrée sur cette période.",
+                                        "purchases_period":  "Achats de la période : {{total}}.",
+                                        "margin_positive":  "Les ventes dépassent les achats de {{percent}}% sur la période.",
+                                        "margin_negative":  "Les achats dépassent les ventes de {{percent}}% sur la période."
+                                    }
+                  },
+    "auth":  {
+                  "email":  "E-mail",
+                  "email_placeholder":  "vous@exemple.com",
+                  "password":  "Mot de passe",
+                  "password_placeholder":  "Saisissez votre mot de passe",
+                  "password_confirmation":  "Confirmer le mot de passe",
+                  "password_confirm_placeholder":  "Confirmez votre mot de passe",
+                  "name":  "Nom",
+                  "name_placeholder":  "Votre nom complet",
+                  "remember":  "Se souvenir de moi",
+                  "forgot_password":  "Mot de passe oublié ?",
+                  "login":  "Se connecter",
+                  "register":  "Créer un compte",
+                  "already_registered":  "Vous avez déjà un compte ?",
+                  "no_account":  "Vous n'avez pas de compte ?"
+              },
+    "welcome":  {
+                    "title":  "Gestion de Stock Couture",
+                    "brand":  "Gestion de Stock",
+                    "redirecting":  "Redirection vers le tableau de bord...",
+                    "go_dashboard":  "Aller au tableau de bord",
+                    "tab_login":  "Se connecter",
+                    "tab_register":  "Créer un compte",
+                    "login_title":  "Bon retour",
+                    "login_subtitle":  "Connectez-vous pour gérer votre stock",
+                    "register_title":  "Créer un compte",
+                    "register_subtitle":  "Commencez à gérer votre inventaire dès aujourd'hui",
+                    "footer":  "Gestion de Stock Couture — Système de gestion d'inventaire",
+                    "feature_stock_title":  "Gestion intelligente du stock",
+                    "feature_stock_desc":  "Suivez vos produits entre entrepôts, gérez les seuils minimum et optimisez votre inventaire.",
+                    "feature_sales_title":  "Suivi des ventes en temps réel",
+                    "feature_sales_desc":  "Gérez vos commandes, factures et retours avec une interface intuitive et rapide.",
+                    "feature_analytics_title":  "Rapports et analyses avancées",
+                    "feature_analytics_desc":  "Tableaux de bord, tendances et exports pour piloter votre activité."
+                }
 }

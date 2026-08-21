@@ -6,7 +6,7 @@ export default function ConfirmModal({ show, onClose, title, message, href, meth
     const { t } = useTranslation();
 
     const handleConfirm = () => {
-        const options = { preserveScroll: true, onSuccess: () => onClose() };
+        const options = { preserveScroll: true, onSuccess: () => onClose(), onError: () => { onClose(); } };
 
         if (method === 'post') {
             router.post(href, {}, options);

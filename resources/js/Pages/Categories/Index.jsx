@@ -5,6 +5,7 @@ import DataTable from '@/Components/ui/DataTable';
 import DeleteModal from '@/Components/shared/DeleteModal';
 import PageHeader from '@/Components/ui/PageHeader';
 import SearchInput from '@/Components/ui/SearchInput';
+import TableActions from '@/Components/ui/TableActions';
 import { Head, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -56,18 +57,10 @@ export default function CategoriesIndex({ categories, filters }) {
                     actions={
                         canEdit || canDelete
                             ? (category) => (
-                                  <div className="flex justify-end gap-1">
-                                      {canEdit && (
-                                          <Button size="sm" variant="ghost" href={route('categories.edit', category.id)}>
-                                              {t('common.edit')}
-                                          </Button>
-                                      )}
-                                      {canDelete && (
-                                          <Button size="sm" variant="ghost" onClick={() => setDeleteTarget(category)}>
-                                              {t('common.delete')}
-                                          </Button>
-                                      )}
-                                  </div>
+                                  <TableActions
+                                      editHref={canEdit ? route('categories.edit', category.id) : null}
+                                      onDelete={canDelete ? () => setDeleteTarget(category) : null}
+                                  />
                               )
                             : undefined
                     }

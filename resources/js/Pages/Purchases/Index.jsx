@@ -7,6 +7,7 @@ import DeleteModal from '@/Components/shared/DeleteModal';
 import PageHeader from '@/Components/ui/PageHeader';
 import SearchInput from '@/Components/ui/SearchInput';
 import Select from '@/Components/ui/Select';
+import TableActions from '@/Components/ui/TableActions';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -122,21 +123,11 @@ export default function PurchasesIndex({ purchases, filters }) {
                         pagination: purchases,
                     }}
                     actions={(purchase) => (
-                        <div className="flex justify-end gap-1">
-                            <Button size="sm" variant="ghost" href={route('purchases.show', purchase.id)}>
-                                {t('common.view')}
-                            </Button>
-                            {canEdit && purchase.status === 'pending' && (
-                                <Button size="sm" variant="ghost" href={route('purchases.edit', purchase.id)}>
-                                    {t('common.edit')}
-                                </Button>
-                            )}
-                            {canDelete && purchase.status === 'pending' && (
-                                <Button size="sm" variant="ghost" onClick={() => setDeleteTarget(purchase)}>
-                                    {t('common.delete')}
-                                </Button>
-                            )}
-                        </div>
+                        <TableActions
+                            viewHref={route('purchases.show', purchase.id)}
+                            editHref={canEdit && purchase.status === 'pending' ? route('purchases.edit', purchase.id) : null}
+                            onDelete={canDelete && purchase.status === 'pending' ? () => setDeleteTarget(purchase) : null}
+                        />
                     )}
                 />
             </Card>

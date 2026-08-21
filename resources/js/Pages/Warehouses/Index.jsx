@@ -6,6 +6,7 @@ import DataTable from '@/Components/ui/DataTable';
 import DeleteModal from '@/Components/shared/DeleteModal';
 import PageHeader from '@/Components/ui/PageHeader';
 import SearchInput from '@/Components/ui/SearchInput';
+import TableActions from '@/Components/ui/TableActions';
 import { Head, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -79,18 +80,10 @@ export default function WarehousesIndex({ warehouses, filters }) {
                     actions={
                         canEdit || canDelete
                             ? (warehouse) => (
-                                  <div className="flex justify-end gap-1">
-                                      {canEdit && (
-                                          <Button size="sm" variant="ghost" href={route('warehouses.edit', warehouse.id)}>
-                                              {t('common.edit')}
-                                          </Button>
-                                      )}
-                                      {canDelete && (
-                                          <Button size="sm" variant="ghost" onClick={() => setDeleteTarget(warehouse)}>
-                                              {t('common.delete')}
-                                          </Button>
-                                      )}
-                                  </div>
+                                  <TableActions
+                                      editHref={canEdit ? route('warehouses.edit', warehouse.id) : null}
+                                      onDelete={canDelete ? () => setDeleteTarget(warehouse) : null}
+                                  />
                               )
                             : undefined
                     }

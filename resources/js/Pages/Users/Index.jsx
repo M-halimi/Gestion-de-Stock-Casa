@@ -7,7 +7,8 @@ import DeleteModal from '@/Components/shared/DeleteModal';
 import PageHeader from '@/Components/ui/PageHeader';
 import SearchInput from '@/Components/ui/SearchInput';
 import Select from '@/Components/ui/Select';
-import { Head, usePage } from '@inertiajs/react';
+import TableActions from '@/Components/ui/TableActions';
+import { Head, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -48,7 +49,7 @@ export default function UsersIndex({ users, roles, filters }) {
                             } else {
                                 url.searchParams.delete('role');
                             }
-                            window.location.href = url.toString();
+                            router.get(route('users.index', Object.fromEntries(url.searchParams)), {}, { preserveState: true, replace: true });
                         }}
                         options={[{ value: '', label: t('pages.users.all_roles') }, ...roles.map((r) => ({ value: r.name, label: r.name }))]}
                     />
@@ -92,14 +93,10 @@ export default function UsersIndex({ users, roles, filters }) {
                     actions={
                         canManage
                             ? (user) => (
-                                  <div className="flex justify-end gap-1">
-                                      <Button size="sm" variant="ghost" href={route('users.edit', user.id)}>
-                                          {t('common.edit')}
-                                      </Button>
-                                      <Button size="sm" variant="ghost" onClick={() => setDeleteTarget(user)}>
-                                          {t('common.delete')}
-                                      </Button>
-                                  </div>
+                                  <TableActions
+                                      editHref={route('users.edit', user.id)}
+                                      onDelete={() => setDeleteTarget(user)}
+                                  />
                               )
                             : undefined
                     }

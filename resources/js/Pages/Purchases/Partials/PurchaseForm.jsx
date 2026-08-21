@@ -60,7 +60,7 @@ export default function PurchaseForm({
         const subtotal = money(item.quantity) * money(item.unit_price);
         return {
             ...item,
-            subtotal: money(item.quantity) * money(item.unit_price),
+            subtotal,
             line_total: subtotal - money(item.discount) + money(item.tax),
         };
     });

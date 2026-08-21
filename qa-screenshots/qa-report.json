@@ -1,0 +1,373 @@
+{
+  "total": 73,
+  "passed": 73,
+  "failed": 0,
+  "jsErrors": [],
+  "results": [
+    {
+      "page": "Login",
+      "status": "PASS",
+      "msg": "Login page loaded"
+    },
+    {
+      "page": "Login",
+      "status": "PASS",
+      "msg": "Logged in successfully"
+    },
+    {
+      "page": "Dashboard",
+      "status": "PASS",
+      "msg": "Title: Tableau de bord"
+    },
+    {
+      "page": "Dashboard",
+      "status": "PASS",
+      "msg": "42 SVG elements"
+    },
+    {
+      "page": "Sidebar",
+      "status": "PASS",
+      "msg": "18 nav items"
+    },
+    {
+      "page": "DarkMode",
+      "status": "PASS",
+      "msg": "Current: dark"
+    },
+    {
+      "page": "Products",
+      "status": "PASS",
+      "msg": "Loaded: Produits"
+    },
+    {
+      "page": "Categories",
+      "status": "PASS",
+      "msg": "Loaded: Catégories"
+    },
+    {
+      "page": "Units",
+      "status": "PASS",
+      "msg": "Loaded: Unités"
+    },
+    {
+      "page": "Suppliers",
+      "status": "PASS",
+      "msg": "Loaded: Fournisseurs"
+    },
+    {
+      "page": "Customers",
+      "status": "PASS",
+      "msg": "Loaded: Clients"
+    },
+    {
+      "page": "Warehouses",
+      "status": "PASS",
+      "msg": "Loaded: Entrepôts"
+    },
+    {
+      "page": "Stock",
+      "status": "PASS",
+      "msg": "Loaded: Stock"
+    },
+    {
+      "page": "Purchases",
+      "status": "PASS",
+      "msg": "Loaded: Achats"
+    },
+    {
+      "page": "Sales",
+      "status": "PASS",
+      "msg": "Loaded: Ventes"
+    },
+    {
+      "page": "Movements",
+      "status": "PASS",
+      "msg": "Loaded: Mouvements"
+    },
+    {
+      "page": "Inventory",
+      "status": "PASS",
+      "msg": "Loaded: Inventaire"
+    },
+    {
+      "page": "Prod Orders",
+      "status": "PASS",
+      "msg": "Loaded: Ordres de production"
+    },
+    {
+      "page": "BOMs",
+      "status": "PASS",
+      "msg": "Loaded: Recettes de fabrication"
+    },
+    {
+      "page": "Reports",
+      "status": "PASS",
+      "msg": "Loaded: Rapports"
+    },
+    {
+      "page": "Settings",
+      "status": "PASS",
+      "msg": "Loaded: Paramètres"
+    },
+    {
+      "page": "Users",
+      "status": "PASS",
+      "msg": "Loaded: Utilisateurs"
+    },
+    {
+      "page": "Products",
+      "status": "PASS",
+      "msg": "Table: 12 rows"
+    },
+    {
+      "page": "Products",
+      "status": "PASS",
+      "msg": "Search executed"
+    },
+    {
+      "page": "Products",
+      "status": "PASS",
+      "msg": "12 edit links visible"
+    },
+    {
+      "page": "Customers",
+      "status": "PASS",
+      "msg": "Table: 15 rows"
+    },
+    {
+      "page": "Customers",
+      "status": "PASS",
+      "msg": "Search executed"
+    },
+    {
+      "page": "Customers",
+      "status": "PASS",
+      "msg": "15 edit links visible"
+    },
+    {
+      "page": "Sales",
+      "status": "PASS",
+      "msg": "Table: 15 rows"
+    },
+    {
+      "page": "Sales",
+      "status": "PASS",
+      "msg": "Search executed"
+    },
+    {
+      "page": "Sales",
+      "status": "PASS",
+      "msg": "0 edit links visible"
+    },
+    {
+      "page": "Purchases",
+      "status": "PASS",
+      "msg": "Table: 15 rows"
+    },
+    {
+      "page": "Purchases",
+      "status": "PASS",
+      "msg": "Search executed"
+    },
+    {
+      "page": "Purchases",
+      "status": "PASS",
+      "msg": "5 edit links visible"
+    },
+    {
+      "page": "Users",
+      "status": "PASS",
+      "msg": "Table: 5 rows"
+    },
+    {
+      "page": "Users",
+      "status": "PASS",
+      "msg": "Search executed"
+    },
+    {
+      "page": "Users",
+      "status": "PASS",
+      "msg": "5 edit links visible"
+    },
+    {
+      "page": "Categories",
+      "status": "PASS",
+      "msg": "Table: 7 rows"
+    },
+    {
+      "page": "Categories",
+      "status": "PASS",
+      "msg": "Search executed"
+    },
+    {
+      "page": "Categories",
+      "status": "PASS",
+      "msg": "7 edit links visible"
+    },
+    {
+      "page": "Warehouses",
+      "status": "PASS",
+      "msg": "Table: 3 rows"
+    },
+    {
+      "page": "Warehouses",
+      "status": "PASS",
+      "msg": "Search executed"
+    },
+    {
+      "page": "Warehouses",
+      "status": "PASS",
+      "msg": "3 edit links visible"
+    },
+    {
+      "page": "Suppliers",
+      "status": "PASS",
+      "msg": "Table: 4 rows"
+    },
+    {
+      "page": "Suppliers",
+      "status": "PASS",
+      "msg": "Search executed"
+    },
+    {
+      "page": "Suppliers",
+      "status": "PASS",
+      "msg": "4 edit links visible"
+    },
+    {
+      "page": "CRUD Product",
+      "status": "PASS",
+      "msg": "Created, redirected to: http://127.0.0.1:8399/products"
+    },
+    {
+      "page": "CRUD Product",
+      "status": "PASS",
+      "msg": "Product visible in list"
+    },
+    {
+      "page": "CRUD Product",
+      "status": "PASS",
+      "msg": "Edit submitted"
+    },
+    {
+      "page": "CRUD Product",
+      "status": "PASS",
+      "msg": "Edited product visible"
+    },
+    {
+      "page": "CRUD Product",
+      "status": "PASS",
+      "msg": "Deleted"
+    },
+    {
+      "page": "CRUD Product",
+      "status": "PASS",
+      "msg": "Product fully deleted"
+    },
+    {
+      "page": "CRUD Customer",
+      "status": "PASS",
+      "msg": "Created"
+    },
+    {
+      "page": "CRUD Customer",
+      "status": "PASS",
+      "msg": "Visible in list"
+    },
+    {
+      "page": "CRUD Customer",
+      "status": "PASS",
+      "msg": "Deleted"
+    },
+    {
+      "page": "LongText",
+      "status": "PASS",
+      "msg": "Long name customer created"
+    },
+    {
+      "page": "LongText",
+      "status": "PASS",
+      "msg": "No overflow"
+    },
+    {
+      "page": "LongText",
+      "status": "PASS",
+      "msg": "Cleanup done"
+    },
+    {
+      "page": "Permissions",
+      "status": "PASS",
+      "msg": "Admin sees 5 users"
+    },
+    {
+      "page": "Permissions",
+      "status": "PASS",
+      "msg": "Create link visible: true"
+    },
+    {
+      "page": "Permissions",
+      "status": "PASS",
+      "msg": "Admin: 12 edit, 12 delete"
+    },
+    {
+      "page": "RTL",
+      "status": "PASS",
+      "msg": "Dashboard dir=rtl"
+    },
+    {
+      "page": "RTL",
+      "status": "PASS",
+      "msg": "Arabic text visible"
+    },
+    {
+      "page": "RTL",
+      "status": "PASS",
+      "msg": "Products in Arabic"
+    },
+    {
+      "page": "RTL",
+      "status": "PASS",
+      "msg": "Product create in Arabic"
+    },
+    {
+      "page": "RTL",
+      "status": "PASS",
+      "msg": "Sales in Arabic"
+    },
+    {
+      "page": "RTL",
+      "status": "PASS",
+      "msg": "Customers in Arabic"
+    },
+    {
+      "page": "RTL",
+      "status": "PASS",
+      "msg": "English LTR loaded"
+    },
+    {
+      "page": "RTL",
+      "status": "PASS",
+      "msg": "Back to French LTR"
+    },
+    {
+      "page": "Responsive",
+      "status": "PASS",
+      "msg": "mobile (375x812): OK"
+    },
+    {
+      "page": "Responsive",
+      "status": "PASS",
+      "msg": "tablet (768x1024): OK"
+    },
+    {
+      "page": "Responsive",
+      "status": "PASS",
+      "msg": "desktop (1440x900): OK"
+    },
+    {
+      "page": "Console",
+      "status": "PASS",
+      "msg": "No JavaScript errors"
+    }
+  ]
+}
