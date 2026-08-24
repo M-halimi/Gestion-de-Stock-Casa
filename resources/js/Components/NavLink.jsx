@@ -2,7 +2,7 @@ import { Link, usePage } from '@inertiajs/react';
 
 export default function NavLink({
     className = '',
-    activeClassName = 'bg-primary-soft text-white hover:bg-primary-soft',
+    activeClassName = 'bg-primary-soft text-primary-subdued hover:bg-primary-soft',
     inactiveClassName = 'text-ink-mute hover:bg-canvas-soft hover:text-ink',
     exact = false,
     children,

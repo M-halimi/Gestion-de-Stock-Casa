@@ -28,11 +28,11 @@ import {
 } from 'recharts';
 
 const colors = {
-    primary: '#5645d4',
-    warning: '#dd5b00',
-    success: '#1aae39',
-    danger: '#e03131',
-    info: '#0075de',
+    primary: '#d4af5e',
+    warning: '#e89030',
+    success: '#3fa372',
+    danger: '#d64545',
+    info: '#6c8fc7',
 };
 
 function MoneyTooltip({ active, payload, label, names }) {

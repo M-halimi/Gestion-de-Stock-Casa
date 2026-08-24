@@ -179,8 +179,10 @@ export default function AuthenticatedLayout({ header, children }) {
         <div className="flex h-full flex-col">
             <div className="flex h-16 shrink-0 items-center gap-3 border-b border-hairline px-5">
                 <Link href="/" className="flex items-center gap-2.5">
-                    <ApplicationLogo className="h-8 w-8 fill-current text-primary" />
-                    <span className="text-[15px] font-semibold tracking-tight text-ink">{t('app.name')}</span>
+                    <ApplicationLogo className="h-11 w-11" />
+                    <span className="brand-wordmark text-[15px] font-bold uppercase tracking-wide">
+                        {t('app.name')}
+                    </span>
                 </Link>
             </div>
 
@@ -188,7 +190,7 @@ export default function AuthenticatedLayout({ header, children }) {
                 <div className="px-4 pt-4">
                     <Link
                         href={route('products.create')}
-                        className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-primary text-[14px] font-semibold text-white shadow-[0_8px_24px_-8px_rgba(99,102,241,0.7)] transition hover:bg-primary-deep"
+                        className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-primary text-[14px] font-semibold text-white shadow-[0_8px_24px_-8px_rgba(212,175,94,0.55)] transition hover:bg-primary-deep"
                     >
                         {PlusIcon}
                         {t('nav.new_product')}
@@ -202,7 +204,7 @@ export default function AuthenticatedLayout({ header, children }) {
                         key={item.label}
                         href={item.href}
                         className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] font-medium transition-colors"
-                        activeClassName="bg-primary-soft text-white"
+                        activeClassName="bg-primary-soft text-primary-subdued"
                         inactiveClassName="text-ink-mute hover:bg-canvas-soft hover:text-ink"
                     >
                         {item.icon}

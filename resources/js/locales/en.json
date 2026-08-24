@@ -1,6 +1,6 @@
 ﻿{
     "app":  {
-                "name":  "Tailoring Stock Management"
+                "name":  "Teklidi Shop"
             },
     "common":  {
                    "login":  "Sign in",
@@ -1041,8 +1041,8 @@
                   "no_account":  "Don't have an account?"
               },
     "welcome":  {
-                    "title":  "Gestion de Stock Couture",
-                    "brand":  "Gestion de Stock",
+                    "title":  "Teklidi Shop",
+                    "brand":  "Teklidi Shop",
                     "redirecting":  "Redirecting to dashboard...",
                     "go_dashboard":  "Go to Dashboard",
                     "tab_login":  "Sign in",
@@ -1051,7 +1051,7 @@
                     "login_subtitle":  "Sign in to manage your stock",
                     "register_title":  "Create an account",
                     "register_subtitle":  "Start managing your inventory today",
-                    "footer":  "Gestion de Stock Couture \u2014 Inventory Management System",
+                    "footer":  "Teklidi Shop \u2014 Inventory Management System",
                     "feature_stock_title":  "Intelligent stock management",
                     "feature_stock_desc":  "Track your products across warehouses, manage minimum thresholds and optimize your inventory.",
                     "feature_sales_title":  "Real-time sales tracking",

@@ -51,9 +51,9 @@ export default function Welcome({ canLogin }) {
             <>
                 <Head title="Welcome" />
                 <div className="flex min-h-screen flex-col items-center justify-center bg-branddark">
-                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(99,102,241,0.14),transparent_55%)]" />
+                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(212,175,94,0.14),transparent_55%)]" />
                     <div className="relative z-10 text-center">
-                        <ApplicationLogo className="mx-auto h-16 w-16 fill-current text-primary" />
+                        <ApplicationLogo className="mx-auto h-20 w-20" />
                         <h1 className="mt-6 text-2xl font-semibold tracking-tight text-ink">
                             {t('welcome.title', 'Gestion de Stock Couture')}
                         </h1>
@@ -78,7 +78,7 @@ export default function Welcome({ canLogin }) {
 
             <div className="relative flex min-h-screen bg-branddark">
                 {/* Radial gradient background */}
-                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(99,102,241,0.12),transparent_50%)]" />
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(212,175,94,0.12),transparent_50%)]" />
 
                 {/* Top-right controls */}
                 <div className="absolute end-4 top-4 z-50 flex items-center gap-2">
@@ -106,9 +106,9 @@ export default function Welcome({ canLogin }) {
                     <div className="relative z-10 mx-auto max-w-lg px-8">
                         {/* Logo */}
                         <div className="mb-8 flex items-center gap-3">
-                            <ApplicationLogo className="h-12 w-12 fill-current text-primary" />
-                            <span className="text-xl font-bold tracking-tight text-ink">
-                                {t('welcome.brand', 'Gestion de Stock')}
+                            <ApplicationLogo className="h-16 w-16" />
+                            <span className="brand-wordmark text-xl font-bold uppercase tracking-wide">
+                                {t('welcome.brand', 'Teklidi Shop')}
                             </span>
                         </div>
 
@@ -148,9 +148,9 @@ export default function Welcome({ canLogin }) {
                     <div className="w-full max-w-md">
                         {/* Mobile logo */}
                         <div className="mb-8 flex items-center justify-center gap-3 lg:hidden">
-                            <ApplicationLogo className="h-10 w-10 fill-current text-primary" />
-                            <span className="text-lg font-bold tracking-tight text-ink">
-                                {t('welcome.brand', 'Gestion de Stock')}
+                            <ApplicationLogo className="h-14 w-14" />
+                            <span className="brand-wordmark text-lg font-bold uppercase tracking-wide">
+                                {t('welcome.brand', 'Teklidi Shop')}
                             </span>
                         </div>
 

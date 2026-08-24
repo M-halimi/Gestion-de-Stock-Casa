@@ -1,6 +1,6 @@
 ﻿{
     "app":  {
-                "name":  "Gestion de Stock Couture"
+                "name":  "Teklidi Shop"
             },
     "common":  {
                    "login":  "Se connecter",
@@ -1042,8 +1042,8 @@
                   "no_account":  "Vous n'avez pas de compte ?"
               },
     "welcome":  {
-                    "title":  "Gestion de Stock Couture",
-                    "brand":  "Gestion de Stock",
+                    "title":  "Teklidi Shop",
+                    "brand":  "Teklidi Shop",
                     "redirecting":  "Redirection vers le tableau de bord...",
                     "go_dashboard":  "Aller au tableau de bord",
                     "tab_login":  "Se connecter",
@@ -1052,7 +1052,7 @@
                     "login_subtitle":  "Connectez-vous pour gérer votre stock",
                     "register_title":  "Créer un compte",
                     "register_subtitle":  "Commencez à gérer votre inventaire dès aujourd'hui",
-                    "footer":  "Gestion de Stock Couture — Système de gestion d'inventaire",
+                    "footer":  "Teklidi Shop — Système de gestion d'inventaire",
                     "feature_stock_title":  "Gestion intelligente du stock",
                     "feature_stock_desc":  "Suivez vos produits entre entrepôts, gérez les seuils minimum et optimisez votre inventaire.",
                     "feature_sales_title":  "Suivi des ventes en temps réel",

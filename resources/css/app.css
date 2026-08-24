@@ -8,40 +8,41 @@
     :root {
         color-scheme: dark;
 
-        --c-primary: 99 102 241;
-        --c-primary-deep: 79 70 229;
-        --c-primary-press: 67 56 202;
-        --c-primary-soft: rgba(99, 102, 241, 0.18);
-        --c-primary-subdued: #a5b4fc;
+        /* Teklidi Shop brand: champagne gold (from logo gradient) */
+        --c-primary: 212 175 94;
+        --c-primary-deep: 184 147 63;
+        --c-primary-press: 154 122 47;
+        --c-primary-soft: rgba(212, 175, 94, 0.16);
+        --c-primary-subdued: #e3c87f;
 
-        --c-branddark: #0f1117;
-        --c-branddark-900: #0b0d13;
+        --c-branddark: #161310;
+        --c-branddark-900: #100e0b;
 
-        --c-ink: #e7e9f2;
-        --c-ink-secondary: #c6cad9;
-        --c-ink-mute: #8b8fa3;
-        --c-ink-mute2: #62677a;
+        --c-ink: #efe8da;
+        --c-ink-secondary: #d6cdbb;
+        --c-ink-mute: #9c9280;
+        --c-ink-mute2: #6e6656;
 
-        --c-canvas: #171923;
-        --c-canvas-soft: #1a1d29;
-        --c-canvas-cream: #20242f;
-        --c-canvas-glass: rgba(23, 25, 35, 0.85);
+        --c-canvas: #1c1914;
+        --c-canvas-soft: #211d16;
+        --c-canvas-cream: #282218;
+        --c-canvas-glass: rgba(28, 25, 20, 0.85);
 
-        --c-hairline: #232838;
-        --c-hairline-input: #323848;
-        --c-hairline-strong: #3a4052;
+        --c-hairline: #2e2820;
+        --c-hairline-input: #3e3626;
+        --c-hairline-strong: #4c4230;
 
-        --c-destructive: 248 113 113;
-        --c-destructive-soft: rgba(248, 113, 113, 0.14);
-        --c-success: 52 211 153;
-        --c-success-soft: rgba(52, 211, 153, 0.14);
-        --c-warning: 251 191 36;
-        --c-warning-soft: rgba(251, 191, 36, 0.14);
-        --c-info: 96 165 250;
-        --c-info-soft: rgba(96, 165, 250, 0.14);
+        --c-destructive: 244 106 96;
+        --c-destructive-soft: rgba(244, 106, 96, 0.14);
+        --c-success: 82 196 148;
+        --c-success-soft: rgba(82, 196, 148, 0.14);
+        --c-warning: 240 158 46;
+        --c-warning-soft: rgba(240, 158, 46, 0.14);
+        --c-info: 118 158 224;
+        --c-info-soft: rgba(118, 158, 224, 0.14);
 
-        --c-accent-magenta: #ff64c8;
-        --c-accent-lemon: #f5d75e;
+        --c-accent-magenta: #d98cb3;
+        --c-accent-lemon: #e3c87f;
 
         --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.35);
         --shadow-2: 0 12px 32px -6px rgba(0, 0, 0, 0.55), 0 4px 10px -3px rgba(0, 0, 0, 0.35);
@@ -50,43 +51,45 @@
     html.light {
         color-scheme: light;
 
-        --c-primary: 99 102 241;
-        --c-primary-deep: 79 70 229;
-        --c-primary-press: 67 56 202;
-        --c-primary-soft: rgba(99, 102, 241, 0.1);
-        --c-primary-subdued: #6366f1;
+        /* Deep bronze in light mode: keeps white-on-primary buttons accessible
+           where raw gold would fail contrast on white surfaces */
+        --c-primary: 146 111 34;
+        --c-primary-deep: 122 92 26;
+        --c-primary-press: 100 74 20;
+        --c-primary-soft: rgba(146, 111, 34, 0.12);
+        --c-primary-subdued: #8c6d1f;
 
-        --c-branddark: #f3f4f8;
+        --c-branddark: #f6f2e8;
         --c-branddark-900: #ffffff;
 
-        --c-ink: #1f2328;
-        --c-ink-secondary: #4a4f5a;
-        --c-ink-mute: #6b7280;
-        --c-ink-mute2: #9ca3af;
+        --c-ink: #2b2519;
+        --c-ink-secondary: #574e3b;
+        --c-ink-mute: #7c7360;
+        --c-ink-mute2: #a69c86;
 
         --c-canvas: #ffffff;
-        --c-canvas-soft: #f3f4f6;
-        --c-canvas-cream: #eef0f3;
+        --c-canvas-soft: #f7f3e9;
+        --c-canvas-cream: #f0eadb;
         --c-canvas-glass: rgba(255, 255, 255, 0.85);
 
-        --c-hairline: #e5e7eb;
-        --c-hairline-input: #d1d5db;
-        --c-hairline-strong: #c4c9d2;
+        --c-hairline: #e8e2d2;
+        --c-hairline-input: #d9d1bb;
+        --c-hairline-strong: #c8bda1;
 
-        --c-destructive: 220 38 38;
-        --c-destructive-soft: rgba(220, 38, 38, 0.1);
-        --c-success: 22 163 74;
-        --c-success-soft: rgba(22, 163, 74, 0.12);
-        --c-warning: 217 119 6;
-        --c-warning-soft: rgba(217, 119, 6, 0.12);
+        --c-destructive: 190 32 32;
+        --c-destructive-soft: rgba(190, 32, 32, 0.1);
+        --c-success: 21 128 61;
+        --c-success-soft: rgba(21, 128, 61, 0.12);
+        --c-warning: 180 83 9;
+        --c-warning-soft: rgba(180, 83, 9, 0.12);
         --c-info: 37 99 235;
         --c-info-soft: rgba(37, 99, 235, 0.1);
 
-        --c-accent-magenta: #db2777;
-        --c-accent-lemon: #ca8a04;
+        --c-accent-magenta: #b4557f;
+        --c-accent-lemon: #a16207;
 
-        --shadow-1: 0 1px 3px rgba(15, 15, 15, 0.08);
-        --shadow-2: 0 8px 24px rgba(15, 15, 15, 0.08), 0 2px 6px rgba(15, 15, 15, 0.04);
+        --shadow-1: 0 1px 3px rgba(43, 32, 12, 0.08);
+        --shadow-2: 0 8px 24px rgba(43, 32, 12, 0.08), 0 2px 6px rgba(43, 32, 12, 0.04);
     }
 
     body {
@@ -96,8 +99,13 @@
     }
 
     ::selection {
-        background: rgba(99, 102, 241, 0.35);
-        color: #fff;
+        background: rgba(212, 175, 94, 0.4);
+        color: #161310;
+    }
+
+    html.light ::selection {
+        background: rgba(146, 111, 34, 0.25);
+        color: #2b2519;
     }
 
     * {
@@ -174,6 +182,49 @@
     }
 
     .glow-ring {
-        box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.4), 0 0 24px -6px rgba(99, 102, 241, 0.55);
+        box-shadow: 0 0 0 1px rgba(212, 175, 94, 0.4), 0 0 24px -6px rgba(212, 175, 94, 0.5);
+    }
+
+    .text-gold-gradient {
+        background: linear-gradient(100deg, #ebd194 0%, #d4af5e 50%, #a9822f 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    html.light .text-gold-gradient {
+        background: linear-gradient(100deg, #a9822f 0%, #8c6d1f 60%, #6f5518 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+    }
+
+    .brand-wordmark {
+        background: linear-gradient(100deg, #a9822f 0%, #ebd194 25%, #d4af5e 50%, #ebd194 75%, #a9822f 100%);
+        background-size: 250% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: gold-shimmer 7s linear infinite;
+        filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35));
+    }
+
+    html.light .brand-wordmark {
+        background: linear-gradient(100deg, #8c6d1f 0%, #d4af5e 25%, #8c6d1f 50%, #d4af5e 75%, #8c6d1f 100%);
+        background-size: 250% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        filter: drop-shadow(0 1px 1px rgba(140, 109, 31, 0.25));
+    }
+
+    @keyframes gold-shimmer {
+        to {
+            background-position: 250% center;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .brand-wordmark {
+            animation: none;
+        }
     }
 }

@@ -10,7 +10,7 @@ import { setCurrency } from '@/lib/format';
 const storedTheme = localStorage.getItem('theme');
 document.documentElement.classList.add(storedTheme === 'light' ? 'light' : 'dark');
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'Teklidi Shop';
 let appTitle = appName;
 
 createInertiaApp({
@@ -35,6 +35,6 @@ createInertiaApp({
         root.render(<App {...props} />);
     },
     progress: {
-        color: '#533AFD',
+        color: '#D4AF5E',
     },
 });

@@ -29,10 +29,14 @@
     </style>
 </head>
 <body @if($print) onload="window.print()" @endif>
+@php($logoData = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/teklidi-logo-256.png'))))
 <main class="page">
     <header class="header">
         <div>
-            <h1>{{ $settings['company_name'] }}</h1>
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 6px;">
+                <img src="{{ $logoData }}" style="height: 56px; width: 56px;" alt="logo">
+                <h1 style="margin: 0;">TEKLIDI SHOP</h1>
+            </div>
             <p class="muted">{{ $document->warehouse?->name ?? '' }}</p>
         </div>
         <div style="text-align: right">

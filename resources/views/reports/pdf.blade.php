@@ -5,6 +5,10 @@
     <title>{{ $title }}</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #1a1a1a; }
+        .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .brand img { height: 44px; width: 44px; }
+        .brand .name { font-size: 16px; font-weight: bold; color: #8c6d1f; letter-spacing: 0.5px; }
+        .brand .sep { border-bottom: 2px solid #d4af5e; margin-bottom: 12px; }
         h1 { font-size: 18px; margin: 0 0 4px; }
         .meta { color: #6b6b6b; margin-bottom: 16px; font-size: 10px; }
         table { width: 100%; border-collapse: collapse; }
@@ -14,6 +18,12 @@
     </style>
 </head>
 <body>
+    @php($logoData = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/teklidi-logo-256.png'))))
+    <div class="brand">
+        <img src="{{ $logoData }}" alt="logo">
+        <span class="name">TEKLIDI SHOP</span>
+    </div>
+    <div class="sep"></div>
     <h1>{{ $title }}</h1>
     <div class="meta">
         Généré le {{ $date }}
