@@ -310,12 +310,12 @@ export default function ReportsIndex({ active_type: activeType, types, summary, 
                     />
                     <div className="ms-auto flex gap-2">
                         <a href={exportUrl('csv')} className="inline-flex">
-                            <Button size="sm" variant="secondary">
+                            <Button size="sm" variant="secondary" external>
                                 {t('pages.reports.export_csv')}
                             </Button>
                         </a>
                         <a href={exportUrl('pdf')} className="inline-flex">
-                            <Button size="sm" variant="secondary">
+                            <Button size="sm" variant="secondary" external>
                                 {t('pages.reports.export_pdf')}
                             </Button>
                         </a>

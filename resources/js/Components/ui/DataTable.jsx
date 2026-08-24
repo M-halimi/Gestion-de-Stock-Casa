@@ -51,7 +51,7 @@ export default function DataTable({ columns = [], rows = [], empty = {}, actions
                             <tr>
                                 <td colSpan={columns.length + (actions ? 1 : 0)}>
                                     <EmptyState
-                                        title={empty.title ?? 'Aucun rÃ©sultat'}
+                                        title={empty.title ?? 'Aucun résultat'}
                                         description={empty.description}
                                         action={empty.action}
                                     />

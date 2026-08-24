@@ -324,10 +324,22 @@ class ReportService
             },
             'columns' => $this->columns($type),
             'rows' => $rows,
-            'period' => $filters['period'] ?? null,
+            'period' => $this->periodLabel($filters),
             'date' => now()->format('d/m/Y H:i'),
         ]);
 
         return $pdf->download('rapport-' . $type . '.pdf');
+    }
+
+    private function periodLabel(array $filters): ?array
+    {
+        if (! isset($filters['from'], $filters['to'])) {
+            return null;
+        }
+
+        return [
+            'from' => $filters['from']->format('Y-m-d'),
+            'to' => $filters['to']->format('Y-m-d'),
+        ];
     }
 }

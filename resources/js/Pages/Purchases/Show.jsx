@@ -27,6 +27,7 @@ export default function PurchasesShow({ purchase, movements }) {
     const canReceive = permissions.includes('receive_purchases');
     const canCancel = permissions.includes('cancel_purchases');
     const canDelete = permissions.includes('delete_purchases');
+    const canViewDocuments = permissions.includes('view_purchases');
 
     const [confirmAction, setConfirmAction] = useState(null);
 
@@ -65,9 +66,21 @@ export default function PurchasesShow({ purchase, movements }) {
             <PageHeader
                 title={purchase.reference}
                 actions={
-                    <Button variant="ghost" href={route('purchases.index')}>
-                        {t('common.back')}
-                    </Button>
+                    <div className="flex flex-wrap items-center justify-end gap-2">
+                        {canViewDocuments && (
+                            <>
+                                <Button external variant="secondary" href={route('purchases.document', purchase.id)}>
+                                    {t('pages.purchases.download_document')}
+                                </Button>
+                                <Button external variant="secondary" href={route('purchases.document.print', purchase.id)} target="_blank" rel="noreferrer">
+                                    {t('pages.purchases.print_document')}
+                                </Button>
+                            </>
+                        )}
+                        <Button variant="ghost" href={route('purchases.index')}>
+                            {t('common.back')}
+                        </Button>
+                    </div>
                 }
             />
 
@@ -75,7 +88,7 @@ export default function PurchasesShow({ purchase, movements }) {
                 <Card>
                     <div className="flex flex-wrap items-center justify-between gap-4">
                         <div>
-                            <h3 className="heading-sm text-ink">{purchase.supplier?.name ?? 'â€”'}</h3>
+                            <h3 className="heading-sm text-ink">{purchase.supplier?.name ?? '—'}</h3>
                             <p className="mt-0.5 text-[13px] text-ink-mute">{t('pages.purchases.purchase')}</p>
                         </div>
                         <Badge status={statusTones[purchase.status]} label={t(`pages.purchases.status.${purchase.status}`)} />
@@ -84,11 +97,11 @@ export default function PurchasesShow({ purchase, movements }) {
                     <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
                         <div>
                             <div className="text-[12px] uppercase tracking-wide text-ink-mute">{t('pages.purchases.supplier')}</div>
-                            <div className="mt-1 text-[15px] text-ink">{purchase.supplier?.name ?? 'â€”'}</div>
+                            <div className="mt-1 text-[15px] text-ink">{purchase.supplier?.name ?? '—'}</div>
                         </div>
                         <div>
                             <div className="text-[12px] uppercase tracking-wide text-ink-mute">{t('pages.purchases.warehouse')}</div>
-                            <div className="mt-1 text-[15px] text-ink">{purchase.warehouse?.name ?? 'â€”'}</div>
+                            <div className="mt-1 text-[15px] text-ink">{purchase.warehouse?.name ?? '—'}</div>
                         </div>
                         <div>
                             <div className="text-[12px] uppercase tracking-wide text-ink-mute">{t('pages.purchases.date')}</div>
@@ -96,7 +109,7 @@ export default function PurchasesShow({ purchase, movements }) {
                         </div>
                         <div>
                             <div className="text-[12px] uppercase tracking-wide text-ink-mute">{t('pages.purchases.created_by')}</div>
-                            <div className="mt-1 text-[15px] text-ink">{purchase.user?.name ?? 'â€”'}</div>
+                            <div className="mt-1 text-[15px] text-ink">{purchase.user?.name ?? '—'}</div>
                         </div>
                     </div>
 
@@ -177,7 +190,7 @@ export default function PurchasesShow({ purchase, movements }) {
                                 {purchase.items.map((item) => (
                                     <tr key={item.id}>
                                         <td className="px-4 py-2.5 text-[14px] text-ink">
-                                            {item.product?.name ?? 'â€”'}
+                                            {item.product?.name ?? '—'}
                                             <span className="ms-1 text-[12px] text-ink-mute tabular">({item.product?.sku})</span>
                                         </td>
                                         <td className="px-4 py-2.5 text-end text-[14px] text-ink tabular">{fmtNumber(item.quantity)}</td>
@@ -201,7 +214,7 @@ export default function PurchasesShow({ purchase, movements }) {
                                     <td colSpan={5} className="px-4 py-2.5 text-end text-[13px] text-ink-mute">
                                         {t('pages.purchases.discount')}
                                     </td>
-                                    <td className="px-4 py-2.5 text-end text-[14px] text-ink tabular">âˆ’ {fmtMoney(purchase.discount)}</td>
+                                    <td className="px-4 py-2.5 text-end text-[14px] text-ink tabular">− {fmtMoney(purchase.discount)}</td>
                                 </tr>
                                 <tr>
                                     <td colSpan={5} className="px-4 py-2.5 text-end text-[13px] text-ink-mute">
@@ -245,13 +258,13 @@ export default function PurchasesShow({ purchase, movements }) {
                                     {movements.map((m) => (
                                         <tr key={m.id}>
                                             <td className="px-4 py-2.5 text-[14px] text-ink">
-                                                {m.product?.name ?? 'â€”'}
+                                            {m.product?.name ?? '—'}
                                                 <span className="ms-2">
                                                     <Badge status={movementTones[m.type]} label={t(`dashboard.movements.types.${m.type}`)} />
                                                 </span>
                                             </td>
                                             <td className="px-4 py-2.5 text-end text-[14px] text-success tabular">+ {fmtNumber(m.quantity)}</td>
-                                            <td className="px-4 py-2.5 text-[14px] text-ink">{m.warehouse?.name ?? 'â€”'}</td>
+                                            <td className="px-4 py-2.5 text-[14px] text-ink">{m.warehouse?.name ?? '—'}</td>
                                             <td className="px-4 py-2.5 text-end text-[14px] text-ink tabular">{fmtDateTime(m.created_at)}</td>
                                         </tr>
                                     ))}

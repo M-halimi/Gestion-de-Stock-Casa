@@ -4,7 +4,7 @@ import Card from '@/Components/ui/Card';
 import Input from '@/Components/ui/Input';
 import PageHeader from '@/Components/ui/PageHeader';
 import Select from '@/Components/ui/Select';
-import { IconBox, IconBuilding, IconNumber, IconTransfer } from '@/Components/ui/FormIcons';
+import { IconBox, IconBuilding, IconNote, IconNumber, IconTransfer } from '@/Components/ui/FormIcons';
 import { Head, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';

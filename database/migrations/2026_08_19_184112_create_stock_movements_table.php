@@ -20,6 +20,7 @@ return new class extends Migration
                 'transfer_out',
                 'production_in',
                 'production_out',
+                'initial_stock',
             ]);
             $table->decimal('quantity', 10, 3)->comment('Signed: positive = increase, negative = decrease');
             $table->string('reason')->nullable();

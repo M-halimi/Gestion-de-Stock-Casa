@@ -2,6 +2,20 @@
 
 namespace App\Providers;
 
+use App\Models\Category;
+use App\Models\Customer;
+use App\Models\InventoryAdjustment;
+use App\Models\Product;
+use App\Models\ProductionOrder;
+use App\Models\Purchase;
+use App\Models\Sale;
+use App\Models\Setting;
+use App\Models\StockMovement;
+use App\Models\Supplier;
+use App\Models\Unit;
+use App\Models\User;
+use App\Models\Warehouse;
+use App\Observers\AuditObserver;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -10,17 +24,11 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         Vite::prefetch(concurrency: 3);
@@ -30,5 +38,24 @@ class AppServiceProvider extends ServiceProvider
                 $request->ip().'|'.strtolower((string) $request->input('email'))
             );
         });
+
+        $auditableModels = [
+            Category::class,
+            Customer::class,
+            InventoryAdjustment::class,
+            Product::class,
+            ProductionOrder::class,
+            Purchase::class,
+            Sale::class,
+            Setting::class,
+            Supplier::class,
+            Unit::class,
+            User::class,
+            Warehouse::class,
+        ];
+
+        foreach ($auditableModels as $model) {
+            $model::observe(AuditObserver::class);
+        }
     }
 }

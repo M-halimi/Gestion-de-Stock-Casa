@@ -1,4 +1,4 @@
-{
+﻿{
     "app":  {
                 "name":  "Tailoring Stock Management"
             },
@@ -28,7 +28,7 @@
                    "details":  "Details",
                    "close":  "Close",
                    "choose_image":  "Choose image",
-                   "loading":  "Loadingâ€¦",
+                   "loading":  "Loading…",
                    "currency":  "DH",
                     "view":  "View",
                     "more":  "More"
@@ -47,11 +47,13 @@
                 "movements":  "Movements",
                 "inventory":  "Inventory",
                 "reports":  "Reports",
+                "audit_logs":  "Audit Logs",
                 "users":  "Users",
                 "settings":  "Settings",
                 "menu":  "Menu",
-                "production":  "Production",
-                "new_product":  "+ New product"
+                "production": "Production",
+                "imports": "Imports",
+                "new_product": "+ New product"
             },
     "topbar":  {
                    "search_placeholder":  "Global search…",
@@ -67,7 +69,7 @@
                                      "name":  "Name",
                                      "description":  "Description",
                                      "products_count":  "Products",
-                                     "search_placeholder":  "Search categoriesâ€¦"
+                                     "search_placeholder":  "Search categories…"
                                  },
                   "units":  {
                                 "title":  "Units",
@@ -77,7 +79,7 @@
                                 "name":  "Name",
                                 "abbreviation":  "Abbreviation",
                                 "products_count":  "Products",
-                                "search_placeholder":  "Search unitsâ€¦"
+                                "search_placeholder":  "Search units…"
                             },
                   "suppliers":  {
                                     "title":  "Suppliers",
@@ -90,7 +92,7 @@
                                     "email":  "Email",
                                     "address":  "Address",
                                     "purchases_count":  "Purchases",
-                                    "search_placeholder":  "Search name, contact, emailâ€¦"
+                                    "search_placeholder":  "Search name, contact, email…"
                                 },
                   "customers":  {
                                     "title":  "Customers",
@@ -121,12 +123,12 @@
                                      "address":  "Address",
                                      "is_active":  "Active",
                                      "stocks_count":  "Stock lines",
-                                     "search_placeholder":  "Search name or codeâ€¦"
+                                     "search_placeholder":  "Search name or code…"
                                  },
                   "stock":  {
                                 "title":  "Stock",
                                 "subtitle":  "Stock levels by warehouse",
-                                "search_placeholder":  "Search name or SKUâ€¦",
+                                "search_placeholder":  "Search name or SKU…",
                                 "filter_warehouse":  "All warehouses",
                                 "filter_status":  "All statuses",
                                 "low":  "Low stock",
@@ -158,15 +160,15 @@
                                    "total_stock":  "Total stock",
                                    "stock_by_warehouse":  "Stock by warehouse",
                                    "movements":  "Latest movements",
-                                   "search_placeholder":  "Search name, SKU, barcodeâ€¦",
+                                   "search_placeholder":  "Search name, SKU, barcode…",
                                    "filter_category":  "All categories",
                                    "filter_status":  "All statuses",
                                    "no_products":  "No products",
                                    "no_products_description":  "No products match your search.",
-                                   "image_hint":  "JPG, PNG or WebP â€” 2 MB max",
+                                   "image_hint":  "JPG, PNG or WebP — 2 MB max",
                                    "sku_hint":  "Leave empty for auto-generation",
-                                   "select_category":  "Choose a categoryâ€¦",
-                                   "select_unit":  "Choose a unitâ€¦",
+                                   "select_category":  "Choose a category…",
+                                   "select_unit":  "Choose a unit…",
                                    "warehouse":  "Warehouse",
                                    "quantity":  "Quantity",
                                    "type":  "Type",
@@ -300,6 +302,8 @@
                                     "add_item":  "Add item",
                                     "no_items":  "Add at least one item.",
                                     "receive_action":  "Receive",
+                                    "download_document":  "Download document",
+                                    "print_document":  "Print document",
                                     "cancel_action":  "Cancel",
                                     "confirm_receive_title":  "Receive this purchase?",
                                     "confirm_receive_message":  "Stock will be increased for every item. This action is irreversible.",
@@ -360,6 +364,8 @@
                                     "stock_available":  "Available stock",
                                     "all_warehouses":  "all warehouses",
                                     "confirm_action":  "Confirm",
+                                    "download_invoice":  "Download invoice",
+                                    "print_invoice":  "Print invoice",
                                     "cancel_action":  "Cancel",
                                     "confirm_confirm_title":  "Confirm this sale?",
                                     "confirm_confirm_message":  "Stock will be decreased for every item. This action is irreversible.",
@@ -421,6 +427,7 @@
                                     "title":  "Inventory",
                                     "subtitle":  "Physical stock counting per warehouse",
                                     "create_action":  "New count",
+                                    "export_action":  "Export inventory",
                                     "create_title":  "New count",
                                     "create_subtitle":  "Choose the warehouse to count",
                                     "create_hint":  "The draft lists every active product with its system stock. Enter counted quantities then validate.",
@@ -525,6 +532,252 @@
                     "currency_code":  "Currency code",
                     "currency_symbol":  "Currency symbol",
                     "invoice_footer":  "Invoice footer"
+                },
+                "audit_logs": {
+                    "title": "Audit Logs",
+                    "subtitle": "Track all user actions and system events across your application",
+                    "section_title":  "Audit Findings",
+                    "search_placeholder":  "Search findings…",
+                    "export_csv":  "Export CSV",
+                    "new_rule":  "New Rule",
+                    "filter_severity":  "Severity",
+                    "filter_status":  "Status",
+                    "filter_category":  "Category",
+                    "filter_date":  "Date range",
+                    "all_severities":  "All severities",
+                    "all_statuses":  "All statuses",
+                    "all_categories":  "All categories",
+                    "severity_critical":  "Critical",
+                    "severity_high":  "High",
+                    "severity_medium":  "Medium",
+                    "severity_low":  "Low",
+                    "status_open":  "Open",
+                    "status_in_progress":  "In Progress",
+                    "status_fixed":  "Fixed",
+                    "status_ignored":  "Ignored",
+                    "cat_security":  "Security",
+                    "cat_performance":  "Performance",
+                    "cat_accessibility":  "Accessibility",
+                    "cat_seo":  "SEO",
+                    "cat_data":  "Data",
+                    "cat_auth":  "Auth",
+                    "col_select":  "Select",
+                    "col_finding":  "Finding",
+                    "col_severity":  "Severity",
+                    "col_status":  "Status",
+                    "col_assigned":  "Assigned to",
+                    "col_category":  "Category",
+                    "col_detected":  "Detected",
+                    "col_actions":  "Actions",
+                    "fix":  "Fix",
+                    "view_details":  "View details",
+                    "reassign":  "Reassign",
+                    "mark_fixed":  "Mark as fixed",
+                    "dismiss":  "Dismiss",
+                    "selected_count":  "{{count}} selected",
+                    "bulk_fix":  "Fix all",
+                    "bulk_ignore":  "Ignore",
+                    "bulk_export":  "Export",
+                    "showing_of":  "Showing {{from}} of {{total}} findings",
+                    "fixed_vs_open":  "Fixed vs Open",
+                    "fixed":  "Fixed",
+                    "open":  "Open",
+                    "in_progress":  "In Progress",
+                    "empty_title":  "No findings found",
+                    "empty_desc":  "No audit findings match your current filters. Try adjusting your search criteria.",
+                    "details_title":  "Finding Details",
+                    "description":  "Description",
+                    "suggested_fix":  "Suggested Fix",
+                    "old_values":  "Previous Values",
+                    "new_values":  "New Values",
+                    "ip_address":  "IP Address",
+                    "user_agent":  "User Agent",
+                    "close":  "Close",
+                    "created":  "Created",
+                    "updated":  "Updated",
+                    "deleted":  "Deleted",
+                    "restored":  "Restored",
+                    "login":  "Login",
+                    "logout":  "Logout",
+                    "failed_login":  "Failed Login",
+                    "transfer":  "Transfer",
+                    "other":  "Other",
+                    "system":  "System",
+                    "column_date":  "Date",
+                    "column_user":  "User",
+                    "column_action":  "Action",
+                    "column_module":  "Module",
+                    "column_description":  "Description",
+                    "column_record":  "Record",
+                    "from":  "From",
+                    "to":  "To",
+                    "apply":  "Apply",
+                    "reset":  "Reset",
+                    "showing":  "Showing {{from}}–{{to}} of {{total}}",
+                    "no_logs":  "No audit logs found",
+                    "no_logs_description":  "No records match your filters.",
+                    "field_user":  "User",
+                    "field_datetime":  "Date & Time",
+                    "field_action":  "Action",
+                    "field_module":  "Module",
+                    "field_record":  "Record",
+                    "field_ip":  "IP Address",
+                    "field_description":  "Description",
+                    "field_user_agent":  "User Agent",
+                    "details_title_modal":  "Log Details",
+                    "action_created":  "Created",
+                    "action_updated":  "Updated",
+                    "action_deleted":  "Deleted",
+                    "action_restored":  "Restored",
+                    "action_login":  "Login",
+                    "action_logout":  "Logout",
+                    "action_failed_login":  "Failed Login",
+                    "action_transfer": "Transfer"
+                },
+                "imports": {
+                    "title": "Import Center",
+                    "subtitle": "Import your data from CSV or Excel files",
+                    "history": "Import History",
+                    "import_button": "Import",
+                    "download_template": "Template",
+                    "last_import": "Last import",
+                    "types": {
+                        "products": {
+                            "title": "Products",
+                            "description": "Import your product catalog with names, SKUs, prices and categories"
+                        },
+                        "customers": {
+                            "title": "Customers",
+                            "description": "Import your customer list with contact details"
+                        },
+                        "suppliers": {
+                            "title": "Suppliers",
+                            "description": "Import your supplier directory"
+                        },
+                        "categories": {
+                            "title": "Categories",
+                            "description": "Import product categories and families"
+                        },
+                        "units": {
+                            "title": "Units",
+                            "description": "Import measurement units for products"
+                        },
+                        "warehouses": {
+                            "title": "Warehouses",
+                            "description": "Import warehouse locations"
+                        },
+                        "initial_stock": {
+                            "title": "Initial Stock",
+                            "description": "Import initial stock quantities per warehouse"
+                        }
+                    },
+                    "status": {
+                        "pending": "Pending",
+                        "parsing": "Parsing",
+                        "parsed": "Parsed",
+                        "mapping": "Mapping",
+                        "importing": "Importing",
+                        "completed": "Completed",
+                        "failed": "Failed",
+                        "partially_completed": "Partial"
+                    },
+                    "wizard_title": "Import {{type}}",
+                    "steps": {
+                        "upload": "Upload",
+                        "mapping": "Mapping",
+                        "preview": "Preview",
+                        "import": "Import",
+                        "result": "Result"
+                    },
+                    "upload": {
+                        "drop_here": "Drop your file here or click to browse",
+                        "file_types": "Supports CSV, XLSX, XLS files",
+                        "select_file": "Select file"
+                    },
+                    "mapping": {
+                        "title": "Column Mapping",
+                        "subtitle": "Map the columns from your file to the database fields",
+                        "file_column": "File Column",
+                        "sample": "Sample Value",
+                        "maps_to": "Maps to",
+                        "skip": "— Skip (do not import) —",
+                        "preview_button": "Preview Data"
+                    },
+                    "preview": {
+                        "title": "Data Preview",
+                        "subtitle": "Review your data before importing",
+                        "total": "Total",
+                        "valid": "Valid",
+                        "errors": "Errors",
+                        "warnings": "Warnings",
+                        "status": "Status",
+                        "ok": "OK",
+                        "error": "Error",
+                        "warning": "Warning",
+                        "showing_first": "Showing first {{count}} rows",
+                        "continue": "Continue to Import"
+                    },
+                    "confirm": {
+                        "title": "Confirm Import",
+                        "subtitle": "Review and confirm your import",
+                        "ready_message": "{{count}} {{type}} rows are ready to import.",
+                        "has_errors": "{{count}} rows have errors and will be skipped.",
+                        "duplicate_strategy": "How to handle duplicates:",
+                        "strategy_skip": "Skip duplicates (keep existing data)",
+                        "strategy_update": "Update existing records with new data",
+                        "strategy_create_both": "Keep both (create new records)",
+                        "importing": "Importing...",
+                        "execute": "Start Import"
+                    },
+                    "result": {
+                        "title": "Import Complete",
+                        "success_title": "Import Successful",
+                        "success_message": "Your data has been imported successfully.",
+                        "imported": "Imported",
+                        "updated": "Updated",
+                        "skipped": "Skipped",
+                        "failed": "Failed",
+                        "error_details": "Error Details",
+                        "row": "Row",
+                        "error": "Error",
+                        "back_to_center": "Back to Import Center",
+                        "view_history": "View History"
+                    },
+                    "history_page": {
+                        "title": "Import History",
+                        "subtitle": "View all past import operations",
+                        "new_import": "New Import",
+                        "reference": "Reference",
+                        "type": "Type",
+                        "file": "File",
+                        "status": "Status",
+                        "rows": "Rows (Total / OK / Failed)",
+                        "created_by": "Created by",
+                        "date": "Date",
+                        "no_imports": "No imports yet",
+                        "no_imports_description": "Start your first import from the Import Center.",
+                        "view_errors": "View errors"
+                    },
+                    "errors_page": {
+                        "title": "Import Errors",
+                        "subtitle": "Details of rows that failed during import",
+                        "reference": "Reference",
+                        "type": "Type",
+                        "file": "File",
+                        "status": "Status",
+                        "date": "Date",
+                        "download_csv": "Download Errors CSV",
+                        "back_to_history": "Back to History",
+                        "row": "Row",
+                        "field": "Field",
+                        "value": "Value",
+                        "error_message": "Error Message",
+                        "no_errors": "No errors found",
+                        "no_errors_description": "This import completed without errors."
+                    },
+                    "errors": {
+                        "upload_failed": "File upload failed. Please try again."
+                    }
                 }
 },
     "users":  {
@@ -699,7 +952,7 @@
                                               "subtitle":  "Low or out of stock",
                                               "empty_title":  "Nothing to watch",
                                               "empty_description":  "All active products are above their minimum stock level.",
-                                              "search_placeholder":  "Search a productâ€¦",
+                                              "search_placeholder":  "Search a product…",
                                               "product":  "Product",
                                               "sku":  "SKU",
                                               "category":  "Category",

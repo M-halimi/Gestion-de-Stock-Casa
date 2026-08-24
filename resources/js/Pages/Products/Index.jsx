@@ -21,6 +21,8 @@ export default function ProductsIndex({ products, categories, filters }) {
     const canCreate = permissions.includes('create_products');
     const canEdit = permissions.includes('edit_products');
     const canDelete = permissions.includes('delete_products');
+    const canExport = permissions.includes('export_data');
+    const canImport = permissions.includes('import_data');
 
     const [deleteTarget, setDeleteTarget] = useState(null);
 
@@ -40,9 +42,34 @@ export default function ProductsIndex({ products, categories, filters }) {
                 title={t('pages.products.title')}
                 subtitle={t('pages.products.subtitle')}
                 actions={
-                    canCreate && (
-                        <Button href={route('products.create')}>{t('common.create')}</Button>
-                    )
+                    <div className="flex items-center gap-2">
+                        {canImport && (
+                            <Button
+                                variant="secondary"
+                                href={route('imports.create', 'products')}
+                            >
+                                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                                </svg>
+                                {t('common.import')}
+                            </Button>
+                        )}
+                        {canExport && (
+                            <Button
+                                variant="secondary"
+                                external
+                                href={route('exports.download', { type: 'products', ...filters })}
+                            >
+                                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                </svg>
+                                Exporter CSV
+                            </Button>
+                        )}
+                        {canCreate && (
+                            <Button href={route('products.create')}>{t('common.create')}</Button>
+                        )}
+                    </div>
                 }
             />
 

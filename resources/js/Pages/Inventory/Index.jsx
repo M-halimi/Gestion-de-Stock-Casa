@@ -16,6 +16,7 @@ export default function InventoryIndex({ adjustments, filters }) {
     const permissions = auth.user?.permissions ?? [];
     const canCreate = permissions.includes('view_inventory');
     const canValidate = permissions.includes('validate_inventory');
+    const canExport = permissions.includes('export_data');
 
     const handleFilter = (key, value) => {
         router.get(
@@ -33,9 +34,14 @@ export default function InventoryIndex({ adjustments, filters }) {
                 title={t('pages.inventory.title')}
                 subtitle={t('pages.inventory.subtitle')}
                 actions={
-                    canCreate && (
-                        <Button href={route('inventory.create')}>{t('pages.inventory.create_action')}</Button>
-                    )
+                    <div className="flex flex-wrap items-center gap-2">
+                        {canExport && (
+                            <Button external variant="secondary" href={route('exports.download', { type: 'inventory', ...filters })}>
+                                {t('pages.inventory.export_action')}
+                            </Button>
+                        )}
+                        {canCreate && <Button href={route('inventory.create')}>{t('pages.inventory.create_action')}</Button>}
+                    </div>
                 }
             />
 

@@ -95,6 +95,40 @@ class PurchaseModuleTest extends TestCase
             ->assertOk();
     }
 
+    public function test_admin_can_download_and_print_purchase_document(): void
+    {
+        $purchase = $this->createPurchase();
+
+        $response = $this->actingAs($this->admin)
+            ->get(route('purchases.document', $purchase))
+            ->assertOk()
+            ->assertHeader('Content-Type', 'application/pdf');
+        $this->assertStringContainsString('bon-commande-' . $purchase->reference . '.pdf', $response->headers->get('Content-Disposition'));
+
+        $this->actingAs($this->admin)
+            ->get(route('purchases.document.print', $purchase))
+            ->assertOk()
+            ->assertHeader('Content-Type', 'text/html; charset=UTF-8')
+            ->assertSee($purchase->reference)
+            ->assertSee('Tissu test');
+
+        $this->assertDatabaseHas('audit_logs', [
+            'action' => 'purchase_document_downloaded',
+            'entity_type' => 'Purchase',
+            'entity_id' => $purchase->id,
+        ]);
+    }
+
+    public function test_employee_cannot_download_purchase_document(): void
+    {
+        $purchase = $this->createPurchase();
+        $employee = User::where('email', 'employee@demo.com')->firstOrFail();
+
+        $this->actingAs($employee)
+            ->get(route('purchases.document', $purchase))
+            ->assertForbidden();
+    }
+
     public function test_employee_cannot_access_purchases(): void
     {
         $employee = User::where('email', 'employee@demo.com')->firstOrFail();

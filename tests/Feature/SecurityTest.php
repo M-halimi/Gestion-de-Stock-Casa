@@ -49,23 +49,15 @@ class SecurityTest extends TestCase
         ])->assertStatus(429);
     }
 
-    public function test_register_is_rate_limited(): void
+    public function test_public_registration_is_disabled(): void
     {
-        for ($i = 0; $i < 5; $i++) {
-            $this->post('/register', [
-                'name' => 'Test User',
-                'email' => 'test@example.com',
-                'password' => 'password',
-                'password_confirmation' => 'password',
-            ]);
-        }
-
+        $this->get('/register')->assertNotFound();
         $this->post('/register', [
             'name' => 'Test User',
             'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ])->assertStatus(429);
+            'password' => 'A-strong-password-123!',
+            'password_confirmation' => 'A-strong-password-123!',
+        ])->assertNotFound();
     }
 
     public function test_forgot_password_is_rate_limited(): void

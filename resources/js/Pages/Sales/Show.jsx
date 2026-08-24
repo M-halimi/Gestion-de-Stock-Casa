@@ -27,6 +27,7 @@ export default function SalesShow({ sale, movements }) {
     const canConfirm = permissions.includes('confirm_sales');
     const canCancel = permissions.includes('cancel_sales');
     const canDelete = permissions.includes('delete_sales');
+    const canViewDocuments = permissions.includes('view_sales');
 
     const [confirmAction, setConfirmAction] = useState(null);
 
@@ -65,9 +66,21 @@ export default function SalesShow({ sale, movements }) {
             <PageHeader
                 title={sale.reference}
                 actions={
-                    <Button variant="ghost" href={route('sales.index')}>
-                        {t('common.back')}
-                    </Button>
+                    <div className="flex flex-wrap items-center justify-end gap-2">
+                        {canViewDocuments && (
+                            <>
+                                <Button external variant="secondary" href={route('sales.invoice', sale.id)}>
+                                    {t('pages.sales.download_invoice')}
+                                </Button>
+                                <Button external variant="secondary" href={route('sales.invoice.print', sale.id)} target="_blank" rel="noreferrer">
+                                    {t('pages.sales.print_invoice')}
+                                </Button>
+                            </>
+                        )}
+                        <Button variant="ghost" href={route('sales.index')}>
+                            {t('common.back')}
+                        </Button>
+                    </div>
                 }
             />
 
@@ -75,7 +88,7 @@ export default function SalesShow({ sale, movements }) {
                 <Card>
                     <div className="flex flex-wrap items-center justify-between gap-4">
                         <div>
-                            <h3 className="heading-sm text-ink">{sale.customer?.name ?? 'â€”'}</h3>
+                            <h3 className="heading-sm text-ink">{sale.customer?.name ?? '—'}</h3>
                             <p className="mt-0.5 text-[13px] text-ink-mute">{t('pages.sales.sale')}</p>
                         </div>
                         <Badge status={statusTones[sale.status]} label={t(`pages.sales.status.${sale.status}`)} />
@@ -84,11 +97,11 @@ export default function SalesShow({ sale, movements }) {
                     <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
                         <div>
                             <div className="text-[12px] uppercase tracking-wide text-ink-mute">{t('pages.sales.customer')}</div>
-                            <div className="mt-1 text-[15px] text-ink">{sale.customer?.name ?? 'â€”'}</div>
+                            <div className="mt-1 text-[15px] text-ink">{sale.customer?.name ?? '—'}</div>
                         </div>
                         <div>
                             <div className="text-[12px] uppercase tracking-wide text-ink-mute">{t('pages.sales.warehouse')}</div>
-                            <div className="mt-1 text-[15px] text-ink">{sale.warehouse?.name ?? 'â€”'}</div>
+                            <div className="mt-1 text-[15px] text-ink">{sale.warehouse?.name ?? '—'}</div>
                         </div>
                         <div>
                             <div className="text-[12px] uppercase tracking-wide text-ink-mute">{t('pages.sales.date')}</div>
@@ -96,7 +109,7 @@ export default function SalesShow({ sale, movements }) {
                         </div>
                         <div>
                             <div className="text-[12px] uppercase tracking-wide text-ink-mute">{t('pages.sales.created_by')}</div>
-                            <div className="mt-1 text-[15px] text-ink">{sale.user?.name ?? 'â€”'}</div>
+                            <div className="mt-1 text-[15px] text-ink">{sale.user?.name ?? '—'}</div>
                         </div>
                     </div>
 
@@ -177,7 +190,7 @@ export default function SalesShow({ sale, movements }) {
                                 {sale.items.map((item) => (
                                     <tr key={item.id}>
                                         <td className="px-4 py-2.5 text-[14px] text-ink">
-                                            {item.product?.name ?? 'â€”'}
+                                            {item.product?.name ?? '—'}
                                             <span className="ms-1 text-[12px] text-ink-mute tabular">({item.product?.sku})</span>
                                         </td>
                                         <td className="px-4 py-2.5 text-end text-[14px] text-ink tabular">{fmtNumber(item.quantity)}</td>
@@ -201,7 +214,7 @@ export default function SalesShow({ sale, movements }) {
                                     <td colSpan={5} className="px-4 py-2.5 text-end text-[13px] text-ink-mute">
                                         {t('pages.sales.discount')}
                                     </td>
-                                    <td className="px-4 py-2.5 text-end text-[14px] text-ink tabular">âˆ’ {fmtMoney(sale.discount)}</td>
+                                    <td className="px-4 py-2.5 text-end text-[14px] text-ink tabular">− {fmtMoney(sale.discount)}</td>
                                 </tr>
                                 <tr>
                                     <td colSpan={5} className="px-4 py-2.5 text-end text-[13px] text-ink-mute">
@@ -245,13 +258,13 @@ export default function SalesShow({ sale, movements }) {
                                     {movements.map((m) => (
                                         <tr key={m.id}>
                                             <td className="px-4 py-2.5 text-[14px] text-ink">
-                                                {m.product?.name ?? 'â€”'}
+                                                {m.product?.name ?? '—'}
                                                 <span className="ms-2">
                                                     <Badge status={movementTones[m.type]} label={t(`dashboard.movements.types.${m.type}`)} />
                                                 </span>
                                             </td>
-                                            <td className="px-4 py-2.5 text-end text-[14px] text-destructive tabular">âˆ’ {fmtNumber(m.quantity)}</td>
-                                            <td className="px-4 py-2.5 text-[14px] text-ink">{m.warehouse?.name ?? 'â€”'}</td>
+                                            <td className="px-4 py-2.5 text-end text-[14px] text-destructive tabular">− {fmtNumber(m.quantity)}</td>
+                                            <td className="px-4 py-2.5 text-[14px] text-ink">{m.warehouse?.name ?? '—'}</td>
                                             <td className="px-4 py-2.5 text-end text-[14px] text-ink tabular">{fmtDateTime(m.created_at)}</td>
                                         </tr>
                                     ))}

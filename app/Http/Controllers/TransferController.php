@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Warehouse;
+use App\Services\AuditLogger;
 use App\Services\InsufficientStockException;
 use App\Services\StockService;
 use Illuminate\Http\RedirectResponse;
@@ -45,6 +46,13 @@ class TransferController extends Controller
                 (float) $data['quantity'],
                 $data['reason'] ?? 'Transfert entre entrepôts',
                 auth()->id(),
+            );
+
+            AuditLogger::action(
+                'transfer',
+                'StockMovement',
+                null,
+                "Transferred {$data['quantity']} units of product #{$data['product_id']} from warehouse #{$data['from_warehouse_id']} to warehouse #{$data['to_warehouse_id']}",
             );
         } catch (InsufficientStockException) {
             return back()

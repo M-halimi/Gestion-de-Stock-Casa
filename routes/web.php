@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TransferController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ImportController;
 use App\Http\Controllers\WarehouseController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -25,7 +27,6 @@ use Inertia\Inertia;
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
     ]);
 });
 
@@ -123,6 +124,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/purchases/create', 'create')->middleware('permission:create_purchases')->name('purchases.create');
         Route::post('/purchases', 'store')->middleware('permission:create_purchases')->name('purchases.store');
         Route::get('/purchases/{purchase}', 'show')->middleware('permission:view_purchases')->name('purchases.show');
+        Route::get('/purchases/{purchase}/document', 'document')->middleware('permission:view_purchases')->name('purchases.document');
+        Route::get('/purchases/{purchase}/document/print', 'documentPrint')->middleware('permission:view_purchases')->name('purchases.document.print');
         Route::get('/purchases/{purchase}/edit', 'edit')->middleware('permission:edit_purchases')->name('purchases.edit');
         Route::put('/purchases/{purchase}', 'update')->middleware('permission:edit_purchases')->name('purchases.update');
         Route::delete('/purchases/{purchase}', 'destroy')->middleware('permission:delete_purchases')->name('purchases.destroy');
@@ -135,6 +138,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/sales/create', 'create')->middleware('permission:create_sales')->name('sales.create');
         Route::post('/sales', 'store')->middleware('permission:create_sales')->name('sales.store');
         Route::get('/sales/{sale}', 'show')->middleware('permission:view_sales')->name('sales.show');
+        Route::get('/sales/{sale}/invoice', 'invoice')->middleware('permission:view_sales')->name('sales.invoice');
+        Route::get('/sales/{sale}/invoice/print', 'invoicePrint')->middleware('permission:view_sales')->name('sales.invoice.print');
         Route::get('/sales/{sale}/edit', 'edit')->middleware('permission:edit_sales')->name('sales.edit');
         Route::put('/sales/{sale}', 'update')->middleware('permission:edit_sales')->name('sales.update');
         Route::delete('/sales/{sale}', 'destroy')->middleware('permission:delete_sales')->name('sales.destroy');
@@ -165,6 +170,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/reports/export', 'export')->middleware('permission:view_reports')->name('reports.export');
     });
 
+    Route::controller(AuditLogController::class)->middleware(['verified', 'role:Admin'])->group(function () {
+        Route::get('/admin/audit-logs', 'index')->middleware('permission:view_audit_logs')->name('audit-logs.index');
+    });
+
     Route::controller(UserController::class)->middleware(['verified', 'role:Admin'])->group(function () {
         Route::get('/users', 'index')->middleware('permission:view_users')->name('users.index');
         Route::get('/users/create', 'create')->middleware('permission:manage_users')->name('users.create');
@@ -177,6 +186,21 @@ Route::middleware('auth')->group(function () {
     Route::controller(SettingsController::class)->middleware(['verified', 'role:Admin'])->group(function () {
         Route::get('/settings', 'edit')->middleware('permission:manage_users')->name('settings.index');
         Route::put('/settings', 'update')->middleware('permission:manage_users')->name('settings.update');
+    });
+
+    // Import/Export
+    Route::middleware(['verified'])->group(function () {
+        Route::get('/imports', [ImportController::class, 'index'])->name('imports.index')->middleware('permission:import_data');
+        Route::get('/imports/create/{type}', [ImportController::class, 'create'])->name('imports.create')->middleware('permission:import_data');
+        Route::post('/imports/upload', [ImportController::class, 'upload'])->name('imports.upload')->middleware('permission:import_data');
+        Route::get('/imports/{import}/parse', [ImportController::class, 'parse'])->name('imports.parse')->middleware('permission:import_data');
+        Route::post('/imports/{import}/preview', [ImportController::class, 'preview'])->name('imports.preview')->middleware('permission:import_data');
+        Route::post('/imports/{import}/execute', [ImportController::class, 'execute'])->name('imports.execute')->middleware('permission:import_data');
+        Route::get('/imports/history', [ImportController::class, 'history'])->name('imports.history')->middleware('permission:import_data');
+        Route::get('/imports/{import}/errors', [ImportController::class, 'errors'])->name('imports.errors')->middleware('permission:import_data');
+        Route::get('/imports/{import}/errors/csv', [ImportController::class, 'downloadErrors'])->name('imports.errors.csv')->middleware('permission:import_data');
+        Route::get('/imports/template/{type}', [ImportController::class, 'downloadTemplate'])->name('imports.template')->middleware('permission:import_data');
+        Route::get('/exports/{type}', [ImportController::class, 'export'])->name('exports.download')->middleware('permission:export_data');
     });
 });
 

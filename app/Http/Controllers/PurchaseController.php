@@ -9,8 +9,11 @@ use App\Models\Purchase;
 use App\Models\Supplier;
 use App\Models\Warehouse;
 use App\Services\PurchaseService;
+use App\Services\AuditLogger;
+use App\Services\DocumentService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 use InvalidArgumentException;
@@ -72,6 +75,23 @@ class PurchaseController extends Controller
                     'created_at' => $m->created_at->toDateTimeString(),
                 ]),
         ]);
+    }
+
+    public function document(Purchase $purchase, DocumentService $documents)
+    {
+        $response = $documents->downloadPurchaseDocument($purchase);
+
+        AuditLogger::action('purchase_document_downloaded', 'Purchase', $purchase->id, "Purchase document \"{$purchase->reference}\" downloaded");
+
+        return $response;
+    }
+
+    public function documentPrint(Purchase $purchase, DocumentService $documents): SymfonyResponse
+    {
+        AuditLogger::action('purchase_document_printed', 'Purchase', $purchase->id, "Purchase document \"{$purchase->reference}\" opened for printing");
+
+        return response($documents->printPurchaseDocument($purchase)->render())
+            ->header('Content-Type', 'text/html; charset=UTF-8');
     }
 
     public function edit(Purchase $purchase): Response

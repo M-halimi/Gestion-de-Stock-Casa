@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Warehouse;
+use App\Services\AuditLogger;
 use App\Services\ReportService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -13,6 +14,12 @@ class ReportController extends Controller
 {
     public function index(Request $request): Response
     {
+        $request->validate([
+            'from' => ['nullable', 'date'],
+            'to' => ['nullable', 'date', 'after_or_equal:from'],
+            'warehouse_id' => ['nullable', 'integer'],
+        ]);
+
         $type = $request->string('type', 'stock')->toString();
         if (! in_array($type, app(ReportService::class)->types(), true)) {
             $type = 'stock';
@@ -37,10 +44,20 @@ class ReportController extends Controller
 
     public function export(Request $request): SymfonyResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'type' => ['required', 'in:stock,purchases,sales,movements'],
             'format' => ['required', 'in:csv,pdf'],
+            'from' => ['nullable', 'date'],
+            'to' => ['nullable', 'date', 'after_or_equal:from'],
+            'warehouse_id' => ['nullable', 'integer'],
         ]);
+
+        AuditLogger::log(
+            action: 'report_exported',
+            entityType: 'Report',
+            description: "Exported {$validated['type']} report as {$validated['format']}",
+            newValues: $request->only(['from', 'to', 'warehouse_id']),
+        );
 
         return app(ReportService::class)->export(
             $request->string('type')->toString(),

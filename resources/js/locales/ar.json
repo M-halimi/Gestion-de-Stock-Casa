@@ -1,4 +1,4 @@
-{
+﻿{
     "app":  {
                 "name":  "إدارة مخزون الخياطة"
             },
@@ -47,10 +47,12 @@
                 "movements":  "الحركات",
                 "inventory":  "الجرد",
                 "reports":  "التقارير",
+                "audit_logs":  "سجل التدقيق",
                 "users":  "المستخدمون",
                 "settings":  "الإعدادات",
                 "menu":  "القائمة",
                 "production":  "الإنتاج",
+                "imports":  "الاستيراد",
                 "new_product":  "+ منتج جديد"
             },
     "topbar":  {
@@ -255,7 +257,7 @@
                                                     "movement_type":  "النوع",
                                                     "movement_quantity":  "الكمية",
                                                     "movement_warehouse":  "المستودع",
-"movement_date":  "التاريخ"
+                                                    "movement_date":  "التاريخ"
                                                 }
                                  },
                 "purchases":  {
@@ -300,6 +302,8 @@
                                     "add_item":  "إضافة صنف",
                                     "no_items":  "أضف صنفًا واحدًا على الأقل.",
                                     "receive_action":  "استلام",
+                                    "download_document":  "تحميل المستند",
+                                    "print_document":  "طباعة المستند",
                                     "cancel_action":  "إلغاء",
                                     "confirm_receive_title":  "استلام هذا الشراء؟",
                                     "confirm_receive_message":  "سيتم زيادة المخزون لكل صنف. هذا الإجراء لا رجعة فيه.",
@@ -360,6 +364,8 @@
                                     "stock_available":  "المخزون المتاح",
                                     "all_warehouses":  "كل المستودعات",
                                     "confirm_action":  "تأكيد",
+                                    "download_invoice":  "تحميل الفاتورة",
+                                    "print_invoice":  "طباعة الفاتورة",
                                     "cancel_action":  "إلغاء",
                                     "confirm_confirm_title":  "تأكيد هذا البيع؟",
                                     "confirm_confirm_message":  "سيتم خصم المخزون لكل صنف. هذا الإجراء لا رجعة فيه.",
@@ -421,6 +427,7 @@
                                     "title":  "الجرد",
                                     "subtitle":  "العد الفيزيائي للمخزون حسب المستودع",
                                     "create_action":  "عدّ جديد",
+                                    "export_action":  "تصدير الجرد",
                                     "create_title":  "عدّ جديد",
                                     "create_subtitle":  "اختر المستودع المراد جرده",
                                     "create_hint":  "تدرج المسودة كل المنتجات النشطة مع مخزونها النظامي. أدخل الكميات المعدودة ثم قم بالتحقق.",
@@ -525,7 +532,254 @@
                     "currency_code":  "العملة",
                     "currency_symbol":  "رمز العملة",
                     "invoice_footer":  "تذييل (المستندات)"
+                },
+                "audit_logs":  {
+                    "title":  "سجل التدقيق",
+                    "subtitle":  "تتبع جميع إجراءات المستخدمين والأحداث النظامية في تطبيقك",
+                    "section_title":  "نتائج التدقيق",
+                    "search_placeholder":  "البحث في النتائج…",
+                    "export_csv":  "تصدير CSV",
+                    "new_rule":  "قاعدة جديدة",
+                    "filter_severity":  "الخطورة",
+                    "filter_status":  "الحالة",
+                    "filter_category":  "الفئة",
+                    "filter_date":  "النطاق الزمني",
+                    "all_severities":  "جميع الخطورات",
+                    "all_statuses":  "جميع الحالات",
+                    "all_categories":  "جميع الفئات",
+                    "severity_critical":  "حرج",
+                    "severity_high":  "عالي",
+                    "severity_medium":  "متوسط",
+                    "severity_low":  "منخفض",
+                    "status_open":  "مفتوح",
+                    "status_in_progress":  "قيد التنفيذ",
+                    "status_fixed":  "تم الإصلاح",
+                    "status_ignored":  "تم تجاهله",
+                    "cat_security":  "الأمان",
+                    "cat_performance":  "الأداء",
+                    "cat_accessibility":  "إمكانية الوصول",
+                    "cat_seo":  "SEO",
+                    "cat_data":  "البيانات",
+                    "cat_auth":  "المصادقة",
+                    "col_select":  "تحديد",
+                    "col_finding":  "النتيجة",
+                    "col_severity":  "الخطورة",
+                    "col_status":  "الحالة",
+                    "col_assigned":  "مسؤول",
+                    "col_category":  "الفئة",
+                    "col_detected":  "تاريخ الاكتشاف",
+                    "col_actions":  "الإجراءات",
+                    "fix":  "إصلاح",
+                    "view_details":  "عرض التفاصيل",
+                    "reassign":  "إعادة تعيين",
+                    "mark_fixed":  "تحديد كمُصلح",
+                    "dismiss":  "تجاهل",
+                    "selected_count":  "{{count}} محدد",
+                    "bulk_fix":  "إصلاح الكل",
+                    "bulk_ignore":  "تجاهل",
+                    "bulk_export":  "تصدير",
+                    "showing_of":  "عرض {{from}} من {{total}} نتيجة",
+                    "fixed_vs_open":  "المُصلحة vs المفتوحة",
+                    "fixed":  "مُصلحة",
+                    "open":  "مفتوح",
+                    "in_progress":  "قيد التنفيذ",
+                    "empty_title":  "لم يتم العثور على نتائج",
+                    "empty_desc":  "لا توجد نتائج تدقيق تطابق عوامل التصفية الحالية. حاول تعديل معايير البحث.",
+                    "details_title":  "تفاصيل النتيجة",
+                    "description":  "الوصف",
+                    "suggested_fix":  "الإصلاح المقترح",
+                    "old_values":  "القيم السابقة",
+                    "new_values":  "القيم الجديدة",
+                    "ip_address":  "عنوان IP",
+                    "user_agent":  "وكيل المستخدم",
+                    "close":  "إغلاق",
+                    "created":  "تم الإنشاء",
+                    "updated":  "تم التحديث",
+                    "deleted":  "تم الحذف",
+                    "restored":  "تمت الاستعادة",
+                    "login":  "تسجيل الدخول",
+                    "logout":  "تسجيل الخروج",
+                    "failed_login":  "فشل تسجيل الدخول",
+                    "transfer":  "تحويل",
+                    "other":  "أخرى",
+                    "system":  "النظام",
+                    "column_date":  "التاريخ",
+                    "column_user":  "المستخدم",
+                    "column_action":  "الإجراء",
+                    "column_module":  "الوحدة",
+                    "column_description":  "الوصف",
+                    "column_record":  "السجل",
+                    "from":  "من",
+                    "to":  "إلى",
+                    "apply":  "تطبيق",
+                    "reset":  "إعادة تعيين",
+                    "showing":  "عرض {{from}}–{{to}} من {{total}}",
+                    "no_logs":  "لم يتم العثور على سجلات",
+                    "no_logs_description":  "لا توجد سجلات تطابق عوامل التصفية.",
+                    "field_user":  "المستخدم",
+                    "field_datetime":  "التاريخ والوقت",
+                    "field_action":  "الإجراء",
+                    "field_module":  "الوحدة",
+                    "field_record":  "السجل",
+                    "field_ip":  "عنوان IP",
+                    "field_description":  "الوصف",
+                    "field_user_agent":  "وكيل المستخدم",
+                    "details_title_modal":  "تفاصيل السجل",
+                    "action_created":  "تم الإنشاء",
+                    "action_updated":  "تم التحديث",
+                    "action_deleted":  "تم الحذف",
+                    "action_restored":  "تمت الاستعادة",
+                    "action_login":  "تسجيل الدخول",
+                    "action_logout":  "تسجيل الخروج",
+                    "action_failed_login":  "فشل تسجيل الدخول",
+                    "action_transfer":  "تحويل"
+                },
+                "imports": {
+                    "title": "مركز الاستيراد",
+                    "subtitle": "استيراد بياناتك من ملفات CSV أو Excel",
+                    "history": "سجل الاستيراد",
+                    "import_button": "استيراد",
+                    "download_template": "النموذج",
+                    "last_import": "آخر استيراد",
+                    "types": {
+                        "products": {
+                            "title": "المنتجات",
+                            "description": "استيراد كتالوج المنتجات مع الأسماء والرموز والأسعار والفئات"
+                        },
+                        "customers": {
+                            "title": "العملاء",
+                            "description": "استيراد قائمة العملاء مع بيانات الاتصال"
+                        },
+                        "suppliers": {
+                            "title": "الموردون",
+                            "description": "استيراد دليل الموردين"
+                        },
+                        "categories": {
+                            "title": "الفئات",
+                            "description": "استيراد فئات المنتجات والعائلات"
+                        },
+                        "units": {
+                            "title": "الوحدات",
+                            "description": "استيراد وحدات قياس المنتجات"
+                        },
+                        "warehouses": {
+                            "title": "المستودعات",
+                            "description": "استيراد مواقع التخزين"
+                        },
+                        "initial_stock": {
+                            "title": "المخزون الأولي",
+                            "description": "استيراد كميات المخزون الأولي لكل مستودع"
+                        }
+                    },
+                    "status": {
+                        "pending": "قيد الانتظار",
+                        "parsing": "جارٍ التحليل",
+                        "parsed": "تم التحليل",
+                        "mapping": "التوطين",
+                        "importing": "جارٍ الاستيراد",
+                        "completed": "مكتمل",
+                        "failed": "فشل",
+                        "partially_completed": "جزئي"
+                    },
+                    "wizard_title": "استيراد {{type}}",
+                    "steps": {
+                        "upload": "الملف",
+                        "mapping": "التوطين",
+                        "preview": "معاينة",
+                        "import": "استيراد",
+                        "result": "النتيجة"
+                    },
+                    "upload": {
+                        "drop_here": "أسقط ملفك هنا أو انقر للتصفح",
+                        "file_types": "يدعم ملفات CSV و XLSX و XLS",
+                        "select_file": "اختر ملفًا"
+                    },
+                    "mapping": {
+                        "title": "توطين الأعمدة",
+                        "subtitle": "ربط أعمدة ملفك بحقوق قاعدة البيانات",
+                        "file_column": "عمود الملف",
+                        "sample": "قيمة نموذجية",
+                        "maps_to": "يربط بـ",
+                        "skip": "— تجاهل (عدم الاستيراد) —",
+                        "preview_button": "معاينة البيانات"
+                    },
+                    "preview": {
+                        "title": "معاينة البيانات",
+                        "subtitle": "راجع بياناتك قبل الاستيراد",
+                        "total": "المجموع",
+                        "valid": "صالحة",
+                        "errors": "أخطاء",
+                        "warnings": "تنبيهات",
+                        "status": "الحالة",
+                        "ok": "جيد",
+                        "error": "خطأ",
+                        "warning": "تنبيه",
+                        "showing_first": "عرض أول {{count}} أسطر",
+                        "continue": "المتابعة للاستيراد"
+                    },
+                    "confirm": {
+                        "title": "تأكيد الاستيراد",
+                        "subtitle": "راجع وتأكد استيرادك",
+                        "ready_message": "{{count}} سطر من {{type}} جاهز للاستيراد.",
+                        "has_errors": "{{count}} سطر يحتوي على أخطاء وسيتم تجاهله.",
+                        "duplicate_strategy": "معالجة التكرارات:",
+                        "strategy_skip": "تجاهل التكرارات (الاحتفاظ بالبيانات الحالية)",
+                        "strategy_update": "تحديث السجلات الحالية بالبيانات الجديدة",
+                        "strategy_create_both": "الاحتفاظ بكليهما (إنشاء سجلات جديدة)",
+                        "importing": "جارٍ الاستيراد...",
+                        "execute": "بدء الاستيراد"
+                    },
+                    "result": {
+                        "title": "اكتمل الاستيراد",
+                        "success_title": "استيراد ناجح",
+                        "success_message": "تم استيراد بياناتك بنجاح.",
+                         "imported": "مستوردة",
+                         "updated": "تم التحديث",
+                        "skipped": "متجاهلة",
+                        "failed": "فاشلة",
+                        "error_details": "تفاصيل الأخطاء",
+                        "row": "سطر",
+                        "error": "خطأ",
+                        "back_to_center": "العودة لمركز الاستيراد",
+                        "view_history": "عرض السجل"
+                    },
+                    "history_page": {
+                        "title": "سجل الاستيراد",
+                        "subtitle": "عرض جميع عمليات الاستيراد السابقة",
+                        "new_import": "استيراد جديد",
+                        "reference": "المرجع",
+                        "type": "النوع",
+                        "file": "الملف",
+                        "status": "الحالة",
+                        "rows": "الأسطر (المجموع / ناجحة / فاشلة)",
+                        "created_by": "أنشأه",
+                        "date": "التاريخ",
+                        "no_imports": "لا توجد استيرادات",
+                        "no_imports_description": "ابدأ أول عملية استيراد من مركز الاستيراد.",
+                        "view_errors": "عرض الأخطاء"
+                    },
+                    "errors_page": {
+                        "title": "أخطاء الاستيراد",
+                        "subtitle": "تفاصيل الأسطر التي فشلت أثناء الاستيراد",
+                        "reference": "المرجع",
+                        "type": "النوع",
+                        "file": "الملف",
+                        "status": "الحالة",
+                        "date": "التاريخ",
+                        "download_csv": "تحميل الأخطاء CSV",
+                        "back_to_history": "العودة للسجل",
+                        "row": "سطر",
+                        "field": "الحقل",
+                        "value": "القيمة",
+                        "error_message": "رسالة الخطأ",
+                        "no_errors": "لم يتم العثور على أخطاء",
+                        "no_errors_description": "اكتمل هذا الاستيراد بدون أخطاء."
+                    },
+                    "errors": {
+                        "upload_failed": "فشل رفع الملف. يرجى المحاولة مرة أخرى."
+                    }
                 }
+
 },
     "users":  {
                     "title":  "المستخدمون",
@@ -598,7 +852,7 @@
                                      "order_completed":  "تم إنهاء الإنتاج. تم تحديث المخزون.",
                                      "order_cancelled":  "تم إلغاء الأمر.",
                                      "order_insufficient":  "المواد غير كافية في المستودع المحدد.",
-"order_bad_status":  "إجراء غير ممكن على أمر في هذه الحالة."
+                                     "order_bad_status":  "إجراء غير ممكن على أمر في هذه الحالة."
                                   },
                 "purchases":  {
                                     "created":  "تم إنشاء الشراء بنجاح.",
@@ -627,7 +881,7 @@
                                     "created":  "تم إنشاء العدّ. أدخل الكميات المعدودة.",
                                     "updated":  "تم حفظ المسودة.",
                                     "validated":  "تم التحقق من العدّ وتصحيح المخزون.",
-"bad_status":  "لا يمكن تنفيذ هذا الإجراء على عدّ في هذه الحالة."
+                                    "bad_status":  "لا يمكن تنفيذ هذا الإجراء على عدّ في هذه الحالة."
                                 },
                  "users":  {
                                     "created":  "تم إنشاء المستخدم بنجاح.",
@@ -751,7 +1005,7 @@
                                            "total":  "المجموع",
                                            "status":  "الحالة"
                                        },
-"status":  {
+                      "status":  {
                                       "paid":  "مدفوعة",
                                       "partial":  "جزئية",
                                       "confirmed":  "مؤكدة",

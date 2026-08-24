@@ -9,9 +9,12 @@ use App\Models\Product;
 use App\Models\Sale;
 use App\Models\Warehouse;
 use App\Services\InsufficientStockException;
+use App\Services\AuditLogger;
+use App\Services\DocumentService;
 use App\Services\SaleService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 use InvalidArgumentException;
@@ -73,6 +76,23 @@ class SaleController extends Controller
                     'created_at' => $m->created_at->toDateTimeString(),
                 ]),
         ]);
+    }
+
+    public function invoice(Sale $sale, DocumentService $documents)
+    {
+        $response = $documents->downloadSaleInvoice($sale);
+
+        AuditLogger::action('invoice_downloaded', 'Sale', $sale->id, "Invoice for sale \"{$sale->reference}\" downloaded");
+
+        return $response;
+    }
+
+    public function invoicePrint(Sale $sale, DocumentService $documents): SymfonyResponse
+    {
+        AuditLogger::action('invoice_printed', 'Sale', $sale->id, "Invoice for sale \"{$sale->reference}\" opened for printing");
+
+        return response($documents->printSaleInvoice($sale)->render())
+            ->header('Content-Type', 'text/html; charset=UTF-8');
     }
 
     public function edit(Sale $sale): Response

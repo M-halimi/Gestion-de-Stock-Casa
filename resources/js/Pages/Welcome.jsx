@@ -14,10 +14,9 @@ const features = [
     { key: 'analytics', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
 ];
 
-export default function Welcome({ canLogin, canRegister }) {
+export default function Welcome({ canLogin }) {
     const { t } = useTranslation();
     const { auth } = usePage().props;
-    const [tab, setTab] = useState('login');
     const [slide, setSlide] = useState(0);
 
     const {
@@ -33,20 +32,6 @@ export default function Welcome({ canLogin, canRegister }) {
         remember: false,
     });
 
-    const {
-        data: registerData,
-        setData: setRegisterData,
-        post: postRegister,
-        processing: registerProcessing,
-        errors: registerErrors,
-        reset: resetRegister,
-    } = useForm({
-        name: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
-    });
-
     useEffect(() => {
         const interval = setInterval(() => {
             setSlide((s) => (s + 1) % features.length);
@@ -58,13 +43,6 @@ export default function Welcome({ canLogin, canRegister }) {
         e.preventDefault();
         postLogin(route('login'), {
             onFinish: () => resetLogin('password'),
-        });
-    };
-
-    const submitRegister = (e) => {
-        e.preventDefault();
-        postRegister(route('register'), {
-            onFinish: () => resetRegister('password', 'password_confirmation'),
         });
     };
 
@@ -176,35 +154,8 @@ export default function Welcome({ canLogin, canRegister }) {
                             </span>
                         </div>
 
-                        {/* Tab switcher */}
-                        <div className="mb-8">
-                            <div className="flex rounded-lg bg-canvas-soft p-1">
-                                <button
-                                    onClick={() => setTab('login')}
-                                    className={`flex-1 rounded-md py-2.5 text-sm font-medium transition-all duration-200 ${
-                                        tab === 'login'
-                                            ? 'bg-primary text-white shadow-sm'
-                                            : 'text-ink-secondary hover:text-ink'
-                                    }`}
-                                >
-                                    {t('welcome.tab_login', 'Sign in')}
-                                </button>
-                                <button
-                                    onClick={() => setTab('register')}
-                                    className={`flex-1 rounded-md py-2.5 text-sm font-medium transition-all duration-200 ${
-                                        tab === 'register'
-                                            ? 'bg-primary text-white shadow-sm'
-                                            : 'text-ink-secondary hover:text-ink'
-                                    }`}
-                                >
-                                    {t('welcome.tab_register', 'Create account')}
-                                </button>
-                            </div>
-                        </div>
-
                         {/* ===== LOGIN FORM ===== */}
-                        {tab === 'login' && (
-                            <div>
+                        <div>
                                 <h2 className="mb-1 text-2xl font-bold tracking-tight text-ink">
                                     {t('welcome.login_title', 'Welcome back')}
                                 </h2>
@@ -284,105 +235,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                         )}
                                     </button>
                                 </form>
-                            </div>
-                        )}
-
-                        {/* ===== REGISTER FORM ===== */}
-                        {tab === 'register' && (
-                            <div>
-                                <h2 className="mb-1 text-2xl font-bold tracking-tight text-ink">
-                                    {t('welcome.register_title', 'Create an account')}
-                                </h2>
-                                <p className="mb-6 text-sm text-ink-secondary">
-                                    {t('welcome.register_subtitle', 'Start managing your inventory today')}
-                                </p>
-
-                                <form onSubmit={submitRegister} className="space-y-4">
-                                    <div>
-                                        <label htmlFor="register-name" className="mb-1.5 block text-sm font-medium text-ink-secondary">
-                                            {t('auth.name', 'Name')}
-                                        </label>
-                                        <input
-                                            id="register-name"
-                                            type="text"
-                                            name="name"
-                                            value={registerData.name}
-                                            onChange={(e) => setRegisterData('name', e.target.value)}
-                                            className="block h-11 w-full rounded-lg border-hairline-input bg-canvas ps-4 pe-4 text-[15px] text-ink shadow-sm placeholder:text-ink-mute focus:border-primary focus:ring-2 focus:ring-primary/30"
-                                            placeholder={t('auth.name_placeholder', 'Your full name')}
-                                            autoFocus
-                                        />
-                                        <InputError message={registerErrors.name} className="mt-1.5" />
-                                    </div>
-
-                                    <div>
-                                        <label htmlFor="register-email" className="mb-1.5 block text-sm font-medium text-ink-secondary">
-                                            {t('auth.email', 'Email')}
-                                        </label>
-                                        <input
-                                            id="register-email"
-                                            type="email"
-                                            name="email"
-                                            value={registerData.email}
-                                            onChange={(e) => setRegisterData('email', e.target.value)}
-                                            className="block h-11 w-full rounded-lg border-hairline-input bg-canvas ps-4 pe-4 text-[15px] text-ink shadow-sm placeholder:text-ink-mute focus:border-primary focus:ring-2 focus:ring-primary/30"
-                                            placeholder={t('auth.email_placeholder', 'you@example.com')}
-                                            autoComplete="username"
-                                        />
-                                        <InputError message={registerErrors.email} className="mt-1.5" />
-                                    </div>
-
-                                    <div>
-                                        <label htmlFor="register-password" className="mb-1.5 block text-sm font-medium text-ink-secondary">
-                                            {t('auth.password', 'Password')}
-                                        </label>
-                                        <input
-                                            id="register-password"
-                                            type="password"
-                                            name="password"
-                                            value={registerData.password}
-                                            onChange={(e) => setRegisterData('password', e.target.value)}
-                                            className="block h-11 w-full rounded-lg border-hairline-input bg-canvas ps-4 pe-4 text-[15px] text-ink shadow-sm placeholder:text-ink-mute focus:border-primary focus:ring-2 focus:ring-primary/30"
-                                            placeholder={t('auth.password_placeholder', 'Enter your password')}
-                                            autoComplete="new-password"
-                                        />
-                                        <InputError message={registerErrors.password} className="mt-1.5" />
-                                    </div>
-
-                                    <div>
-                                        <label htmlFor="register-password-confirm" className="mb-1.5 block text-sm font-medium text-ink-secondary">
-                                            {t('auth.password_confirmation', 'Confirm password')}
-                                        </label>
-                                        <input
-                                            id="register-password-confirm"
-                                            type="password"
-                                            name="password_confirmation"
-                                            value={registerData.password_confirmation}
-                                            onChange={(e) => setRegisterData('password_confirmation', e.target.value)}
-                                            className="block h-11 w-full rounded-lg border-hairline-input bg-canvas ps-4 pe-4 text-[15px] text-ink shadow-sm placeholder:text-ink-mute focus:border-primary focus:ring-2 focus:ring-primary/30"
-                                            placeholder={t('auth.password_confirm_placeholder', 'Confirm your password')}
-                                            autoComplete="new-password"
-                                        />
-                                        <InputError message={registerErrors.password_confirmation} className="mt-1.5" />
-                                    </div>
-
-                                    <button
-                                        type="submit"
-                                        disabled={registerProcessing}
-                                        className="flex h-11 w-full items-center justify-center rounded-lg bg-primary text-sm font-semibold text-white shadow-sm transition-all hover:bg-primary-deep focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-branddark disabled:opacity-50"
-                                    >
-                                        {registerProcessing ? (
-                                            <svg className="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                                            </svg>
-                                        ) : (
-                                            t('auth.register', 'Create account')
-                                        )}
-                                    </button>
-                                </form>
-                            </div>
-                        )}
+                        </div>
 
                         {/* Footer text */}
                         <p className="mt-8 text-center text-xs text-ink-mute">

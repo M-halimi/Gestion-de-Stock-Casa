@@ -79,11 +79,11 @@ export default function OrdersShow({ order, movements }) {
                         </div>
                         <div>
                             <div className="text-[12px] uppercase tracking-wide text-ink-mute">{t('pages.production.orders.warehouse')}</div>
-                            <div className="mt-1 text-[15px] text-ink">{order.warehouse?.name ?? 'Ã¢â‚¬â€'}</div>
+                            <div className="mt-1 text-[15px] text-ink">{order.warehouse?.name ?? '—'}</div>
                         </div>
                         <div>
                             <div className="text-[12px] uppercase tracking-wide text-ink-mute">{t('pages.production.orders.created_by')}</div>
-                            <div className="mt-1 text-[15px] text-ink">{order.user?.name ?? 'Ã¢â‚¬â€'}</div>
+                            <div className="mt-1 text-[15px] text-ink">{order.user?.name ?? '—'}</div>
                         </div>
                     </div>
 
@@ -154,7 +154,7 @@ export default function OrdersShow({ order, movements }) {
                                 {order.items.map((item) => (
                                     <tr key={item.id}>
                                         <td className="px-4 py-2.5 text-[14px] text-ink">
-                                            {item.component?.name ?? 'Ã¢â‚¬â€'}
+                                            {item.component?.name ?? '—'}
                                             <span className="ms-1 text-[12px] text-ink-mute tabular">({item.component?.sku})</span>
                                         </td>
                                         <td className="px-4 py-2.5 text-center text-[14px] text-ink tabular">
@@ -213,12 +213,12 @@ export default function OrdersShow({ order, movements }) {
                                 <tbody className="divide-y divide-hairline bg-canvas">
                                     {movements.map((m) => (
                                         <tr key={m.id}>
-                                            <td className="px-4 py-2.5 text-[14px] text-ink">{m.product?.name ?? 'Ã¢â‚¬â€'}</td>
+                                            <td className="px-4 py-2.5 text-[14px] text-ink">{m.product?.name ?? '—'}</td>
                                             <td className="px-4 py-2.5">
                                                 <Badge status={movementTones[m.type]} label={t(`pages.production.movement.${m.type}`)} />
                                             </td>
                                             <td className="px-4 py-2.5 text-end text-[14px] text-ink tabular">{fmtNumber(m.quantity)}</td>
-                                            <td className="px-4 py-2.5 text-[14px] text-ink">{m.warehouse?.name ?? 'Ã¢â‚¬â€'}</td>
+                                            <td className="px-4 py-2.5 text-[14px] text-ink">{m.warehouse?.name ?? '—'}</td>
                                             <td className="px-4 py-2.5 text-end text-[14px] text-ink tabular">{fmtDateTime(m.created_at)}</td>
                                         </tr>
                                     ))}

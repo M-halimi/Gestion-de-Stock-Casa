@@ -90,6 +90,16 @@ const icons = {
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
         </svg>
     ),
+    'audit-logs': (
+        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+        </svg>
+    ),
+    imports: (
+        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+        </svg>
+    ),
 };
 
 const CalendarIcon = (
@@ -157,8 +167,10 @@ export default function AuthenticatedLayout({ header, children }) {
         { label: t('nav.sales'), href: route('sales.index'), permission: 'view_sales', icon: icons.sales },
         { label: t('nav.movements'), href: route('movements.index'), permission: 'view_movements', icon: icons.movements },
         { label: t('nav.inventory'), href: route('inventory.index'), permission: 'view_inventory', icon: icons.inventory },
+        { label: t('nav.imports'), href: route('imports.index'), permission: 'import_data', icon: icons.imports },
         { label: t('nav.production'), href: route('production.index'), permission: 'view_production', icon: icons.production },
         { label: t('nav.reports'), href: route('reports.index'), permission: 'view_reports', icon: icons.reports },
+        { label: t('nav.audit_logs'), href: route('audit-logs.index'), permission: 'view_audit_logs', icon: icons['audit-logs'] },
         { label: t('nav.users'), href: route('users.index'), permission: 'view_users', icon: icons.users },
         { label: t('nav.settings'), href: route('settings.index'), permission: 'manage_users', icon: icons.settings },
     ].filter((item) => has(item.permission));

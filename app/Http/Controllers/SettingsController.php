@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\AuditLogger;
 use App\Services\SettingsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,12 +31,23 @@ class SettingsController extends Controller
             'invoice_footer' => ['nullable', 'string', 'max:1000'],
         ]);
 
+        $oldSettings = $this->settings->all();
+
         $this->settings->set([
             'company_name' => $data['company_name'],
             'currency_code' => $data['currency_code'],
             'currency_symbol' => $data['currency_symbol'],
             'invoice_footer' => $data['invoice_footer'] ?? '',
         ]);
+
+        AuditLogger::action(
+            'updated',
+            'Setting',
+            null,
+            'Updated application settings',
+            $oldSettings,
+            $data,
+        );
 
         return redirect()
             ->route('settings.index')

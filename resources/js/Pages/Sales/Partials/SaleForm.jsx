@@ -263,7 +263,7 @@ export default function SaleForm({
                             </div>
                             <div className="flex justify-between">
                                 <span className="text-ink-mute">{t('pages.sales.discount')}</span>
-                                <span className="text-ink tabular">âˆ’ {fmtMoney(totals.discount)}</span>
+                                <span className="text-ink tabular">− {fmtMoney(totals.discount)}</span>
                             </div>
                             <div className="flex justify-between">
                                 <span className="text-ink-mute">{t('pages.sales.tax')}</span>

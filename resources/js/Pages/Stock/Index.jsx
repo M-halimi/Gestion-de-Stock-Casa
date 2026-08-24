@@ -1,15 +1,20 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import Badge from '@/Components/ui/Badge';
+import Button from '@/Components/ui/Button';
 import Card from '@/Components/ui/Card';
 import PageHeader from '@/Components/ui/PageHeader';
 import SearchInput from '@/Components/ui/SearchInput';
 import Select from '@/Components/ui/Select';
-import { Head, router } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import { fmtNumber as fmt } from '@/utils/format';
 
 export default function StockIndex({ products, warehouses, filters }) {
     const { t } = useTranslation();
+    const { auth } = usePage().props;
+    const permissions = auth.user?.permissions ?? [];
+    const canExport = permissions.includes('export_data');
+    const canImport = permissions.includes('import_data');
 
     const handleFilter = (key, value) => {
         router.get(
@@ -26,7 +31,37 @@ export default function StockIndex({ products, warehouses, filters }) {
         <AuthenticatedLayout header={<h2 className="heading-md text-ink">{t('pages.stock.title')}</h2>}>
             <Head title={t('pages.stock.title')} />
 
-            <PageHeader title={t('pages.stock.title')} subtitle={t('pages.stock.subtitle')} />
+            <PageHeader
+                title={t('pages.stock.title')}
+                subtitle={t('pages.stock.subtitle')}
+                actions={
+                    <div className="flex items-center gap-2">
+                        {canImport && (
+                            <Button
+                                variant="secondary"
+                                href={route('imports.create', 'initial_stock')}
+                            >
+                                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                                </svg>
+                                Importer le stock initial
+                            </Button>
+                        )}
+                        {canExport && (
+                            <Button
+                                variant="secondary"
+                                external
+                                href={route('exports.download', { type: 'stock', ...filters })}
+                            >
+                                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                </svg>
+                                Exporter CSV
+                            </Button>
+                        )}
+                    </div>
+                }
+            />
 
             <Card className="overflow-hidden">
                 <div className="flex flex-wrap items-center gap-3 border-b border-hairline px-5 py-3">
@@ -87,7 +122,7 @@ export default function StockIndex({ products, warehouses, filters }) {
                                         const qty = qtyOf(p, w.id);
                                         return (
                                             <td key={w.id} className="px-5 py-3 text-center text-[14px] text-ink tabular">
-                                                {qty > 0 ? fmt(qty) : <span className="text-ink-mute">â€”</span>}
+                                                {qty > 0 ? fmt(qty) : <span className="text-ink-mute">—</span>}
                                             </td>
                                         );
                                     })}
@@ -121,7 +156,7 @@ export default function StockIndex({ products, warehouses, filters }) {
                 {products.last_page > 1 && (
                     <div className="flex items-center justify-between border-t border-hairline px-5 py-3">
                         <p className="text-[13px] text-ink-mute tabular">
-                            {products.from ?? 0}â€“{products.to ?? 0} / {products.total}
+                            {products.from ?? 0}–{products.to ?? 0} / {products.total}
                         </p>
                         <nav className="flex items-center gap-1">
                             {Array.from({ length: products.last_page }, (_, i) => i + 1).map((page) => (

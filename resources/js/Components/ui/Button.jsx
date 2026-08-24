@@ -20,12 +20,21 @@ export default function Button({
     size = 'md',
     className = '',
     href,
+    external = false,
     children,
     ...props
 }) {
     const classes = `inline-flex cursor-pointer items-center justify-center gap-2 rounded-md font-medium leading-none transition duration-150 ease-in-out focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${variants[variant]} ${sizes[size]} ${className}`;
 
     if (href) {
+        if (external) {
+            return (
+                <a href={href} className={classes} {...props}>
+                    {children}
+                </a>
+            );
+        }
+
         return (
             <Link href={href} className={classes}>
                 {children}

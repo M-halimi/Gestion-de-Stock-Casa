@@ -112,6 +112,41 @@ class SaleModuleTest extends TestCase
             ->assertOk();
     }
 
+    public function test_admin_can_download_and_print_sale_invoice(): void
+    {
+        $sale = $this->createSale();
+
+        $response = $this->actingAs($this->admin)
+            ->get(route('sales.invoice', $sale))
+            ->assertOk()
+            ->assertHeader('Content-Type', 'application/pdf');
+        $this->assertStringContainsString('facture-' . $sale->reference . '.pdf', $response->headers->get('Content-Disposition'));
+
+        $this->actingAs($this->admin)
+            ->get(route('sales.invoice.print', $sale))
+            ->assertOk()
+            ->assertHeader('Content-Type', 'text/html; charset=UTF-8')
+            ->assertSee($sale->reference)
+            ->assertSee('Tissu test');
+
+        $this->assertDatabaseHas('audit_logs', [
+            'action' => 'invoice_downloaded',
+            'entity_type' => 'Sale',
+            'entity_id' => $sale->id,
+        ]);
+    }
+
+    public function test_employee_with_sales_view_permission_can_download_sale_invoice(): void
+    {
+        $sale = $this->createSale();
+        $employee = User::where('email', 'employee@demo.com')->firstOrFail();
+
+        $this->actingAs($employee)
+            ->get(route('sales.invoice', $sale))
+            ->assertOk()
+            ->assertHeader('Content-Type', 'application/pdf');
+    }
+
     public function test_employee_can_view_create_and_confirm_but_not_cancel_or_delete(): void
     {
         $employee = User::where('email', 'employee@demo.com')->firstOrFail();

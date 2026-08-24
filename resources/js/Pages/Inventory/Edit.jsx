@@ -51,7 +51,7 @@ export default function InventoryEdit({ adjustment, items }) {
             <Head title={t('pages.inventory.edit_title')} />
 
             <PageHeader
-                title={`${adjustment.reference} â€” ${adjustment.warehouse?.name ?? ''}`}
+                title={`${adjustment.reference} — ${adjustment.warehouse?.name ?? ''}`}
                 subtitle={t('pages.inventory.edit_subtitle')}
             />
 

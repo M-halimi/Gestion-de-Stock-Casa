@@ -27,6 +27,8 @@ class RolePermissionSeeder extends Seeder
             'view_inventory', 'validate_inventory',
             'view_production', 'create_production', 'edit_production', 'manage_production', 'delete_production',
             'view_reports',
+            'view_audit_logs',
+            'import_data', 'export_data',
             'view_users', 'manage_users',
         ];
 
@@ -47,6 +49,7 @@ class RolePermissionSeeder extends Seeder
             'delete_production',
             'delete_purchases',
             'delete_sales',
+            'view_audit_logs',
         ])));
 
         $employee = Role::firstOrCreate(['name' => 'Employee']);
