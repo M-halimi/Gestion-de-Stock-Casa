@@ -1,4 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import BackButton from '@/Components/ui/BackButton';
 import Button from '@/Components/ui/Button';
 import Card from '@/Components/ui/Card';
 import Input from '@/Components/ui/Input';
@@ -48,9 +49,9 @@ export default function OrdersCreate({ boms, warehouses }) {
             <PageHeader
                 title={t('pages.production.orders.create_title')}
                 actions={
-                    <Button variant="ghost" href={route('production.orders.index')}>
+                    <BackButton href={route('production.orders.index')}>
                         {t('common.back')}
-                    </Button>
+                    </BackButton>
                 }
             />
 

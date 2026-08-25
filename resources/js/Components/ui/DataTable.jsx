@@ -7,7 +7,7 @@ export default function DataTable({ columns = [], rows = [], empty = {}, actions
     return (
         <div className="overflow-hidden rounded-lg border border-hairline bg-canvas shadow-level-1">
             <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-hairline">
+                <table className="w-full min-w-[640px] divide-y divide-hairline">
                     <thead className="bg-canvas-soft">
                         <tr>
                             {columns.map((col) => (

@@ -1,5 +1,6 @@
 ﻿import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import Badge from '@/Components/ui/Badge';
+import BackButton from '@/Components/ui/BackButton';
 import Button from '@/Components/ui/Button';
 import Card from '@/Components/ui/Card';
 import ConfirmModal from '@/Components/shared/ConfirmModal';
@@ -52,9 +53,9 @@ export default function OrdersShow({ order, movements }) {
             <PageHeader
                 title={order.reference}
                 actions={
-                    <Button variant="ghost" href={route('production.orders.index')}>
+                    <BackButton href={route('production.orders.index')}>
                         {t('common.back')}
-                    </Button>
+                    </BackButton>
                 }
             />
 

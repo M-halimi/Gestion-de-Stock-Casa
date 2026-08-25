@@ -1,4 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import BackButton from '@/Components/ui/BackButton';
 import Button from '@/Components/ui/Button';
 import Card from '@/Components/ui/Card';
 import Input from '@/Components/ui/Input';
@@ -26,9 +27,9 @@ export default function CustomersCreate() {
             <PageHeader
                 title={t('pages.customers.create_title')}
                 actions={
-                    <Button variant="ghost" href={route('customers.index')}>
+                    <BackButton href={route('customers.index')}>
                         {t('common.back')}
-                    </Button>
+                    </BackButton>
                 }
             />
 

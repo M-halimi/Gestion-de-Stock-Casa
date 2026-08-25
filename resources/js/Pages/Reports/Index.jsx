@@ -287,14 +287,16 @@ export default function ReportsIndex({ active_type: activeType, types, summary, 
                                 type="date"
                                 value={filters.from ?? ''}
                                 onChange={(e) => handleFilter('from', e.target.value)}
-                                className="w-full sm:w-auto sm:min-w-64 sm:max-w-full"
+                                wrapperClassName="w-full sm:w-40"
+                                className="w-full"
                                 label={t('pages.reports.from')}
                             />
                             <Input
                                 type="date"
                                 value={filters.to ?? ''}
                                 onChange={(e) => handleFilter('to', e.target.value)}
-                                className="w-full sm:w-auto sm:min-w-64 sm:max-w-full"
+                                wrapperClassName="w-full sm:w-40"
+                                className="w-full"
                                 label={t('pages.reports.to')}
                             />
                         </>

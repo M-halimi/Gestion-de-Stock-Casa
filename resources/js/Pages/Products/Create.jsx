@@ -1,4 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import BackButton from '@/Components/ui/BackButton';
 import Button from '@/Components/ui/Button';
 import Card from '@/Components/ui/Card';
 import Input from '@/Components/ui/Input';
@@ -52,9 +53,9 @@ export default function ProductsCreate({ categories, units }) {
             <PageHeader
                 title={t('pages.products.create_title')}
                 actions={
-                    <Button variant="ghost" href={route('products.index')}>
+                    <BackButton href={route('products.index')}>
                         {t('common.back')}
-                    </Button>
+                    </BackButton>
                 }
             />
 

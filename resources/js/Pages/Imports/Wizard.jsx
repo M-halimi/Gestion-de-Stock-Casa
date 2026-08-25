@@ -1,4 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import BackButton from '@/Components/ui/BackButton';
 import Button from '@/Components/ui/Button';
 import Card from '@/Components/ui/Card';
 import PageHeader from '@/Components/ui/PageHeader';
@@ -314,7 +315,7 @@ export default function ImportWizard({ importData, type, columns }) {
                         </table>
                     </div>
                     <div className="mt-4 flex items-center justify-end gap-3">
-                        <Button variant="ghost" size="sm" onClick={() => setStep('upload')}>{t('common.back')}</Button>
+                        <BackButton size="sm" onClick={() => setStep('upload')}>{t('common.back')}</BackButton>
                         <Button variant="primary" size="sm" onClick={handlePreview} disabled={loading}>
                             {loading ? t('common.loading') : t('pages.imports.mapping.preview_button')}
                         </Button>
@@ -396,7 +397,7 @@ export default function ImportWizard({ importData, type, columns }) {
                     )}
 
                     <div className="mt-4 flex items-center justify-end gap-3">
-                        <Button variant="ghost" size="sm" onClick={() => setStep('mapping')}>{t('common.back')}</Button>
+                        <BackButton size="sm" onClick={() => setStep('mapping')}>{t('common.back')}</BackButton>
                         <Button variant="primary" size="sm" onClick={() => setStep('import')} disabled={(previewData.valid_rows ?? 0) === 0}>
                             {t('pages.imports.preview.continue')}
                         </Button>
@@ -438,7 +439,7 @@ export default function ImportWizard({ importData, type, columns }) {
                         </div>
 
                         <div className="flex items-center justify-end gap-3">
-                            <Button variant="ghost" size="sm" onClick={() => setStep('preview')}>{t('common.back')}</Button>
+                            <BackButton size="sm" onClick={() => setStep('preview')}>{t('common.back')}</BackButton>
                             <Button variant="primary" size="md" onClick={handleExecute} disabled={loading}>
                                 {loading ? (
                                     <span className="flex items-center gap-2">

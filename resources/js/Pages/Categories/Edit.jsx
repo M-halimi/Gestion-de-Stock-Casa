@@ -1,4 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import BackButton from '@/Components/ui/BackButton';
 import Button from '@/Components/ui/Button';
 import Card from '@/Components/ui/Card';
 import Input from '@/Components/ui/Input';
@@ -23,9 +24,9 @@ export default function CategoriesEdit({ category }) {
                 title={t('pages.categories.edit_title')}
                 actions={
                     <>
-                        <Button variant="ghost" href={route('categories.index')}>
+                        <BackButton href={route('categories.index')}>
                             {t('common.back')}
-                        </Button>
+                        </BackButton>
                         <Button onClick={() => put(route('categories.update', category.id))} disabled={processing}>
                             {t('common.save')}
                         </Button>

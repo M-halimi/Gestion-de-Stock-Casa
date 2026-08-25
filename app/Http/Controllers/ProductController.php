@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Models\BillOfMaterialItem;
 use App\Models\Category;
+use App\Models\InventoryAdjustmentItem;
 use App\Models\Product;
+use App\Models\ProductionOrderItem;
 use App\Models\StockMovement;
 use App\Models\Unit;
 use App\Models\Warehouse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -113,17 +117,27 @@ class ProductController extends Controller
 
     public function destroy(Product $product): RedirectResponse
     {
-        if ($product->purchaseItems()->exists() || $product->saleItems()->exists()) {
+        $isInUse = $product->purchaseItems()->exists()
+            || $product->saleItems()->exists()
+            || $product->stockMovements()->exists()
+            || InventoryAdjustmentItem::where('product_id', $product->id)->exists()
+            || $product->productionOrders()->exists()
+            || BillOfMaterialItem::where('component_id', $product->id)->exists()
+            || ProductionOrderItem::where('component_id', $product->id)->exists();
+
+        if ($isInUse) {
             return redirect()
                 ->route('products.index')
                 ->with('error', 'product.in_use');
         }
 
-        if ($product->image) {
-            Storage::disk('public')->delete($product->image);
-        }
+        DB::transaction(function () use ($product) {
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
 
-        $product->delete();
+            $product->delete();
+        });
 
         return redirect()
             ->route('products.index')

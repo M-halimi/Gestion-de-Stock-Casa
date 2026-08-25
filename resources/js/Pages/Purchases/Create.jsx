@@ -1,4 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import BackButton from '@/Components/ui/BackButton';
 import Button from '@/Components/ui/Button';
 import PageHeader from '@/Components/ui/PageHeader';
 import PurchaseForm from '@/Pages/Purchases/Partials/PurchaseForm';
@@ -22,9 +23,9 @@ export default function PurchasesCreate({ suppliers, warehouses, products }) {
             <PageHeader
                 title={t('pages.purchases.create_title')}
                 actions={
-                    <Button variant="ghost" href={route('purchases.index')}>
+                    <BackButton href={route('purchases.index')}>
                         {t('common.back')}
-                    </Button>
+                    </BackButton>
                 }
             />
 

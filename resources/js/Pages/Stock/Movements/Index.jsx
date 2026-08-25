@@ -108,14 +108,16 @@ export default function MovementsIndex({ movements, products, warehouses, filter
                         type="date"
                         value={filters.from ?? ''}
                         onChange={(e) => handleFilter('from', e.target.value)}
-                        className="w-full sm:w-auto sm:min-w-64 sm:max-w-full"
+                        wrapperClassName="w-full sm:w-40"
+                        className="w-full"
                         label={t('pages.movements.from')}
                     />
                     <Input
                         type="date"
                         value={filters.to ?? ''}
                         onChange={(e) => handleFilter('to', e.target.value)}
-                        className="w-full sm:w-auto sm:min-w-64 sm:max-w-full"
+                        wrapperClassName="w-full sm:w-40"
+                        className="w-full"
                         label={t('pages.movements.to')}
                     />
                     {(filters.product_id || filters.type || filters.warehouse_id || filters.from || filters.to) && (

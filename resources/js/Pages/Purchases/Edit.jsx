@@ -1,4 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import BackButton from '@/Components/ui/BackButton';
 import Button from '@/Components/ui/Button';
 import PageHeader from '@/Components/ui/PageHeader';
 import PurchaseForm from '@/Pages/Purchases/Partials/PurchaseForm';
@@ -29,9 +30,9 @@ export default function PurchasesEdit({ purchase, suppliers, warehouses, product
                 title={t('pages.purchases.edit_title')}
                 subtitle={purchase.reference}
                 actions={
-                    <Button variant="ghost" href={route('purchases.show', purchase.id)}>
+                    <BackButton href={route('purchases.show', purchase.id)}>
                         {t('common.back')}
-                    </Button>
+                    </BackButton>
                 }
             />
 

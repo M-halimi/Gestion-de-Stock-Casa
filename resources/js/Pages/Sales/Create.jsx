@@ -1,4 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import BackButton from '@/Components/ui/BackButton';
 import Button from '@/Components/ui/Button';
 import CreateCustomerDialog from '@/Components/CreateCustomerDialog';
 import PageHeader from '@/Components/ui/PageHeader';
@@ -31,9 +32,9 @@ export default function SalesCreate({ customers, warehouses, products }) {
             <PageHeader
                 title={t('pages.sales.create_title')}
                 actions={
-                    <Button variant="ghost" href={route('sales.index')}>
+                    <BackButton href={route('sales.index')}>
                         {t('common.back')}
-                    </Button>
+                    </BackButton>
                 }
             />
 

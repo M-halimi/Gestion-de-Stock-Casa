@@ -1,4 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import BackButton from '@/Components/ui/BackButton';
 import Button from '@/Components/ui/Button';
 import Card from '@/Components/ui/Card';
 import Input from '@/Components/ui/Input';
@@ -23,9 +24,9 @@ export default function WarehousesEdit({ warehouse }) {
             <PageHeader
                 title={t('pages.warehouses.edit_title')}
                 actions={
-                    <Button variant="ghost" href={route('warehouses.index')}>
+                    <BackButton href={route('warehouses.index')}>
                         {t('common.back')}
-                    </Button>
+                    </BackButton>
                 }
             />
 

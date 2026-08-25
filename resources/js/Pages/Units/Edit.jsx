@@ -1,4 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import BackButton from '@/Components/ui/BackButton';
 import Button from '@/Components/ui/Button';
 import Card from '@/Components/ui/Card';
 import Input from '@/Components/ui/Input';
@@ -21,9 +22,9 @@ export default function UnitsEdit({ unit }) {
                 title={t('pages.units.edit_title')}
                 actions={
                     <>
-                        <Button variant="ghost" href={route('units.index')}>
+                        <BackButton href={route('units.index')}>
                             {t('common.back')}
-                        </Button>
+                        </BackButton>
                         <Button onClick={() => put(route('units.update', unit.id))} disabled={processing}>
                             {t('common.save')}
                         </Button>

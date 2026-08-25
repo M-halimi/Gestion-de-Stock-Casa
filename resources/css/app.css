@@ -137,13 +137,11 @@
 
     select {
         background-position: right 0.75rem center;
-        padding-right: 2.5rem !important;
+        padding-inline-end: 2.5rem !important;
     }
 
     html[dir='rtl'] select {
         background-position: left 0.75rem center;
-        padding-right: 0.75rem !important;
-        padding-left: 2.5rem !important;
     }
 }
 

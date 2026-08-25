@@ -1,4 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import BackButton from '@/Components/ui/BackButton';
 import Button from '@/Components/ui/Button';
 import Card from '@/Components/ui/Card';
 import Input from '@/Components/ui/Input';
@@ -25,9 +26,9 @@ export default function UsersCreate({ roles }) {
             <PageHeader
                 title={t('pages.users.create_title')}
                 actions={
-                    <Button variant="ghost" href={route('users.index')}>
+                    <BackButton href={route('users.index')}>
                         {t('common.back')}
-                    </Button>
+                    </BackButton>
                 }
             />
 

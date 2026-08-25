@@ -1,5 +1,6 @@
 ﻿import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import Badge from '@/Components/ui/Badge';
+import BackButton from '@/Components/ui/BackButton';
 import Button from '@/Components/ui/Button';
 import Card from '@/Components/ui/Card';
 import ConfirmModal from '@/Components/shared/ConfirmModal';
@@ -77,9 +78,9 @@ export default function SalesShow({ sale, movements }) {
                                 </Button>
                             </>
                         )}
-                        <Button variant="ghost" href={route('sales.index')}>
+                        <BackButton href={route('sales.index')}>
                             {t('common.back')}
-                        </Button>
+                        </BackButton>
                     </div>
                 }
             />

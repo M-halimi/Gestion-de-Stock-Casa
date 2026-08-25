@@ -1,4 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import BackButton from '@/Components/ui/BackButton';
 import Button from '@/Components/ui/Button';
 import PageHeader from '@/Components/ui/PageHeader';
 import SaleForm from '@/Pages/Sales/Partials/SaleForm';
@@ -29,9 +30,9 @@ export default function SalesEdit({ sale, customers, warehouses, products }) {
                 title={t('pages.sales.edit_title')}
                 subtitle={sale.reference}
                 actions={
-                    <Button variant="ghost" href={route('sales.show', sale.id)}>
+                    <BackButton href={route('sales.show', sale.id)}>
                         {t('common.back')}
-                    </Button>
+                    </BackButton>
                 }
             />
 

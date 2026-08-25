@@ -126,8 +126,48 @@ const PlusIcon = (
     </svg>
 );
 
+const ChevronIcon = (
+    <svg className="h-4 w-4 shrink-0 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+    </svg>
+);
+
+function NavGroup({ label, icon, hasActive, children }) {
+    const [open, setOpen] = useState(hasActive);
+
+    useEffect(() => {
+        if (hasActive) setOpen(true);
+    }, [hasActive]);
+
+    return (
+        <div>
+            <button
+                type="button"
+                onClick={() => setOpen((o) => !o)}
+                aria-expanded={open}
+                className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] font-medium transition-colors ${
+                    hasActive
+                        ? 'bg-primary-soft text-primary-subdued'
+                        : 'text-ink-mute hover:bg-canvas-soft hover:text-ink'
+                }`}
+            >
+                {icon}
+                <span className="flex-1 text-start">{label}</span>
+                <span className={open ? 'rotate-180' : ''}>{ChevronIcon}</span>
+            </button>
+            {open && (
+                <div className="ms-[18px] space-y-1 border-s border-hairline pb-1 ps-3 pt-1">
+                    {children}
+                </div>
+            )}
+        </div>
+    );
+}
+
 export default function AuthenticatedLayout({ header, children }) {
-    const { auth } = usePage().props;
+    const page = usePage();
+    const auth = page.props.auth;
+    const url = page.url;
     const user = auth.user;
     const permissions = user?.permissions ?? [];
     const has = (permission) => permissions.includes(permission);
@@ -154,26 +194,67 @@ export default function AuthenticatedLayout({ header, children }) {
         { weekday: 'long', day: 'numeric', month: 'long' }
     ).format(new Date());
 
-    const navigation = [
-        { label: t('nav.dashboard'), href: route('dashboard'), permission: 'view_dashboard', icon: icons.dashboard },
-        { label: t('nav.products'), href: route('products.index'), permission: 'view_products', icon: icons.products },
-        { label: t('nav.categories'), href: route('categories.index'), permission: 'view_categories', icon: icons.categories },
-        { label: t('nav.units'), href: route('units.index'), permission: 'view_units', icon: icons.units },
-        { label: t('nav.suppliers'), href: route('suppliers.index'), permission: 'view_suppliers', icon: icons.suppliers },
-        { label: t('nav.customers'), href: route('customers.index'), permission: 'view_customers', icon: icons.customers },
-        { label: t('nav.warehouses'), href: route('warehouses.index'), permission: 'view_warehouses', icon: icons.warehouses },
-        { label: t('nav.stock'), href: route('stock.index'), permission: 'view_stock', icon: icons.stock },
-        { label: t('nav.purchases'), href: route('purchases.index'), permission: 'view_purchases', icon: icons.purchases },
-        { label: t('nav.sales'), href: route('sales.index'), permission: 'view_sales', icon: icons.sales },
-        { label: t('nav.movements'), href: route('movements.index'), permission: 'view_movements', icon: icons.movements },
-        { label: t('nav.inventory'), href: route('inventory.index'), permission: 'view_inventory', icon: icons.inventory },
-        { label: t('nav.imports'), href: route('imports.index'), permission: 'import_data', icon: icons.imports },
-        { label: t('nav.production'), href: route('production.index'), permission: 'view_production', icon: icons.production },
-        { label: t('nav.reports'), href: route('reports.index'), permission: 'view_reports', icon: icons.reports },
-        { label: t('nav.audit_logs'), href: route('audit-logs.index'), permission: 'view_audit_logs', icon: icons['audit-logs'] },
-        { label: t('nav.users'), href: route('users.index'), permission: 'view_users', icon: icons.users },
-        { label: t('nav.settings'), href: route('settings.index'), permission: 'manage_users', icon: icons.settings },
-    ].filter((item) => has(item.permission));
+    const isActivePath = (href) => {
+        const path = href.split('?')[0];
+        return path !== '#' && path !== '' && url.startsWith(path);
+    };
+
+    const sections = [
+        {
+            label: t('nav.section_main'),
+            items: [
+                { label: t('nav.dashboard'), href: route('dashboard'), permission: 'view_dashboard', icon: icons.dashboard },
+                { label: t('nav.stock'), href: route('stock.index'), permission: 'view_stock', icon: icons.stock },
+            ],
+        },
+        {
+            label: t('nav.section_operations'),
+            items: [
+                { label: t('nav.entries'), href: route('purchases.index'), permission: 'view_purchases', icon: icons.purchases },
+                { label: t('nav.exits'), href: route('sales.index'), permission: 'view_sales', icon: icons.sales },
+                { label: t('nav.movements'), href: route('movements.index'), permission: 'view_movements', icon: icons.movements },
+            ],
+        },
+        {
+            label: t('nav.section_management'),
+            collapsible: true,
+            items: [
+                { label: t('nav.products'), href: route('products.index'), permission: 'view_products', icon: icons.products },
+                { label: t('nav.suppliers'), href: route('suppliers.index'), permission: 'view_suppliers', icon: icons.suppliers },
+                { label: t('nav.customers'), href: route('customers.index'), permission: 'view_customers', icon: icons.customers },
+                { label: t('nav.categories'), href: route('categories.index'), permission: 'view_categories', icon: icons.categories },
+                { label: t('nav.units'), href: route('units.index'), permission: 'view_units', icon: icons.units },
+                { label: t('nav.warehouses'), href: route('warehouses.index'), permission: 'view_warehouses', icon: icons.warehouses },
+            ],
+        },
+        {
+            label: t('nav.section_reporting'),
+            items: [
+                { label: t('nav.reports'), href: route('reports.index'), permission: 'view_reports', icon: icons.reports },
+            ],
+        },
+        {
+            label: t('nav.section_advanced'),
+            collapsible: true,
+            items: [
+                { label: t('nav.inventory'), href: route('inventory.index'), permission: 'view_inventory', icon: icons.inventory },
+                { label: t('nav.imports'), href: route('imports.index'), permission: 'import_data', icon: icons.imports },
+                { label: t('nav.production'), href: route('production.index'), permission: 'view_production', icon: icons.production },
+            ],
+        },
+        {
+            label: t('nav.section_administration'),
+            collapsible: true,
+            items: [
+                { label: t('nav.users'), href: route('users.index'), permission: 'view_users', icon: icons.users },
+                { label: t('nav.audit_logs'), href: route('audit-logs.index'), permission: 'view_audit_logs', icon: icons['audit-logs'] },
+                { label: t('nav.settings'), href: route('settings.index'), permission: 'manage_users', icon: icons.settings },
+            ],
+        },
+    ].map((section) => ({
+        ...section,
+        items: (section.items ?? []).filter((item) => has(item.permission)),
+    })).filter((section) => section.items.length > 0);
 
     const sidebarContent = (
         <div className="flex h-full flex-col">
@@ -186,30 +267,74 @@ export default function AuthenticatedLayout({ header, children }) {
                 </Link>
             </div>
 
-            {has('create_products') && (
-                <div className="px-4 pt-4">
+            <div className="space-y-2 px-4 pt-4">
+                {has('create_sales') && (
+                    <Link
+                        href={route('sales.create')}
+                        className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-primary text-[14px] font-semibold text-white shadow-[0_8px_24px_-8px_rgba(212,175,94,0.55)] transition hover:bg-primary-deep"
+                    >
+                        {PlusIcon}
+                        {t('nav.new_sale')}
+                    </Link>
+                )}
+                {has('create_purchases') && (
+                    <Link
+                        href={route('purchases.create')}
+                        className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-hairline-input bg-canvas text-[13px] font-semibold text-ink-secondary transition hover:bg-canvas-soft hover:text-ink"
+                    >
+                        {PlusIcon}
+                        {t('nav.new_purchase')}
+                    </Link>
+                )}
+                {has('create_products') && (
                     <Link
                         href={route('products.create')}
-                        className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-primary text-[14px] font-semibold text-white shadow-[0_8px_24px_-8px_rgba(212,175,94,0.55)] transition hover:bg-primary-deep"
+                        className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-hairline-input bg-canvas text-[13px] font-semibold text-ink-secondary transition hover:bg-canvas-soft hover:text-ink"
                     >
                         {PlusIcon}
                         {t('nav.new_product')}
                     </Link>
-                </div>
-            )}
+                )}
+            </div>
 
-            <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-                {navigation.map((item) => (
-                    <NavLink
-                        key={item.label}
-                        href={item.href}
-                        className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] font-medium transition-colors"
-                        activeClassName="bg-primary-soft text-primary-subdued"
-                        inactiveClassName="text-ink-mute hover:bg-canvas-soft hover:text-ink"
-                    >
-                        {item.icon}
-                        {item.label}
-                    </NavLink>
+            <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-2">
+                {sections.map((section) => (
+                    <div key={section.label}>
+                        {section.collapsible ? (
+                            <NavGroup label={section.label} hasActive={section.items.some((item) => isActivePath(item.href))}>
+                                {section.items.map((item) => (
+                                    <NavLink
+                                        key={item.label}
+                                        href={item.href}
+                                        className="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium transition-colors"
+                                        activeClassName="bg-primary-soft font-semibold text-primary-subdued"
+                                        inactiveClassName="text-ink-mute hover:bg-canvas-soft hover:text-ink"
+                                    >
+                                        {item.icon}
+                                        {item.label}
+                                    </NavLink>
+                                ))}
+                            </NavGroup>
+                        ) : (
+                            <div>
+                                <div className="px-3 pb-1 pt-4 text-[11px] font-semibold uppercase tracking-[1px] text-ink-mute2">
+                                    {section.label}
+                                </div>
+                                {section.items.map((item) => (
+                                    <NavLink
+                                        key={item.label}
+                                        href={item.href}
+                                        className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] font-medium transition-colors"
+                                        activeClassName="bg-primary-soft font-semibold text-primary-subdued"
+                                        inactiveClassName="text-ink-mute hover:bg-canvas-soft hover:text-ink"
+                                    >
+                                        {item.icon}
+                                        {item.label}
+                                    </NavLink>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 ))}
             </nav>
 
@@ -269,6 +394,13 @@ export default function AuthenticatedLayout({ header, children }) {
 
             <div className="lg:ps-60">
                 <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-hairline bg-canvas-glass px-4 backdrop-blur-md sm:px-6">
+                    <Link href="/" className="flex items-center gap-2 lg:hidden">
+                        <ApplicationLogo className="h-9 w-9" />
+                        <span className="brand-wordmark text-sm font-bold uppercase tracking-wide">
+                            {t('app.name')}
+                        </span>
+                    </Link>
+
                     <button
                         onClick={() => setSidebarOpen(true)}
                         className="rounded-md p-2 text-ink-mute transition hover:bg-canvas-soft hover:text-ink lg:hidden"

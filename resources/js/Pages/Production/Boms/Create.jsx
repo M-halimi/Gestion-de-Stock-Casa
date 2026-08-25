@@ -1,4 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import BackButton from '@/Components/ui/BackButton';
 import Button from '@/Components/ui/Button';
 import PageHeader from '@/Components/ui/PageHeader';
 import BomForm from '@/Pages/Production/Boms/Partials/BomForm';
@@ -20,9 +21,9 @@ export default function BomsCreate({ products, components }) {
             <PageHeader
                 title={t('pages.production.boms.create_title')}
                 actions={
-                    <Button variant="ghost" href={route('production.boms.index')}>
+                    <BackButton href={route('production.boms.index')}>
                         {t('common.back')}
-                    </Button>
+                    </BackButton>
                 }
             />
 

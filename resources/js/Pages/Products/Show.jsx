@@ -1,5 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import Badge from '@/Components/ui/Badge';
+import BackButton from '@/Components/ui/BackButton';
 import Button from '@/Components/ui/Button';
 import Card from '@/Components/ui/Card';
 import PageHeader from '@/Components/ui/PageHeader';
@@ -32,9 +33,9 @@ export default function ProductsShow({ product, movements }) {
                 title={product.name}
                 subtitle={product.sku}
                 actions={
-                    <Button variant="ghost" href={route('products.index')}>
+                    <BackButton href={route('products.index')}>
                         {t('common.back')}
-                    </Button>
+                    </BackButton>
                 }
             />
 
