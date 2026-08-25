@@ -77,16 +77,17 @@ class SaleService
 
         DB::transaction(function () use ($sale) {
             foreach ($sale->items as $item) {
-                $available = (float) Product::findOrFail($item->product_id)->totalQuantity($sale->warehouse_id);
+                $product = Product::findOrFail($item->product_id);
+                $available = (float) $product->totalQuantity($sale->warehouse_id);
 
                 if ((float) $item->quantity > $available) {
                     throw new InsufficientStockException(
                         sprintf(
-                            'Insufficient stock for product %d in warehouse %d (requested %s, available %s).',
-                            $item->product_id,
-                            $sale->warehouse_id,
-                            (float) $item->quantity,
-                            $available
+                            'Insufficient stock — %s (%s): available %s, requested %s.',
+                            $product->name,
+                            $product->sku,
+                            rtrim(rtrim(number_format($available, 3, '.', ''), '0'), '.'),
+                            rtrim(rtrim(number_format((float) $item->quantity, 3, '.', ''), '0'), '.')
                         )
                     );
                 }

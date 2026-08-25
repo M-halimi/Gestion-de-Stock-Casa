@@ -238,7 +238,7 @@ export default function AuthenticatedLayout({ header, children }) {
             collapsible: true,
             items: [
                 { label: t('nav.inventory'), href: route('inventory.index'), permission: 'view_inventory', icon: icons.inventory },
-                { label: t('nav.imports'), href: route('imports.index'), permission: 'import_data', icon: icons.imports },
+                // { label: t('nav.imports'), href: route('imports.index'), permission: 'import_data', icon: icons.imports },
                 { label: t('nav.production'), href: route('production.index'), permission: 'view_production', icon: icons.production },
             ],
         },

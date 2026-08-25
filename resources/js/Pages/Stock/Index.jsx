@@ -3,6 +3,7 @@ import Badge from '@/Components/ui/Badge';
 import Button from '@/Components/ui/Button';
 import Card from '@/Components/ui/Card';
 import PageHeader from '@/Components/ui/PageHeader';
+import Pagination from '@/Components/ui/Pagination';
 import SearchInput from '@/Components/ui/SearchInput';
 import Select from '@/Components/ui/Select';
 import { Head, router, usePage } from '@inertiajs/react';
@@ -154,30 +155,7 @@ export default function StockIndex({ products, warehouses, filters }) {
                 </div>
 
                 {products.last_page > 1 && (
-                    <div className="flex items-center justify-between border-t border-hairline px-5 py-3">
-                        <p className="text-[13px] text-ink-mute tabular">
-                            {products.from ?? 0}–{products.to ?? 0} / {products.total}
-                        </p>
-                        <nav className="flex items-center gap-1">
-                            {Array.from({ length: products.last_page }, (_, i) => i + 1).map((page) => (
-                                <a
-                                    key={page}
-                                    href={route('stock.index', { ...filters, page })}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        handleFilter('page', page === 1 ? undefined : page);
-                                    }}
-                                    className={`rounded-md px-2.5 py-1.5 text-[13px] ${
-                                        page === products.current_page
-                                            ? 'bg-primary font-normal text-white'
-                                            : 'text-ink-secondary hover:bg-canvas-soft'
-                                    }`}
-                                >
-                                    {page}
-                                </a>
-                            ))}
-                        </nav>
-                    </div>
+                    <Pagination meta={products} />
                 )}
             </Card>
         </AuthenticatedLayout>

@@ -20,6 +20,7 @@ class StockMovement extends Model
     public const TYPE_TRANSFER_OUT = 'transfer_out';
     public const TYPE_PRODUCTION_IN = 'production_in';
     public const TYPE_PRODUCTION_OUT = 'production_out';
+    public const TYPE_INITIAL_STOCK = 'initial_stock';
 
     protected $fillable = [
         'product_id',

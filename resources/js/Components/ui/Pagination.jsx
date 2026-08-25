@@ -29,7 +29,7 @@ export default function Pagination({ meta }) {
                     <Link
                         href={buildUrl(meta.current_page - 1)}
                         preserveScroll
-                        className="rounded-md px-2.5 py-1.5 text-[13px] text-ink-secondary hover:bg-canvas-soft"
+                        className="rounded-md border border-hairline bg-canvas px-2.5 py-1.5 text-[13px] text-ink-secondary hover:bg-canvas-soft hover:text-ink"
                     >
                         ‹
                     </Link>
@@ -45,8 +45,8 @@ export default function Pagination({ meta }) {
                                 preserveScroll
                                 className={`rounded-md px-2.5 py-1.5 text-[13px] ${
                                     page === meta.current_page
-                                        ? 'bg-primary font-normal text-white'
-                                        : 'text-ink-secondary hover:bg-canvas-soft'
+                                        ? 'bg-primary font-semibold text-white'
+                                        : 'border border-hairline bg-canvas text-ink-secondary hover:bg-canvas-soft hover:text-ink'
                                 }`}
                             >
                                 {page}
@@ -58,7 +58,7 @@ export default function Pagination({ meta }) {
                     <Link
                         href={buildUrl(meta.current_page + 1)}
                         preserveScroll
-                        className="rounded-md px-2.5 py-1.5 text-[13px] text-ink-secondary hover:bg-canvas-soft"
+                        className="rounded-md border border-hairline bg-canvas px-2.5 py-1.5 text-[13px] text-ink-secondary hover:bg-canvas-soft hover:text-ink"
                     >
                         ›
                     </Link>

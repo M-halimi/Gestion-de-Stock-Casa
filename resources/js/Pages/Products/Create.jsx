@@ -2,7 +2,9 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import BackButton from '@/Components/ui/BackButton';
 import Button from '@/Components/ui/Button';
 import Card from '@/Components/ui/Card';
+import Checkbox from '@/Components/Checkbox';
 import Input from '@/Components/ui/Input';
+import InputError from '@/Components/InputError';
 import PageHeader from '@/Components/ui/PageHeader';
 import Select from '@/Components/ui/Select';
 import TextArea from '@/Components/ui/TextArea';
@@ -17,12 +19,14 @@ import {
     IconShield,
     IconTag,
 } from '@/Components/ui/FormIcons';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export default function ProductsCreate({ categories, units }) {
+export default function ProductsCreate({ categories, units, warehouses }) {
     const { t } = useTranslation();
+    const permissions = usePage().props.auth.user?.permissions ?? [];
+    const canManageStock = permissions.includes('manage_stock');
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         sku: '',
@@ -35,6 +39,10 @@ export default function ProductsCreate({ categories, units }) {
         description: '',
         image: null,
         status: 'active',
+        initial_stock_enabled: false,
+        initial_warehouse_id: '',
+        initial_quantity: '',
+        initial_notes: '',
     });
 
     const inputRef = useRef(null);
@@ -206,6 +214,69 @@ export default function ProductsCreate({ categories, units }) {
                         </div>
                         {errors.image && <p className="mt-2 text-[13px] text-destructive">{errors.image}</p>}
                     </Card>
+
+                    {canManageStock && (
+                        <Card>
+                            <label className="flex cursor-pointer items-center gap-3">
+                                <Checkbox
+                                    name="initial_stock_enabled"
+                                    checked={data.initial_stock_enabled}
+                                    onChange={(e) => setData('initial_stock_enabled', e.target.checked)}
+                                />
+                                <span className="text-[14px] font-medium text-ink">
+                                    {t('pages.products.initial_stock_toggle')}
+                                </span>
+                            </label>
+                            <p className="mt-1.5 text-[12px] text-ink-mute">
+                                {t('pages.products.initial_stock_hint')}
+                            </p>
+
+                            {data.initial_stock_enabled && (
+                                <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
+                                    <Select
+                                        id="initial_warehouse_id"
+                                        label={t('pages.products.initial_warehouse')}
+                                        value={data.initial_warehouse_id}
+                                        onChange={(e) => setData('initial_warehouse_id', e.target.value)}
+                                        error={errors.initial_warehouse_id}
+                                        icon={<IconBox />}
+                                        options={[
+                                            { value: '', label: t('pages.products.select_warehouse') },
+                                            ...warehouses.map((w) => ({
+                                                value: String(w.id),
+                                                label: w.code ? `${w.name} (${w.code})` : w.name,
+                                            })),
+                                        ]}
+                                    />
+                                    <Input
+                                        id="initial_quantity"
+                                        label={t('pages.products.initial_quantity')}
+                                        type="number"
+                                        step="0.01"
+                                        min="0"
+                                        value={data.initial_quantity}
+                                        onChange={(e) => setData('initial_quantity', e.target.value)}
+                                        error={errors.initial_quantity}
+                                        icon={<IconScale />}
+                                        inputClass="tabular"
+                                    />
+                                    <div className="md:col-span-2">
+                                        <TextArea
+                                            id="initial_notes"
+                                            label={t('pages.products.initial_notes')}
+                                            value={data.initial_notes}
+                                            onChange={(e) => setData('initial_notes', e.target.value)}
+                                            error={errors.initial_notes}
+                                            icon={<IconNote />}
+                                        />
+                                    </div>
+                                    {errors.initial_stock_enabled && (
+                                        <InputError message={errors.initial_stock_enabled} className="md:col-span-2" />
+                                    )}
+                                </div>
+                            )}
+                        </Card>
+                    )}
 
                     <div className="flex justify-end gap-2">
                         <Button variant="ghost" href={route('products.index')}>

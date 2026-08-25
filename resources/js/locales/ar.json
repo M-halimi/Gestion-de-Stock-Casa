@@ -53,7 +53,7 @@
         "settings": "الإعدادات",
         "menu": "القائمة",
         "production": "الإنتاج",
-        "imports": "الاستيراد",
+        "imports": "استيراد",
         "new_product": "+ منتج جديد",
         "section_main": "الرئيسية",
         "section_operations": "العمليات",
@@ -64,7 +64,7 @@
         "entries": "المدخلات (المشتريات)",
         "exits": "المخرجات (المبيعات)",
         "new_sale": "بيع جديد",
-        "new_purchase": "شراء جديد"
+        "new_purchase": "استيراد"
     },
     "topbar": {
         "search_placeholder": "بحث شامل…",
@@ -188,7 +188,13 @@
             "user": "المستخدم",
             "in_stock": "في المخزون",
             "no_stock": "لا يوجد مخزون في المستودعات.",
-            "no_movements": "لا توجد حركات مسجلة لهذا المنتج."
+            "no_movements": "لا توجد حركات مسجلة لهذا المنتج.",
+            "initial_stock_toggle": "إضافة مخزون أولي",
+            "initial_stock_hint": "ينشئ الكمية الأولى من هذا المنتج في مستودع، مع حركة قابلة للتتبع.",
+            "initial_warehouse": "المستودع",
+            "select_warehouse": "اختر مستودعاً…",
+            "initial_quantity": "الكمية الأولية",
+            "initial_notes": "ملاحظات (اختياري)"
         },
         "production": {
             "status": {
@@ -274,7 +280,7 @@
         "purchases": {
             "title": "المشتريات",
             "subtitle": "طلبات الموردين واستلام البضائع",
-            "create_title": "شراء جديد",
+            "create_title": "استيراد",
             "edit_title": "تعديل الشراء",
             "create_action": "شراء جديد",
             "update_action": "حفظ التعديلات",
@@ -417,7 +423,8 @@
                 "transfer_in": "تحويل وارد",
                 "transfer_out": "تحويل صادر",
                 "production_in": "إدخال إنتاج",
-                "production_out": "إخراج إنتاج"
+                "production_out": "إخراج إنتاج",
+                "initial_stock": "مخزون أولي"
             }
         },
         "transfers": {

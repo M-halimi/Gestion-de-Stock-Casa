@@ -18,6 +18,7 @@ const tones = {
     transfer_out: 'transfer_out',
     production_in: 'production_in',
     production_out: 'production_out',
+    initial_stock: 'initial_stock',
 };
 
 export default function MovementsIndex({ movements, products, warehouses, filters }) {
@@ -92,6 +93,7 @@ export default function MovementsIndex({ movements, products, warehouses, filter
                                 transfer_out: t('pages.movements.types.transfer_out'),
                                 production_in: t('pages.movements.types.production_in'),
                                 production_out: t('pages.movements.types.production_out'),
+                                initial_stock: t('pages.movements.types.initial_stock'),
                             }).map(([value, label]) => ({ value, label })),
                         ]}
                     />

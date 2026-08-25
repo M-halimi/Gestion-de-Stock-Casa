@@ -188,7 +188,13 @@
             "user": "User",
             "in_stock": "In stock",
             "no_stock": "No stock in any warehouse.",
-            "no_movements": "No movements recorded for this product."
+            "no_movements": "No movements recorded for this product.",
+            "initial_stock_toggle": "Add initial stock",
+            "initial_stock_hint": "Creates the first quantity of this product in a warehouse, with a traceable movement.",
+            "initial_warehouse": "Warehouse",
+            "select_warehouse": "Choose a warehouse…",
+            "initial_quantity": "Initial quantity",
+            "initial_notes": "Notes (optional)"
         },
         "production": {
             "status": {
@@ -417,7 +423,8 @@
                 "transfer_in": "Inbound transfer",
                 "transfer_out": "Outbound transfer",
                 "production_in": "Production in",
-                "production_out": "Production out"
+                "production_out": "Production out",
+                "initial_stock": "Initial Stock"
             }
         },
         "transfers": {

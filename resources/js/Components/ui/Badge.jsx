@@ -23,6 +23,7 @@ const styles = {
     low: 'bg-destructive-soft text-destructive',
     ok: 'bg-success-soft text-success',
     purchase: 'bg-success-soft text-success',
+    initial_stock: 'bg-success-soft text-success',
     sale: 'bg-info-soft text-info',
     adjustment: 'bg-warning-soft text-warning',
     transfer_in: 'bg-canvas-cream text-ink-mute2',

@@ -269,7 +269,13 @@
             "user": "Utilisateur",
             "in_stock": "En stock",
             "no_stock": "Aucun stock dans les entrepôts.",
-            "no_movements": "Aucun mouvement enregistré pour ce produit."
+            "no_movements": "Aucun mouvement enregistré pour ce produit.",
+            "initial_stock_toggle": "Ajouter un stock initial",
+            "initial_stock_hint": "Crée la première quantité de ce produit dans un entrepôt, avec un mouvement traçable.",
+            "initial_warehouse": "Entrepôt",
+            "select_warehouse": "Choisir un entrepôt…",
+            "initial_quantity": "Quantité initiale",
+            "initial_notes": "Notes (optionnel)"
         },
         "purchases": {
             "title": "Achats",
@@ -417,7 +423,8 @@
                 "transfer_in": "Transfert entrant",
                 "transfer_out": "Transfert sortant",
                 "production_in": "Entrée production",
-                "production_out": "Sortie production"
+                "production_out": "Sortie production",
+                "initial_stock": "Stock initial"
             }
         },
         "transfers": {

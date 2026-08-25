@@ -215,7 +215,9 @@ class SaleModuleTest extends TestCase
         $this->actingAs($this->admin)
             ->post(route('sales.confirm', $sale))
             ->assertRedirect()
-            ->assertSessionHas('error', 'sales.insufficient');
+            ->assertSessionHas('error', function (string $error) {
+                return str_contains($error, 'available 3') && str_contains($error, 'requested 5');
+            });
 
         $this->assertSame(Sale::STATUS_DRAFT, $sale->fresh()->status);
         $this->assertSame(0, StockMovement::where('reference_type', Sale::class)->count());

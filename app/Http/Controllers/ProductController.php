@@ -12,6 +12,7 @@ use App\Models\ProductionOrderItem;
 use App\Models\StockMovement;
 use App\Models\Unit;
 use App\Models\Warehouse;
+use App\Services\StockService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -49,6 +50,7 @@ class ProductController extends Controller
         return Inertia::render('Products/Create', [
             'categories' => Category::orderBy('name')->get(['id', 'name']),
             'units' => Unit::orderBy('name')->get(['id', 'name', 'abbreviation']),
+            'warehouses' => Warehouse::orderBy('name')->get(['id', 'name']),
         ]);
     }
 
@@ -62,7 +64,26 @@ class ProductController extends Controller
             $data['image'] = $request->file('image')->store('products', 'public');
         }
 
-        Product::create($data);
+        $initialStockEnabled = $request->boolean('initial_stock_enabled');
+        $initialWarehouseId = $initialStockEnabled ? (int) $request->validated('initial_warehouse_id') : null;
+        $initialQuantity = $initialStockEnabled ? (float) $request->validated('initial_quantity') : null;
+        $initialNotes = $initialStockEnabled
+            ? ($request->validated('initial_notes') ?: 'Stock initial')
+            : null;
+
+        DB::transaction(function () use (&$product, $data, $initialStockEnabled, $initialWarehouseId, $initialQuantity, $initialNotes) {
+            $product = Product::create($data);
+
+            if ($initialStockEnabled) {
+                app(StockService::class)->increase(
+                    $product,
+                    $initialWarehouseId,
+                    $initialQuantity,
+                    $initialNotes,
+                    StockMovement::TYPE_INITIAL_STOCK,
+                );
+            }
+        });
 
         return redirect()
             ->route('products.index')

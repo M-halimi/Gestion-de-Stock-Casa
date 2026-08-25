@@ -132,7 +132,7 @@ class SaleController extends Controller
 
             return back()->with('success', 'sales.confirmed');
         } catch (InsufficientStockException $e) {
-            return back()->with('error', 'sales.insufficient');
+            return back()->with('error', $e->getMessage());
         } catch (RuntimeException $e) {
             return back()->with('error', 'sales.bad_status');
         }

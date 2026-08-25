@@ -8,7 +8,15 @@ class StoreProductRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('create_products');
+        if (! $this->user()->can('create_products')) {
+            return false;
+        }
+
+        if ($this->boolean('initial_stock_enabled') && ! $this->user()->can('manage_stock')) {
+            return false;
+        }
+
+        return true;
     }
 
     public function rules(): array
@@ -25,6 +33,22 @@ class StoreProductRequest extends FormRequest
             'description' => ['nullable', 'string', 'max:2000'],
             'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'status' => ['required', 'in:active,inactive'],
+
+            'initial_stock_enabled' => ['nullable', 'boolean'],
+            'initial_warehouse_id' => [
+                'nullable',
+                'required_if:initial_stock_enabled,true',
+                'integer',
+                'exists:warehouses,id',
+            ],
+            'initial_quantity' => [
+                'nullable',
+                'required_if:initial_stock_enabled,true',
+                'numeric',
+                'gt:0',
+                'max:99999999',
+            ],
+            'initial_notes' => ['nullable', 'string', 'max:500'],
         ];
     }
 }
