@@ -261,4 +261,28 @@ class ProductInitialStockTest extends TestCase
             'product_id' => $product->id, 'warehouse_id' => $this->warehouseB->id, 'quantity' => 30,
         ]);
     }
+
+    public function test_stock_page_shows_the_initial_quantity_for_the_new_product(): void
+    {
+        $this->actingAs($this->admin)
+            ->post(route('products.store'), $this->basePayload + [
+                'initial_stock_enabled' => true,
+                'initial_warehouse_id' => $this->warehouseA->id,
+                'initial_quantity' => 100,
+            ])
+            ->assertRedirect(route('products.index'));
+
+        $this->actingAs($this->admin)
+            ->get('/stock')
+            ->assertInertia(fn ($page) => $page
+                ->component('Stock/Index')
+                ->has('products.data.0', fn ($page) => $page
+                    ->where('name', 'Test Product')
+                    ->has('stocks', 1)
+                    ->where('stocks.0.warehouse_id', $this->warehouseA->id)
+                    ->where('stocks.0.quantity', '100.000')
+                    ->etc()
+                )
+            );
+    }
 }

@@ -23,7 +23,7 @@ import { Head, useForm, usePage } from '@inertiajs/react';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export default function ProductsCreate({ categories, units, warehouses }) {
+export default function ProductsCreate({ categories, units, warehouses = [] }) {
     const { t } = useTranslation();
     const permissions = usePage().props.auth.user?.permissions ?? [];
     const canManageStock = permissions.includes('manage_stock');

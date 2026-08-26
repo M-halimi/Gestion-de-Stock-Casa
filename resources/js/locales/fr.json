@@ -838,7 +838,8 @@
             "created": "Produit créé avec succès.",
             "updated": "Produit mis à jour.",
             "deleted": "Produit supprimé.",
-            "in_use": "Impossible de supprimer : ce produit est utilisé dans des transactions."
+            "in_use": "Impossible de supprimer : ce produit est utilisé dans des transactions.",
+            "initial_stock_invalid": "Stock initial invalide : choisissez un entrepôt et une quantité supérieure à 0."
         },
         "supplier": {
             "created": "Fournisseur créé avec succès.",

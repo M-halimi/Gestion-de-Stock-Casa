@@ -154,6 +154,17 @@ class ProductModuleTest extends TestCase
             ->assertOk();
 
         $this->actingAs($this->admin())
+            ->get('/products/create')
+            ->assertInertia(fn ($page) => $page
+                ->component('Products/Create')
+                ->has('warehouses')
+                ->has('warehouses.0', fn ($page) => $page
+                    ->has('id')
+                    ->has('name')
+                )
+            );
+
+        $this->actingAs($this->admin())
             ->get("/products/{$product->id}")
             ->assertOk();
 

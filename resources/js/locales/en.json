@@ -838,7 +838,8 @@
             "created": "Product created successfully.",
             "updated": "Product updated.",
             "deleted": "Product deleted.",
-            "in_use": "Cannot delete: this product is used in transactions."
+            "in_use": "Cannot delete: this product is used in transactions.",
+            "initial_stock_invalid": "Invalid initial stock: choose a warehouse and a quantity greater than 0."
         },
         "supplier": {
             "created": "Supplier created successfully.",

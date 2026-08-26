@@ -16,6 +16,7 @@ use App\Services\StockService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -64,11 +65,27 @@ class ProductController extends Controller
             $data['image'] = $request->file('image')->store('products', 'public');
         }
 
+        // Initial stock is validated here directly from the request input so the
+        // flow works even if the deployed FormRequest is an older version that
+        // does not declare these fields.
         $initialStockEnabled = $request->boolean('initial_stock_enabled');
-        $initialWarehouseId = $initialStockEnabled ? (int) $request->validated('initial_warehouse_id') : null;
-        $initialQuantity = $initialStockEnabled ? (float) $request->validated('initial_quantity') : null;
+
+        if ($initialStockEnabled && ! $request->user()->can('manage_stock')) {
+            abort(403);
+        }
+
+        if ($initialStockEnabled) {
+            Validator::make($request->all(), [
+                'initial_warehouse_id' => ['required', 'integer', 'exists:warehouses,id'],
+                'initial_quantity' => ['required', 'numeric', 'gt:0', 'max:99999999'],
+                'initial_notes' => ['nullable', 'string', 'max:500'],
+            ])->validate();
+        }
+
+        $initialWarehouseId = $initialStockEnabled ? (int) $request->input('initial_warehouse_id') : null;
+        $initialQuantity = $initialStockEnabled ? (float) $request->input('initial_quantity') : null;
         $initialNotes = $initialStockEnabled
-            ? ($request->validated('initial_notes') ?: 'Stock initial')
+            ? ((string) $request->input('initial_notes') ?: 'Stock initial')
             : null;
 
         DB::transaction(function () use (&$product, $data, $initialStockEnabled, $initialWarehouseId, $initialQuantity, $initialNotes) {
