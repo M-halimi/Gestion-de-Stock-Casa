@@ -32,7 +32,8 @@
         "currency": "DH",
         "view": "Voir",
         "more": "Plus",
-        "import": "Importer"
+        "import": "Importer",
+        "clear": "Effacer"
     },
     "nav": {
         "dashboard": "Accueil",
@@ -1076,5 +1077,15 @@
         "feature_sales_desc": "Gérez vos commandes, factures et retours avec une interface intuitive et rapide.",
         "feature_analytics_title": "Rapports et analyses avancées",
         "feature_analytics_desc": "Tableaux de bord, tendances et exports pour piloter votre activité."
+    },
+    "search": {
+        "scope_products": "Produits",
+        "scope_customers": "Clients",
+        "scope_suppliers": "Fournisseurs",
+        "scope_sales": "Ventes",
+        "scope_purchases": "Achats",
+        "search_in": "Rechercher dans",
+        "loading": "Recherche…",
+        "scope_all": "Tous"
     }
 }

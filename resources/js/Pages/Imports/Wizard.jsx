@@ -3,6 +3,7 @@ import BackButton from '@/Components/ui/BackButton';
 import Button from '@/Components/ui/Button';
 import Card from '@/Components/ui/Card';
 import PageHeader from '@/Components/ui/PageHeader';
+import Select from '@/Components/ui/Select';
 import Badge from '@/Components/ui/Badge';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useCallback, useMemo, useRef, useState } from 'react';
@@ -298,16 +299,15 @@ export default function ImportWizard({ importData, type, columns }) {
                                             {previewData?.rows?.[0]?.[headerIndex] ?? '\u2014'}
                                         </td>
                                         <td className="px-4 py-3">
-                                            <select
+                                            <Select
                                                 value={fieldKey ?? ''}
                                                 onChange={(e) => handleMappingChange(headerIndex, e.target.value || null)}
-                                                className="h-9 rounded-md border-hairline-input bg-canvas px-3 text-[13px] text-ink focus:border-primary focus:ring-1 focus:ring-primary/30"
-                                            >
-                                                <option value="">{t('pages.imports.mapping.skip')}</option>
-                                                {dbColumns.map((col) => (
-                                                    <option key={col.key} value={col.key}>{col.name}</option>
-                                                ))}
-                                            </select>
+                                                className="w-full"
+                                                options={[
+                                                    { value: '', label: t('pages.imports.mapping.skip') },
+                                                    ...dbColumns.map((col) => ({ value: col.key, label: col.name })),
+                                                ]}
+                                            />
                                         </td>
                                     </tr>
                                 ))}

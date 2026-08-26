@@ -1,3 +1,4 @@
+import Select from '@/Components/ui/Select';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import Pagination from '@/Components/ui/Pagination';
 import { Head, router } from '@inertiajs/react';
@@ -111,14 +112,24 @@ function FilterBar({ filters, setFilters, users, actions, entities, applyFilters
                 <svg className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
                 <input type="text" value={filters.search} onChange={e => setFilters({ ...filters, search: e.target.value })} onKeyDown={e => e.key === 'Enter' && applyFilters()} placeholder="Search..." className="w-full rounded-lg border border-hairline-input bg-canvas-soft pl-9 pr-3 py-2 text-sm text-ink placeholder:text-ink-mute focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
             </div>
-            <select value={filters.entity_type} onChange={e => setFilters({ ...filters, entity_type: e.target.value })} className="rounded-lg border border-hairline-input bg-canvas-soft px-3 py-2 text-sm text-ink-secondary focus:border-primary focus:ring-1 focus:ring-primary outline-none">
-                <option value="">All modules</option>
-                {entities.map(e => <option key={e} value={e}>{e}</option>)}
-            </select>
-            <select value={filters.user_id} onChange={e => setFilters({ ...filters, user_id: e.target.value })} className="rounded-lg border border-hairline-input bg-canvas-soft px-3 py-2 text-sm text-ink-secondary focus:border-primary focus:ring-1 focus:ring-primary outline-none">
-                <option value="">All users</option>
-                {users.map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
-            </select>
+            <Select
+                value={filters.entity_type}
+                onChange={e => setFilters({ ...filters, entity_type: e.target.value })}
+                className="w-full sm:w-44"
+                options={[
+                    { value: '', label: 'All modules' },
+                    ...entities.map(e => ({ value: e, label: e })),
+                ]}
+            />
+            <Select
+                value={filters.user_id}
+                onChange={e => setFilters({ ...filters, user_id: e.target.value })}
+                className="w-full sm:w-44"
+                options={[
+                    { value: '', label: 'All users' },
+                    ...users.map(u => ({ value: String(u.id), label: u.name })),
+                ]}
+            />
             <input type="date" value={filters.from} onChange={e => setFilters({ ...filters, from: e.target.value })} className="rounded-lg border border-hairline-input bg-canvas-soft px-3 py-2 text-sm text-ink-secondary focus:border-primary focus:ring-1 focus:ring-primary outline-none" title="From"/>
             <input type="date" value={filters.to} onChange={e => setFilters({ ...filters, to: e.target.value })} className="rounded-lg border border-hairline-input bg-canvas-soft px-3 py-2 text-sm text-ink-secondary focus:border-primary focus:ring-1 focus:ring-primary outline-none" title="To"/>
             <div className="flex gap-2">

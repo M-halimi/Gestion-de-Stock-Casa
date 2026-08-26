@@ -28,7 +28,7 @@ export default function LanguageSwitcher() {
                             d="M12 21a9 9 0 100-18 9 9 0 000 18zm0 0a8.949 8.949 0 003-1.5 8.949 8.949 0 000-15A8.949 8.949 0 0012 3a8.949 8.949 0 000 15 8.949 8.949 0 003 1.5zM3 12h18"
                         />
                     </svg>
-                    <span className="leading-none">{current.label}</span>
+                    <span className="hidden leading-none sm:inline">{current.label}</span>
                     <svg
                         className="h-3.5 w-3.5 shrink-0 text-ink-mute"
                         fill="none"

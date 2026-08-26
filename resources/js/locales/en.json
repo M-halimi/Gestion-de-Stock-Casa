@@ -32,7 +32,8 @@
         "currency": "DH",
         "view": "View",
         "more": "More",
-        "import": "Import"
+        "import": "Import",
+        "clear": "Clear"
     },
     "nav": {
         "dashboard": "Home",
@@ -1076,5 +1077,15 @@
         "feature_sales_desc": "Manage your orders, invoices and returns with an intuitive and fast interface.",
         "feature_analytics_title": "Advanced reports & analytics",
         "feature_analytics_desc": "Dashboards, trends and exports to drive your business."
+    },
+    "search": {
+        "scope_products": "Products",
+        "scope_customers": "Clients",
+        "scope_suppliers": "Suppliers",
+        "scope_sales": "Sales",
+        "scope_purchases": "Purchases",
+        "search_in": "Search in",
+        "loading": "Searching…",
+        "scope_all": "All"
     }
 }

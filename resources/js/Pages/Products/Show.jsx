@@ -45,12 +45,19 @@ export default function ProductsShow({ product, movements }) {
                         <div className="flex items-center gap-4">
                             <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-hairline bg-canvas-soft">
                                 {product.image ? (
-                                    <img src={`/storage/${product.image}`} alt={product.name} className="h-full w-full object-cover" />
-                                ) : (
-                                    <svg className="h-10 w-10 text-ink-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5L12 3l9 4.5M3 7.5l9 4.5m-9-4.5v9l9 4.5m0-13.5l9 4.5m-9 4.5v9m0-13.5l-9 4.5m9 4.5l9-4.5v9l-9 4.5v-9" />
-                                    </svg>
-                                )}
+                                    <img
+                                        src={`/storage/${product.image}`}
+                                        alt={product.name}
+                                        className="h-full w-full object-cover"
+                                        onError={(e) => {
+                                            e.currentTarget.style.display = 'none';
+                                            e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                                        }}
+                                    />
+                                ) : null}
+                                <svg className={`h-10 w-10 text-ink-mute ${product.image ? 'hidden' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5L12 3l9 4.5M3 7.5l9 4.5m-9-4.5v9l9 4.5m0-13.5l9 4.5m9 4.5v9l-9 4.5v-9" />
+                                </svg>
                             </div>
                             <div>
                                 <Badge tone={product.status === 'active' ? 'success' : 'neutral'}>{t(`pages.products.${product.status}`)}</Badge>

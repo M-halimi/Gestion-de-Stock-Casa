@@ -109,12 +109,19 @@ export default function ProductsIndex({ products, categories, filters }) {
                                 <div className="flex items-center gap-3">
                                     <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-hairline bg-canvas-soft">
                                         {p.image ? (
-                                            <img src={`/storage/${p.image}`} alt={p.name} className="h-full w-full object-cover" />
-                                        ) : (
-                                            <svg className="h-5 w-5 text-ink-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5L12 3l9 4.5M3 7.5l9 4.5m-9-4.5v9l9 4.5m0-13.5l9 4.5m-9 4.5v9m0-13.5l-9 4.5m9 4.5l9-4.5v9l-9 4.5v-9" />
-                                            </svg>
-                                        )}
+                                            <img
+                                                src={`/storage/${p.image}`}
+                                                alt={p.name}
+                                                className="h-full w-full object-cover"
+                                                onError={(e) => {
+                                                    e.currentTarget.style.display = 'none';
+                                                    e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                                                }}
+                                            />
+                                        ) : null}
+                                        <svg className={`h-5 w-5 text-ink-mute ${p.image ? 'hidden' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5L12 3l9 4.5M3 7.5l9 4.5m-9-4.5v9l9 4.5m0-13.5l9 4.5m9 4.5v9l-9 4.5v-9" />
+                                        </svg>
                                     </div>
                                     <div>
                                         <div className="font-normal text-ink">{p.name}</div>

@@ -1,11 +1,12 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import FlashToast from '@/Components/shared/FlashToast';
+import GlobalSearch from '@/Components/GlobalSearch';
 import LanguageSwitcher from '@/Components/LanguageSwitcher';
 import NavLink from '@/Components/NavLink';
 import ThemeSwitcher from '@/Components/ThemeSwitcher';
-import { Link, router, usePage } from '@inertiajs/react';
-import { useEffect, useRef, useState } from 'react';
+import { Link, usePage } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const icons = {
@@ -108,11 +109,6 @@ const CalendarIcon = (
     </svg>
 );
 
-const SearchIcon = (
-    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-    </svg>
-);
 
 const DownloadIcon = (
     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
@@ -174,20 +170,6 @@ export default function AuthenticatedLayout({ header, children }) {
     const { t, i18n } = useTranslation();
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [search, setSearch] = useState('');
-    const searchRef = useRef(null);
-
-    useEffect(() => {
-        const handler = (e) => {
-            const tag = document.activeElement?.tagName;
-            if (e.key === '/' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(tag)) {
-                e.preventDefault();
-                searchRef.current?.focus();
-            }
-        };
-        document.addEventListener('keydown', handler);
-        return () => document.removeEventListener('keydown', handler);
-    }, []);
 
     const today = new Intl.DateTimeFormat(
         i18n.language === 'ar' ? 'ar-MA' : i18n.language === 'en' ? 'en-GB' : 'fr-FR',
@@ -261,7 +243,7 @@ export default function AuthenticatedLayout({ header, children }) {
             <div className="flex h-16 shrink-0 items-center gap-3 border-b border-hairline px-5">
                 <Link href="/" className="flex items-center gap-2.5">
                     <ApplicationLogo className="h-11 w-11" />
-                    <span className="brand-wordmark text-[15px] font-bold uppercase tracking-wide">
+                    <span className="brand-wordmark hidden text-[15px] font-bold uppercase tracking-wide min-[480px]:inline">
                         {t('app.name')}
                     </span>
                 </Link>
@@ -395,8 +377,8 @@ export default function AuthenticatedLayout({ header, children }) {
             <div className="lg:ps-60">
                 <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-hairline bg-canvas-glass px-4 backdrop-blur-md sm:px-6">
                     <Link href="/" className="flex items-center gap-2 lg:hidden">
-                        <ApplicationLogo className="h-9 w-9" />
-                        <span className="brand-wordmark text-sm font-bold uppercase tracking-wide">
+                        <ApplicationLogo className="h-9 w-9 shrink-0" />
+                        <span className="brand-wordmark hidden text-sm font-bold uppercase tracking-wide min-[420px]:inline">
                             {t('app.name')}
                         </span>
                     </Link>
@@ -411,28 +393,7 @@ export default function AuthenticatedLayout({ header, children }) {
                         </svg>
                     </button>
 
-                    <form
-                        className="relative hidden w-full max-w-md flex-1 sm:block"
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                            router.get(route('stock.index', { search }));
-                        }}
-                    >
-                        <span className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-ink-mute">
-                            {SearchIcon}
-                        </span>
-                        <input
-                            ref={searchRef}
-                            type="search"
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            placeholder={t('topbar.search_placeholder')}
-                            className="h-10 w-full rounded-lg border border-hairline-input bg-canvas-soft pe-14 ps-9 text-[14px] font-normal text-ink placeholder:text-ink-mute focus:border-primary focus:ring-2 focus:ring-primary/30"
-                        />
-                        <kbd className="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 rounded border border-hairline-strong bg-canvas px-1.5 py-0.5 text-[11px] font-semibold text-ink-mute">
-                            /
-                        </kbd>
-                    </form>
+                    <GlobalSearch />
 
                     <div className="flex-1 sm:hidden" />
 

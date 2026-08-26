@@ -32,7 +32,8 @@
         "currency": "درهم",
         "view": "عرض",
         "more": "المزيد",
-        "import": "استيراد"
+        "import": "استيراد",
+        "clear": "مسح"
     },
     "nav": {
         "dashboard": "الرئيسية",
@@ -1076,5 +1077,15 @@
         "feature_sales_desc": "أدر طلباتك وفواتيرك وإرجاعاتك بواجهة سريعة وبديهية.",
         "feature_analytics_title": "تقارير وتحليلات متقدمة",
         "feature_analytics_desc": "لوحات معلومات واتجاهات وتصدير لتوجيه نشاطك التجاري."
+    },
+    "search": {
+        "scope_products": "المنتجات",
+        "scope_customers": "العملاء",
+        "scope_suppliers": "الموردون",
+        "scope_sales": "المبيعات",
+        "scope_purchases": "المشتريات",
+        "search_in": "البحث في",
+        "loading": "جارٍ البحث…",
+        "scope_all": "الكل"
     }
 }
