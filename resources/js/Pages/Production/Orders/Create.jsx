@@ -16,6 +16,7 @@ export default function OrdersCreate({ boms, warehouses }) {
     const { t } = useTranslation();
     const { data, setData, post, processing, errors } = useForm({
         bill_of_material_id: '',
+        product_variant_id: '',
         quantity: '',
         warehouse_id: '',
         notes: '',
@@ -27,6 +28,7 @@ export default function OrdersCreate({ boms, warehouses }) {
     );
 
     const quantity = Number(data.quantity) || 0;
+    const variants = selectedBom?.variants ?? [];
 
     const requirements = useMemo(() => {
         if (!selectedBom || quantity <= 0) return [];
@@ -69,7 +71,15 @@ export default function OrdersCreate({ boms, warehouses }) {
                                 id="bill_of_material_id"
                                 label={t('pages.production.orders.bom')}
                                 value={data.bill_of_material_id}
-                                onChange={(e) => setData('bill_of_material_id', e.target.value)}
+                                onChange={(e) => {
+                                    const bom = boms.find((item) => String(item.id) === String(e.target.value));
+                                    const bomVariants = bom?.variants ?? [];
+                                    setData((current) => ({
+                                        ...current,
+                                        bill_of_material_id: e.target.value,
+                                        product_variant_id: bomVariants.length === 1 ? String(bomVariants[0].id) : '',
+                                    }));
+                                }}
                                 error={errors.bill_of_material_id}
                                 icon={<IconBox />}
                                 options={[
@@ -77,6 +87,22 @@ export default function OrdersCreate({ boms, warehouses }) {
                                     ...boms.map((b) => ({ value: String(b.id), label: `${b.product.name} (${b.product.sku})` })),
                                 ]}
                             />
+                            {variants.length > 0 && (
+                                <Select
+                                    id="product_variant_id"
+                                    label="Product variant"
+                                    value={data.product_variant_id}
+                                    onChange={(e) => setData('product_variant_id', e.target.value)}
+                                    error={errors.product_variant_id}
+                                    options={[
+                                        { value: '', label: 'Select variant' },
+                                        ...variants.map((variant) => ({
+                                            value: String(variant.id),
+                                            label: `${variant.label}${variant.barcode ? ` (${variant.barcode})` : ''}`,
+                                        })),
+                                    ]}
+                                />
+                            )}
                             <Select
                                 id="warehouse_id"
                                 label={t('pages.production.orders.warehouse')}

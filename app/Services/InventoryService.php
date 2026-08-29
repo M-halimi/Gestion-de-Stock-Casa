@@ -29,15 +29,23 @@ class InventoryService
                 ->get(['id', 'name', 'sku', 'unit_id']);
 
             foreach ($products as $product) {
-                $system = (float) $product->totalQuantity($warehouseId);
+                $variants = $product->variants()->where('status', 'active')->get();
+                if ($variants->isEmpty()) {
+                    $variants = collect([app(ProductVariantService::class)->ensureLegacyVariant($product)]);
+                }
 
-                InventoryAdjustmentItem::create([
-                    'inventory_adjustment_id' => $adjustment->id,
-                    'product_id' => $product->id,
-                    'system_quantity' => $system,
-                    'counted_quantity' => $system,
-                    'difference' => 0,
-                ]);
+                foreach ($variants as $variant) {
+                    $system = (float) $variant->totalQuantity($warehouseId);
+
+                    InventoryAdjustmentItem::create([
+                        'inventory_adjustment_id' => $adjustment->id,
+                        'product_id' => $product->id,
+                        'product_variant_id' => $variant->id,
+                        'system_quantity' => $system,
+                        'counted_quantity' => $system,
+                        'difference' => 0,
+                    ]);
+                }
             }
 
             return $adjustment;
@@ -70,7 +78,7 @@ class InventoryService
             throw new RuntimeException('Only a draft inventory adjustment can be validated.');
         }
 
-        $adjustment->loadMissing('items.product', 'warehouse');
+        $adjustment->loadMissing('items.product', 'items.variant', 'warehouse');
 
         $reason = "Inventaire {$adjustment->reference}";
 
@@ -84,7 +92,7 @@ class InventoryService
                 $item->save();
 
                 app(StockService::class)->adjust(
-                    $item->product,
+                    $item->variant ?? $item->product,
                     $adjustment->warehouse,
                     (float) $item->counted_quantity,
                     $reason,

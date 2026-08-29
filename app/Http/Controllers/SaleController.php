@@ -62,7 +62,7 @@ class SaleController extends Controller
 
     public function show(Sale $sale): Response
     {
-        $sale->load(['customer', 'warehouse', 'items.product', 'user']);
+        $sale->load(['customer', 'warehouse', 'items.product', 'items.variant.color', 'items.variant.size', 'user']);
 
         return Inertia::render('Sales/Show', [
             'sale' => $sale,
@@ -155,7 +155,7 @@ class SaleController extends Controller
             'customers' => Customer::orderBy('name')->limit(50)->get(['id', 'name', 'phone']),
             'warehouses' => Warehouse::where('is_active', true)->orderBy('name')->get(['id', 'name', 'code']),
             'products' => Product::where('status', 'active')
-                ->with('stocks')
+                ->with(['stocks', 'variants.color', 'variants.size', 'variants.stocks'])
                 ->orderBy('name')
                 ->get(['id', 'name', 'sku', 'sale_price']),
         ];

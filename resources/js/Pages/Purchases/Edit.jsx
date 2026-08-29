@@ -15,6 +15,7 @@ export default function PurchasesEdit({ purchase, suppliers, warehouses, product
         notes: purchase.notes ?? '',
         items: purchase.items.map((item) => ({
             product_id: String(item.product_id),
+            product_variant_id: String(item.product_variant_id ?? ''),
             quantity: String(item.quantity),
             unit_price: String(item.unit_price),
             discount: String(item.discount),

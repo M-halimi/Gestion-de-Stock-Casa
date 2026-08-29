@@ -21,6 +21,7 @@ class ProductionOrder extends Model
         'reference',
         'bill_of_material_id',
         'product_id',
+        'product_variant_id',
         'quantity',
         'material_cost',
         'warehouse_id',
@@ -46,6 +47,11 @@ class ProductionOrder extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function variant(): BelongsTo
+    {
+        return $this->belongsTo(ProductVariant::class, 'product_variant_id');
     }
 
     public function warehouse(): BelongsTo

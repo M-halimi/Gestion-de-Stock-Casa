@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Purchase;
 use App\Models\Sale;
+use App\Models\SaleItem;
 use App\Models\Stock;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -35,7 +37,7 @@ class DashboardTest extends TestCase
     {
         $response = $this->actingAs($this->admin())->get('/dashboard')->assertOk();
 
-        foreach (['kpis', 'sales_trend', 'comparison', 'top_products', 'low_stock', 'movements', 'recent_purchases', 'recent_sales', 'insights'] as $prop) {
+        foreach (['kpis', 'sales_trend', 'comparison', 'top_products', 'top_variants', 'low_stock', 'movements', 'recent_purchases', 'recent_sales', 'insights'] as $prop) {
             $this->assertArrayHasKey($prop, $response->viewData('page')['props']);
         }
     }
@@ -124,6 +126,49 @@ class DashboardTest extends TestCase
             $this->assertGreaterThanOrEqual($top[1]['total_revenue'], $top[0]['total_revenue']);
         }
         $this->assertSame('revenue', $props['filters']['by']);
+    }
+
+    public function test_top_variants_include_product_size_and_color_sales(): void
+    {
+        $product = Product::factory()->create([
+            'status' => 'active',
+            'category_id' => \App\Models\Category::first()->id,
+            'unit_id' => \App\Models\Unit::first()->id,
+        ]);
+        $variant = ProductVariant::create([
+            'product_id' => $product->id,
+            'color_id' => \App\Models\Color::where('name', 'Red')->value('id'),
+            'size_id' => \App\Models\Size::where('name', 'XL')->value('id'),
+            'combination_key' => 'red-xl-dashboard-test',
+            'variant_code' => 'VAR-DASH-001',
+            'barcode' => 'DASH-001',
+            'status' => 'active',
+        ]);
+        $sale = Sale::factory()->create([
+            'date' => now(),
+            'status' => Sale::STATUS_CONFIRMED,
+        ]);
+        SaleItem::create([
+            'sale_id' => $sale->id,
+            'product_id' => $product->id,
+            'product_variant_id' => $variant->id,
+            'quantity' => 1000,
+            'unit_price' => 25,
+            'subtotal' => 25000,
+        ]);
+
+        $props = $this->actingAs($this->admin())
+            ->get('/dashboard?period=30d')
+            ->viewData('page')['props'];
+
+        $topVariant = collect($props['top_variants'])->firstWhere('variant_id', $variant->id);
+
+        $this->assertNotNull($topVariant);
+        $this->assertSame($product->id, $topVariant['product_id']);
+        $this->assertSame('Red', $topVariant['color']);
+        $this->assertSame('XL', $topVariant['size']);
+        $this->assertSame(1000.0, (float) $topVariant['total_qty']);
+        $this->assertSame(25000.0, (float) $topVariant['total_revenue']);
     }
 
     public function test_low_stock_search_filters_products(): void

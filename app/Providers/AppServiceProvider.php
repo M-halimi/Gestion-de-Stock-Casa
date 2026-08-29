@@ -3,13 +3,16 @@
 namespace App\Providers;
 
 use App\Models\Category;
+use App\Models\Color;
 use App\Models\Customer;
 use App\Models\InventoryAdjustment;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\ProductionOrder;
 use App\Models\Purchase;
 use App\Models\Sale;
 use App\Models\Setting;
+use App\Models\Size;
 use App\Models\StockMovement;
 use App\Models\Supplier;
 use App\Models\Unit;
@@ -41,13 +44,16 @@ class AppServiceProvider extends ServiceProvider
 
         $auditableModels = [
             Category::class,
+            Color::class,
             Customer::class,
             InventoryAdjustment::class,
             Product::class,
+            ProductVariant::class,
             ProductionOrder::class,
             Purchase::class,
             Sale::class,
             Setting::class,
+            Size::class,
             Supplier::class,
             Unit::class,
             User::class,

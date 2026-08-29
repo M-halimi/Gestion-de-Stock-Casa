@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\PurchaseItem;
 use App\Models\Unit;
 use App\Models\User;
+use App\Models\Warehouse;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -191,6 +192,49 @@ class ProductModuleTest extends TestCase
             ->assertRedirect(route('products.index'));
 
         $this->assertDatabaseHas('products', ['name' => 'Soie sauvage']);
+    }
+
+    public function test_product_defaults_minimum_stock_to_three(): void
+    {
+        $this->actingAs($this->admin())
+            ->post('/products', [
+                'name' => 'Default Minimum Stock Product',
+                'category_id' => Category::first()->id,
+                'unit_id' => Unit::first()->id,
+                'purchase_price' => 10,
+                'sale_price' => 20,
+                'status' => 'active',
+            ])
+            ->assertRedirect(route('products.index'));
+
+        $this->assertDatabaseHas('products', [
+            'name' => 'Default Minimum Stock Product',
+            'min_stock' => 3,
+        ]);
+    }
+
+    public function test_product_created_from_pos_returns_to_pos(): void
+    {
+        $warehouse = Warehouse::create([
+            'name' => 'POS Return Warehouse',
+            'code' => 'POS-RET',
+            'is_active' => true,
+        ]);
+
+        $this->actingAs($this->admin())
+            ->post(route('products.store'), [
+                'name' => 'POS Product Return Test',
+                'category_id' => Category::first()->id,
+                'unit_id' => Unit::first()->id,
+                'purchase_price' => 10,
+                'sale_price' => 20,
+                'status' => 'active',
+                'return_to' => 'pos',
+                'return_warehouse_id' => $warehouse->id,
+            ])
+            ->assertRedirect(route('pos.create', ['warehouse_id' => $warehouse->id]));
+
+        $this->assertDatabaseHas('products', ['name' => 'POS Product Return Test']);
     }
 
     public function test_product_creation_requires_valid_payload(): void

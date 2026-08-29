@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Stock;
 use App\Models\StockMovement;
 use App\Models\Warehouse;
@@ -16,7 +17,7 @@ class InsufficientStockException extends RuntimeException
 class StockService
 {
     public function increase(
-        Product|int $product,
+        Product|ProductVariant|int $product,
         Warehouse|int $warehouse,
         float $quantity,
         string $reason,
@@ -29,7 +30,7 @@ class StockService
     }
 
     public function decrease(
-        Product|int $product,
+        Product|ProductVariant|int $product,
         Warehouse|int $warehouse,
         float $quantity,
         string $reason,
@@ -42,7 +43,7 @@ class StockService
     }
 
     public function transfer(
-        Product|int $product,
+        Product|ProductVariant|int $product,
         Warehouse|int $fromWarehouse,
         Warehouse|int $toWarehouse,
         float $quantity,
@@ -60,27 +61,31 @@ class StockService
             throw new \InvalidArgumentException('Source and destination warehouses must differ.');
         }
 
-        $productId = $product instanceof Product ? $product->id : (int) $product;
-
-        DB::transaction(function () use ($productId, $fromWarehouse, $toWarehouse, $quantity, $reason, $userId) {
-            $this->apply($productId, $fromWarehouse, -$quantity, StockMovement::TYPE_TRANSFER_OUT, $reason, null, null, $userId);
-            $this->apply($productId, $toWarehouse, $quantity, StockMovement::TYPE_TRANSFER_IN, $reason, null, null, $userId);
+        DB::transaction(function () use ($product, $fromWarehouse, $toWarehouse, $quantity, $reason, $userId) {
+            $this->apply($product, $fromWarehouse, -$quantity, StockMovement::TYPE_TRANSFER_OUT, $reason, null, null, $userId);
+            $this->apply($product, $toWarehouse, $quantity, StockMovement::TYPE_TRANSFER_IN, $reason, null, null, $userId);
         });
     }
 
     public function adjust(
-        Product|int $product,
+        Product|ProductVariant|int $product,
         Warehouse|int $warehouse,
         float $newQuantity,
         string $reason,
         ?int $userId = null,
     ): Stock {
-        $productId = $product instanceof Product ? $product->id : (int) $product;
+        $target = $this->resolveTarget($product);
         $warehouseId = $warehouse instanceof Warehouse ? $warehouse->id : (int) $warehouse;
 
-        return DB::transaction(function () use ($productId, $warehouseId, $newQuantity, $reason, $userId) {
-            $stock = Stock::where('product_id', $productId)
+        return DB::transaction(function () use ($target, $warehouseId, $newQuantity, $reason, $userId) {
+            $stock = Stock::query()
+                ->when($target['variant_id'], fn ($query) => $query->where(function ($stock) use ($target) {
+                    $stock->where('product_variant_id', $target['variant_id'])
+                        ->orWhere(fn ($legacy) => $legacy->where('product_id', $target['product_id'])->whereNull('product_variant_id'));
+                }))
+                ->when(! $target['variant_id'], fn ($query) => $query->where('product_id', $target['product_id']))
                 ->where('warehouse_id', $warehouseId)
+                ->orderByRaw('product_variant_id IS NULL')
                 ->lockForUpdate()
                 ->first();
 
@@ -88,7 +93,8 @@ class StockService
             $delta = $newQuantity - (float) $current;
 
             $stock = $stock ?? new Stock([
-                'product_id' => $productId,
+                'product_id' => $target['product_id'],
+                'product_variant_id' => $target['variant_id'],
                 'warehouse_id' => $warehouseId,
             ]);
 
@@ -97,7 +103,8 @@ class StockService
 
             if ((float) $delta !== 0.0) {
                 StockMovement::create([
-                    'product_id' => $productId,
+                    'product_id' => $target['product_id'],
+                    'product_variant_id' => $target['variant_id'],
                     'warehouse_id' => $warehouseId,
                     'type' => StockMovement::TYPE_ADJUSTMENT,
                     'quantity' => $delta,
@@ -111,7 +118,7 @@ class StockService
     }
 
     private function apply(
-        Product|int $product,
+        Product|ProductVariant|int $product,
         Warehouse|int $warehouse,
         float $delta,
         string $type,
@@ -124,12 +131,18 @@ class StockService
             throw new \InvalidArgumentException('Quantity must not be zero.');
         }
 
-        $productId = $product instanceof Product ? $product->id : (int) $product;
+        $target = $this->resolveTarget($product);
         $warehouseId = $warehouse instanceof Warehouse ? $warehouse->id : (int) $warehouse;
 
-        return DB::transaction(function () use ($productId, $warehouseId, $delta, $type, $reason, $referenceType, $referenceId, $userId) {
-            $stock = Stock::where('product_id', $productId)
+        return DB::transaction(function () use ($target, $warehouseId, $delta, $type, $reason, $referenceType, $referenceId, $userId) {
+            $stock = Stock::query()
+                ->when($target['variant_id'], fn ($query) => $query->where(function ($stock) use ($target) {
+                    $stock->where('product_variant_id', $target['variant_id'])
+                        ->orWhere(fn ($legacy) => $legacy->where('product_id', $target['product_id'])->whereNull('product_variant_id'));
+                }))
+                ->when(! $target['variant_id'], fn ($query) => $query->where('product_id', $target['product_id']))
                 ->where('warehouse_id', $warehouseId)
+                ->orderByRaw('product_variant_id IS NULL')
                 ->lockForUpdate()
                 ->first();
 
@@ -138,12 +151,13 @@ class StockService
             if ($newQuantity < 0) {
                 throw new InsufficientStockException(
                     sprintf('Insufficient stock for product %d in warehouse %d (requested %s, available %s).',
-                        $productId, $warehouseId, -$delta, $stock?->quantity ?? 0)
+                        $target['product_id'], $warehouseId, -$delta, $stock?->quantity ?? 0)
                 );
             }
 
             $stock = $stock ?? new Stock([
-                'product_id' => $productId,
+                'product_id' => $target['product_id'],
+                'product_variant_id' => $target['variant_id'],
                 'warehouse_id' => $warehouseId,
             ]);
 
@@ -151,7 +165,8 @@ class StockService
             $stock->save();
 
             StockMovement::create([
-                'product_id' => $productId,
+                'product_id' => $target['product_id'],
+                'product_variant_id' => $target['variant_id'],
                 'warehouse_id' => $warehouseId,
                 'type' => $type,
                 'quantity' => abs($delta),
@@ -163,5 +178,46 @@ class StockService
 
             return $stock;
         });
+    }
+
+    /** @return array{product_id:int,variant_id:?int} */
+    private function resolveTarget(Product|ProductVariant|int $target): array
+    {
+        if ($target instanceof ProductVariant) {
+            return ['product_id' => (int) $target->product_id, 'variant_id' => (int) $target->id];
+        }
+
+        $product = $target instanceof Product ? $target : Product::findOrFail((int) $target);
+        $variants = $product->variants()
+            ->where('status', ProductVariant::STATUS_ACTIVE)
+            ->where('is_legacy', false);
+        $variantsCount = $variants->count();
+        if ($variantsCount === 1) {
+            return ['product_id' => (int) $product->id, 'variant_id' => (int) $variants->value('id')];
+        }
+
+        if ($variantsCount > 1) {
+            throw new \InvalidArgumentException('A product variant is required for this product.');
+        }
+
+        $legacy = $product->legacyVariant()->first();
+        if ($legacy) {
+            return ['product_id' => (int) $product->id, 'variant_id' => (int) $legacy->id];
+        }
+
+        if ($variantsCount === 0) {
+            $legacy = ProductVariant::firstOrCreate(
+                ['product_id' => $product->id, 'is_legacy' => true],
+                [
+                    'combination_key' => 'legacy',
+                    'barcode' => $product->barcode,
+                    'status' => $product->status ?? ProductVariant::STATUS_ACTIVE,
+                ],
+            );
+
+            return ['product_id' => (int) $product->id, 'variant_id' => (int) $legacy->id];
+        }
+
+        throw new \InvalidArgumentException('A product variant is required for this product.');
     }
 }

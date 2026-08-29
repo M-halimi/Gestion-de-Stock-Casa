@@ -38,6 +38,10 @@ class Product extends Model
             if (empty($product->sku)) {
                 $product->sku = $product->generateSku();
             }
+
+            if ($product->min_stock === null || $product->min_stock === '') {
+                $product->min_stock = 3;
+            }
         });
     }
 
@@ -68,6 +72,16 @@ class Product extends Model
     public function stocks(): HasMany
     {
         return $this->hasMany(Stock::class);
+    }
+
+    public function variants(): HasMany
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
+
+    public function legacyVariant(): HasOne
+    {
+        return $this->hasOne(ProductVariant::class)->where('is_legacy', true);
     }
 
     public function stockMovements(): HasMany

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('unit_id')->constrained()->restrictOnDelete();
             $table->decimal('purchase_price', 12, 2)->default(0);
             $table->decimal('sale_price', 12, 2)->default(0);
-            $table->decimal('min_stock', 10, 3)->default(0);
+            $table->decimal('min_stock', 10, 3)->default(3);
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');

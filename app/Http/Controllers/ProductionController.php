@@ -116,7 +116,7 @@ class ProductionController extends Controller
     public function ordersIndex(Request $request): Response
     {
         $orders = ProductionOrder::query()
-            ->with(['product', 'warehouse', 'user'])
+            ->with(['product', 'variant.color', 'variant.size', 'warehouse', 'user'])
             ->withCount('items')
             ->when($request->input('search'), fn ($q, $search) => $q->where('reference', 'like', "%{$search}%")
                 ->orWhereHas('product', fn ($p) => $p->where('name', 'like', "%{$search}%")))
@@ -134,11 +134,20 @@ class ProductionController extends Controller
     public function ordersCreate(): Response
     {
         return Inertia::render('Production/Orders/Create', [
-            'boms' => BillOfMaterial::with(['product', 'items.component'])
+            'boms' => BillOfMaterial::with(['product.variants.color', 'product.variants.size', 'items.component'])
                 ->get()
                 ->map(fn ($bom) => [
                     'id' => $bom->id,
                     'product' => $bom->product->only(['id', 'name', 'sku']),
+                    'variants' => $bom->product->variants
+                        ->where('status', 'active')
+                        ->where('is_legacy', false)
+                        ->map(fn ($variant) => [
+                            'id' => $variant->id,
+                            'barcode' => $variant->barcode,
+                            'label' => $variant->label(),
+                        ])
+                        ->values(),
                     'components' => $bom->items->map(fn ($item) => [
                         'component_id' => $item->component_id,
                         'name' => $item->component->name,
@@ -166,7 +175,7 @@ class ProductionController extends Controller
     public function ordersShow(ProductionOrder $order): Response
     {
         return Inertia::render('Production/Orders/Show', [
-            'order' => $order->load(['product', 'warehouse', 'items.component', 'user', 'billOfMaterial']),
+            'order' => $order->load(['product', 'variant.color', 'variant.size', 'warehouse', 'items.component', 'user', 'billOfMaterial']),
             'movements' => $order->movements()->with(['product', 'warehouse', 'user'])->latest('id')->get()
                 ->map(fn ($m) => [
                     'id' => $m->id,

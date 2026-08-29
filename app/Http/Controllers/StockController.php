@@ -24,13 +24,18 @@ class StockController extends Controller
 
         $products = Product::query()
             ->where('status', 'active')
-            ->with(['category', 'unit', 'stocks'])
+            ->with(['category', 'unit', 'stocks', 'variants.color', 'variants.size'])
             ->select('products.*')
             ->selectSub($totalStock, 'total_quantity')
             ->when(request('search'), function ($q, $search) {
                 $q->where(fn ($q) => $q
                     ->where('name', 'like', "%{$search}%")
-                    ->orWhere('sku', 'like', "%{$search}%"));
+                    ->orWhere('sku', 'like', "%{$search}%")
+                    ->orWhere('barcode', 'like', "%{$search}%")
+                    ->orWhereHas('variants', fn ($variant) => $variant
+                        ->where('barcode', 'like', "%{$search}%")
+                        ->orWhereHas('color', fn ($color) => $color->where('name', 'like', "%{$search}%"))
+                        ->orWhereHas('size', fn ($size) => $size->where('name', 'like', "%{$search}%"))));
             })
             ->when(request('warehouse_id'), fn ($q, $id) => $q->whereHas('stocks', fn ($sq) => $sq->where('warehouse_id', $id)))
             ->when(request('status'), function ($q, $status) use ($totalStock) {

@@ -16,6 +16,7 @@ export default function StockIndex({ products, warehouses, filters }) {
     const permissions = auth.user?.permissions ?? [];
     const canExport = permissions.includes('export_data');
     const canImport = permissions.includes('import_data');
+    const canManageStock = permissions.includes('manage_stock');
 
     const handleFilter = (key, value) => {
         router.get(
@@ -37,6 +38,7 @@ export default function StockIndex({ products, warehouses, filters }) {
                 subtitle={t('pages.stock.subtitle')}
                 actions={
                     <div className="flex items-center gap-2">
+                        {canManageStock && <Button variant="secondary" href={route('stock.barcode')}>Barcode stock</Button>}
                         {canImport && (
                             <Button
                                 variant="secondary"
@@ -91,8 +93,8 @@ export default function StockIndex({ products, warehouses, filters }) {
                     />
                 </div>
 
-                <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-hairline">
+                <div className="w-full max-w-full overflow-x-auto overscroll-x-contain">
+                    <table className="min-w-[720px] divide-y divide-hairline">
                         <thead className="bg-canvas-soft">
                             <tr>
                                 <th scope="col" className="px-5 py-3 text-start text-[12px] font-normal uppercase tracking-wide text-ink-mute">

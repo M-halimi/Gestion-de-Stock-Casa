@@ -39,6 +39,9 @@ class DashboardController extends Controller
             'top_products' => $canSales
                 ? $service->getTopProducts($period, $request->query('by') === 'revenue' ? 'revenue' : 'quantity')
                 : null,
+            'top_variants' => $canSales
+                ? $service->getTopVariants($period, $request->query('by') === 'revenue' ? 'revenue' : 'quantity')
+                : null,
             'low_stock' => $canProducts && $canStock
                 ? $service->getLowStockProducts(
                     $request->query('search'),

@@ -260,6 +260,7 @@
             "no_products_description": "Aucun produit ne correspond à votre recherche.",
             "image_hint": "JPG, PNG ou WebP — 2 Mo max",
             "sku_hint": "Laissez vide pour génération automatique",
+            "generate_sku": "Générer le SKU",
             "select_category": "Choisir une catégorie…",
             "select_unit": "Choisir une unité…",
             "warehouse": "Entrepôt",
@@ -965,6 +966,20 @@
             "by_revenue": "Chiffre d'affaires",
             "quantity": "Qté vendue",
             "revenue": "CA"
+        },
+        "top_variants": {
+            "title": "Meilleures variantes",
+            "subtitle": "Produits par taille et couleur",
+            "empty": "Aucune vente de variante sur cette période.",
+            "guide_title": "Comment lire ce bloc :",
+            "guide_description": "Chaque carte indique le produit, sa couleur, sa taille et la quantité vendue. La barre verte compare les ventes avec le meilleur produit.",
+            "reference": "Référence",
+            "color": "Couleur",
+            "size": "Taille",
+            "sold": "Unités vendues",
+            "revenue": "Chiffre d'affaires",
+            "not_specified": "Non spécifié",
+            "no_options": "Ce produit n'a pas d'option de couleur ou de taille."
         },
         "low_stock_table": {
             "title": "Produits à surveiller",

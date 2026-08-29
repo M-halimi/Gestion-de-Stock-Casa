@@ -179,6 +179,7 @@
             "no_products_description": "No products match your search.",
             "image_hint": "JPG, PNG or WebP — 2 MB max",
             "sku_hint": "Leave empty for auto-generation",
+            "generate_sku": "Generate SKU",
             "select_category": "Choose a category…",
             "select_unit": "Choose a unit…",
             "warehouse": "Warehouse",
@@ -965,6 +966,20 @@
             "by_revenue": "Revenue",
             "quantity": "Qty sold",
             "revenue": "Revenue"
+        },
+        "top_variants": {
+            "title": "Best-selling variants",
+            "subtitle": "Products by size and color",
+            "empty": "No variant sales data available for this period.",
+            "guide_title": "How to read this:",
+            "guide_description": "Each card shows one product, its color and size, and what was sold. The green bar compares sales with the best-selling item.",
+            "reference": "Reference",
+            "color": "Color",
+            "size": "Size",
+            "sold": "Units sold",
+            "revenue": "Revenue",
+            "not_specified": "Not specified",
+            "no_options": "This product has no color or size option."
         },
         "low_stock_table": {
             "title": "Products to watch",

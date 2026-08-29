@@ -17,7 +17,7 @@ export default function SalesCreate({ customers, warehouses, products }) {
         warehouse_id: '',
         date: new Date().toISOString().slice(0, 10),
         notes: '',
-        items: [{ product_id: '', quantity: '', unit_price: '', discount: 0, tax: 0 }],
+        items: [{ product_id: '', product_variant_id: '', quantity: '', unit_price: '', discount: 0, tax: 0 }],
     });
 
     const handleCustomerCreated = (customer) => {

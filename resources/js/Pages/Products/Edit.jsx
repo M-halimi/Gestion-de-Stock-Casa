@@ -2,10 +2,13 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import BackButton from '@/Components/ui/BackButton';
 import Button from '@/Components/ui/Button';
 import Card from '@/Components/ui/Card';
+import InputError from '@/Components/InputError';
 import Input from '@/Components/ui/Input';
 import PageHeader from '@/Components/ui/PageHeader';
 import Select from '@/Components/ui/Select';
 import TextArea from '@/Components/ui/TextArea';
+import ProductVariantsEditor from '@/Components/ProductVariantsEditor';
+import { generateProductSku } from '@/utils/productSku';
 import {
     IconBarcode,
     IconBox,
@@ -20,7 +23,7 @@ import { Head, useForm } from '@inertiajs/react';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export default function ProductsEdit({ product, categories, units }) {
+export default function ProductsEdit({ product, categories, units, colors = [], sizes = [] }) {
     const { t } = useTranslation();
     const { data, setData, put, processing, errors } = useForm({
         name: product.name,
@@ -34,10 +37,24 @@ export default function ProductsEdit({ product, categories, units }) {
         description: product.description ?? '',
         image: product.image ?? null,
         status: product.status,
+        variants: (product.variants ?? []).map((variant) => ({
+            id: variant.id,
+            color_id: variant.color_id,
+            size_id: variant.size_id,
+            variant_code: variant.variant_code ?? '',
+            barcode: variant.barcode ?? '',
+            status: variant.status,
+            is_legacy: variant.is_legacy,
+        })),
     });
 
     const inputRef = useRef(null);
     const [preview, setPreview] = useState(null);
+
+    const generateSku = () => {
+        const category = categories.find((item) => String(item.id) === String(data.category_id));
+        setData('sku', generateProductSku({ name: data.name, categoryName: category?.name }));
+    };
 
     const handleImage = (e) => {
         const file = e.target.files?.[0];
@@ -77,15 +94,27 @@ export default function ProductsEdit({ product, categories, units }) {
                                 icon={<IconTag />}
                                 autoFocus
                             />
-                            <Input
-                                id="sku"
-                                label={t('pages.products.sku')}
-                                value={data.sku}
-                                onChange={(e) => setData('sku', e.target.value)}
-                                error={errors.sku}
-                                hint={t('pages.products.sku_hint')}
-                                icon={<IconHashtag />}
-                            />
+                            <div className="flex items-start gap-2">
+                                <Input
+                                    id="sku"
+                                    label={t('pages.products.sku')}
+                                    value={data.sku}
+                                    onChange={(e) => setData('sku', e.target.value)}
+                                    error={errors.sku}
+                                    hint={t('pages.products.sku_hint')}
+                                    icon={<IconHashtag />}
+                                    wrapperClassName="min-w-0 flex-1"
+                                />
+                                <Button
+                                    type="button"
+                                    variant="secondary"
+                                    size="sm"
+                                    className="mt-0.5 h-10 shrink-0 whitespace-nowrap"
+                                    onClick={generateSku}
+                                >
+                                    {t('pages.products.generate_sku')}
+                                </Button>
+                            </div>
                             <Input
                                 id="barcode"
                                 label={t('pages.products.barcode')}
@@ -177,6 +206,15 @@ export default function ProductsEdit({ product, categories, units }) {
                                 icon={<IconNote />}
                             />
                         </div>
+                    </Card>
+
+                    <Card>
+                        <div className="mb-4">
+                            <h3 className="heading-md text-ink">Product variants</h3>
+                            <p className="mt-1 text-[13px] text-ink-mute">Existing variants are never silently deleted when they have stock or history.</p>
+                        </div>
+                        <ProductVariantsEditor colors={colors} sizes={sizes} data={data} setData={setData} productSku={product.sku} productBarcode={product.barcode} />
+                        {errors.variants && <InputError message={errors.variants} className="mt-3" />}
                     </Card>
 
                     <Card>

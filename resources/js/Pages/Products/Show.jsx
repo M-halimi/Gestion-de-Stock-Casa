@@ -6,6 +6,7 @@ import Card from '@/Components/ui/Card';
 import PageHeader from '@/Components/ui/PageHeader';
 import { Head } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
+import { useMemo, useState } from 'react';
 import { fmtDate, fmtMoney, fmtNumber } from '@/utils/format';
 
 function InfoRow({ label, value, tabular = false }) {
@@ -22,8 +23,18 @@ const movementTone = (type) =>
 
 export default function ProductsShow({ product, movements }) {
     const { t } = useTranslation();
+    const [variantSearch, setVariantSearch] = useState('');
+    const [colorFilter, setColorFilter] = useState('');
+    const [sizeFilter, setSizeFilter] = useState('');
 
     const totalQty = product.stocks.reduce((sum, s) => sum + Number(s.quantity), 0);
+    const variants = product.variants ?? [];
+    const filteredVariants = useMemo(() => variants.filter((variant) => {
+        const haystack = [variant.barcode, variant.color?.name, variant.size?.name, variant.label].filter(Boolean).join(' ').toLowerCase();
+        return (!variantSearch || haystack.includes(variantSearch.toLowerCase()))
+            && (!colorFilter || String(variant.color_id) === colorFilter)
+            && (!sizeFilter || String(variant.size_id) === sizeFilter);
+    }), [variants, variantSearch, colorFilter, sizeFilter]);
 
     return (
         <AuthenticatedLayout header={<h2 className="heading-md text-ink">{product.name}</h2>}>
@@ -41,6 +52,49 @@ export default function ProductsShow({ product, movements }) {
 
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
                 <div className="space-y-6 lg:col-span-2">
+                    <Card>
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                            <div>
+                                <h3 className="heading-md text-ink">Variants</h3>
+                                <p className="mt-1 text-[13px] text-ink-mute">Search by color, size or barcode.</p>
+                            </div>
+                            <input
+                                value={variantSearch}
+                                onChange={(e) => setVariantSearch(e.target.value)}
+                                placeholder="Search variants"
+                                className="h-10 min-w-56 rounded-md border border-hairline-input bg-canvas px-3 text-[14px] text-ink"
+                            />
+                        </div>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                            <select value={colorFilter} onChange={(e) => setColorFilter(e.target.value)} className="h-9 rounded-md border border-hairline-input bg-canvas px-2 text-[13px] text-ink">
+                                <option value="">All colors</option>
+                                {[...new Map(variants.filter((v) => v.color).map((v) => [v.color_id, v.color])).values()].map((color) => <option key={color.id} value={color.id}>{color.name}</option>)}
+                            </select>
+                            <select value={sizeFilter} onChange={(e) => setSizeFilter(e.target.value)} className="h-9 rounded-md border border-hairline-input bg-canvas px-2 text-[13px] text-ink">
+                                <option value="">All sizes</option>
+                                {[...new Map(variants.filter((v) => v.size).map((v) => [v.size_id, v.size])).values()].map((size) => <option key={size.id} value={size.id}>{size.name}</option>)}
+                            </select>
+                        </div>
+                        <div className="mt-4 w-full max-w-full overflow-x-auto overscroll-x-contain">
+                            <table className="min-w-[640px] w-full text-start">
+                                <thead className="border-b border-hairline text-[12px] uppercase tracking-wide text-ink-mute">
+                                    <tr><th className="py-2 pe-4 font-normal">Color</th><th className="py-2 pe-4 font-normal">Size</th><th className="py-2 pe-4 font-normal">Barcode</th><th className="py-2 text-end font-normal">Stock</th></tr>
+                                </thead>
+                                <tbody>
+                                    {filteredVariants.map((variant) => (
+                                        <tr key={variant.id} className="border-b border-hairline last:border-0">
+                                            <td className="py-2.5 pe-4 text-[14px] text-ink">{variant.is_legacy ? 'Legacy / default' : variant.color?.name ?? '—'}</td>
+                                            <td className="py-2.5 pe-4 text-[14px] text-ink">{variant.is_legacy ? '—' : variant.size?.name ?? '—'}</td>
+                                            <td className="py-2.5 pe-4 text-[14px] text-ink-mute tabular">{variant.barcode ?? '—'}</td>
+                                            <td className="py-2.5 text-end text-[14px] text-ink tabular">{fmtNumber((variant.stocks ?? []).reduce((sum, stock) => sum + Number(stock.quantity), 0))}</td>
+                                        </tr>
+                                    ))}
+                                    {filteredVariants.length === 0 && <tr><td colSpan={4} className="py-4 text-center text-[14px] text-ink-mute">No variants found.</td></tr>}
+                                </tbody>
+                            </table>
+                        </div>
+                    </Card>
+
                     <Card>
                         <div className="flex items-center gap-4">
                             <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-hairline bg-canvas-soft">
@@ -70,8 +124,8 @@ export default function ProductsShow({ product, movements }) {
 
                     <Card>
                         <h3 className="heading-md mb-2 text-ink">{t('pages.products.stock_by_warehouse')}</h3>
-                        <div className="mt-3 overflow-x-auto">
-                            <table className="w-full text-start">
+                        <div className="mt-3 w-full max-w-full overflow-x-auto overscroll-x-contain">
+                            <table className="min-w-[520px] w-full text-start">
                                 <thead>
                                     <tr className="border-b border-hairline text-[12px] uppercase tracking-wide text-ink-mute">
                                         <th className="py-2 pe-4 font-normal">{t('pages.products.warehouse')}</th>
@@ -99,8 +153,8 @@ export default function ProductsShow({ product, movements }) {
 
                     <Card>
                         <h3 className="heading-md mb-2 text-ink">{t('pages.products.movements')}</h3>
-                        <div className="mt-3 overflow-x-auto">
-                            <table className="w-full text-start">
+                        <div className="mt-3 w-full max-w-full overflow-x-auto overscroll-x-contain">
+                            <table className="min-w-[640px] w-full text-start">
                                 <thead>
                                     <tr className="border-b border-hairline text-[12px] uppercase tracking-wide text-ink-mute">
                                         <th className="py-2 pe-4 font-normal">{t('pages.products.date')}</th>

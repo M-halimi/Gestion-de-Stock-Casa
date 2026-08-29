@@ -14,8 +14,9 @@ class StockMovementController extends Controller
     public function index(): Response
     {
         $movements = StockMovement::query()
-            ->with(['product:id,name,sku', 'warehouse:id,name,code', 'user:id,name', 'reference'])
+            ->with(['product:id,name,sku', 'variant:id,product_id,color_id,size_id,barcode,is_legacy', 'variant.color:id,name', 'variant.size:id,name', 'warehouse:id,name,code', 'user:id,name', 'reference'])
             ->when(request('product_id'), fn ($q, $id) => $q->where('product_id', $id))
+            ->when(request('product_variant_id'), fn ($q, $id) => $q->where('product_variant_id', $id))
             ->when(request('type'), fn ($q, $type) => $q->where('type', $type))
             ->when(request('warehouse_id'), fn ($q, $id) => $q->where('warehouse_id', $id))
             ->when(request('from'), fn ($q, $from) => $q->whereDate('created_at', '>=', Carbon::parse($from)->startOfDay()))
@@ -27,9 +28,9 @@ class StockMovementController extends Controller
 
         return Inertia::render('Stock/Movements/Index', [
             'movements' => $movements,
-            'products' => Product::orderBy('name')->get(['id', 'name', 'sku']),
+            'products' => Product::with('variants.color', 'variants.size')->orderBy('name')->get(['id', 'name', 'sku']),
             'warehouses' => Warehouse::orderBy('name')->get(['id', 'name', 'code']),
-            'filters' => request()->only(['product_id', 'type', 'warehouse_id', 'from', 'to']),
+            'filters' => request()->only(['product_id', 'product_variant_id', 'type', 'warehouse_id', 'from', 'to']),
         ]);
     }
 
@@ -43,6 +44,13 @@ class StockMovementController extends Controller
             'reason' => $m->reason,
             'created_at' => $m->created_at->toDateTimeString(),
             'product' => $m->product?->only(['id', 'name', 'sku']),
+            'variant' => $m->variant ? [
+                'id' => $m->variant->id,
+                'barcode' => $m->variant->barcode,
+                'label' => $m->variant->label(),
+                'color' => $m->variant->color?->name,
+                'size' => $m->variant->size?->name,
+            ] : null,
             'warehouse' => $m->warehouse?->only(['id', 'name', 'code']),
             'user' => $m->user?->only(['id', 'name']),
             'reference' => $this->referenceLink($m),
@@ -55,7 +63,7 @@ class StockMovementController extends Controller
             return round((float) $m->quantity, 3);
         }
 
-        $outbound = [StockMovement::TYPE_SALE, StockMovement::TYPE_TRANSFER_OUT, StockMovement::TYPE_PRODUCTION_OUT];
+        $outbound = [StockMovement::TYPE_SALE, StockMovement::TYPE_TRANSFER_OUT, StockMovement::TYPE_PRODUCTION_OUT, StockMovement::TYPE_BARCODE_OUT];
 
         return in_array($m->type, $outbound, true)
             ? -round((float) $m->quantity, 3)

@@ -1,5 +1,6 @@
 ﻿import Button from '@/Components/ui/Button';
 import Card from '@/Components/ui/Card';
+import BarcodeInput from '@/Components/BarcodeInput';
 import CustomerCombobox from '@/Components/CustomerCombobox';
 import Input from '@/Components/ui/Input';
 import InputLabel from '@/Components/InputLabel';
@@ -16,6 +17,7 @@ import {
 } from '@/Components/ui/FormIcons';
 import { useTranslation } from 'react-i18next';
 import { fmtMoney, fmtNumber } from '@/utils/format';
+import { useState } from 'react';
 
 const money = (v) => Number(v) || 0;
 
@@ -32,6 +34,40 @@ export default function SaleForm({
     onOpenCreateCustomer,
 }) {
     const { t } = useTranslation();
+    const [scanBarcode, setScanBarcode] = useState('');
+    const [scanError, setScanError] = useState('');
+
+    const addScannedItem = (resolved) => {
+        const product = products.find((candidate) => String(candidate.id) === String(resolved.product?.id));
+        if (!product) return setScanError('The scanned product is not available in this form.');
+
+        const activeVariants = (product.variants ?? []).filter((variant) => variant.status === 'active');
+        const variant = resolved.match === 'variant'
+            ? activeVariants.find((candidate) => String(candidate.id) === String(resolved.variant_id))
+            : activeVariants.length === 1 ? activeVariants[0] : null;
+
+        if (!variant) return setScanError('Scan the exact variant barcode for this product.');
+
+        const existingIndex = data.items.findIndex((item) =>
+            String(item.product_id) === String(product.id) && String(item.product_variant_id) === String(variant.id)
+        );
+        if (existingIndex >= 0) {
+            const nextItems = [...data.items];
+            nextItems[existingIndex] = { ...nextItems[existingIndex], quantity: money(nextItems[existingIndex].quantity) + 1 };
+            setData('items', nextItems);
+        } else {
+            setData('items', [...data.items, {
+                product_id: product.id,
+                product_variant_id: variant.id,
+                quantity: 1,
+                unit_price: String(product.sale_price ?? ''),
+                discount: 0,
+                tax: 0,
+            }]);
+        }
+        setScanBarcode('');
+        setScanError('');
+    };
 
     const setItem = (index, key, value) => {
         const items = [...data.items];
@@ -42,13 +78,15 @@ export default function SaleForm({
             if (product && !items[index].unit_price) {
                 items[index].unit_price = String(product.sale_price ?? '');
             }
+            const variants = (product?.variants ?? []).filter((variant) => variant.status === 'active');
+            items[index].product_variant_id = variants.length === 1 ? String(variants[0].id) : '';
         }
 
         setData('items', items);
     };
 
     const addItem = () => {
-        setData('items', [...data.items, { product_id: '', quantity: '', unit_price: '', discount: 0, tax: 0 }]);
+        setData('items', [...data.items, { product_id: '', product_variant_id: '', quantity: '', unit_price: '', discount: 0, tax: 0 }]);
     };
 
     const removeItem = (index) => {
@@ -60,11 +98,14 @@ export default function SaleForm({
 
     const items = data.items.map((item) => {
         const subtotal = money(item.quantity) * money(item.unit_price);
+        const product = products.find((p) => String(p.id) === String(item.product_id));
+        const variant = product?.variants?.find((v) => String(v.id) === String(item.product_variant_id));
         return {
             ...item,
             subtotal,
             line_total: subtotal - money(item.discount) + money(item.tax),
-            product: products.find((p) => String(p.id) === String(item.product_id)),
+            product,
+            variant,
         };
     });
 
@@ -82,14 +123,16 @@ export default function SaleForm({
 
     const selectedWarehouseId = String(data.warehouse_id ?? '');
 
-    const availableStock = (product) => {
+    const availableStock = (product, variant) => {
         if (!product) return 0;
-        const rows = product.stocks ?? [];
+        const rows = variant?.stocks ?? product.stocks ?? [];
         const filtered = selectedWarehouseId
             ? rows.filter((s) => String(s.warehouse_id) === selectedWarehouseId)
             : rows;
         return filtered.reduce((sum, s) => sum + (Number(s.quantity) || 0), 0);
     };
+
+    const variantLabel = (variant) => variant.is_legacy ? 'Default' : [variant.color?.name, variant.size?.name].filter(Boolean).join(' / ');
 
     return (
         <div className="max-w-4xl">
@@ -149,6 +192,20 @@ export default function SaleForm({
                 </Card>
 
                 <Card>
+                    <p className="text-[14px] font-medium text-ink">Scan barcode to add a sale item</p>
+                    <div className="mt-3">
+                        <BarcodeInput
+                            endpoint={route('sales.barcode.lookup')}
+                            value={scanBarcode}
+                            onChange={setScanBarcode}
+                            onResolved={addScannedItem}
+                            onError={setScanError}
+                        />
+                    </div>
+                    {scanError && <p className="mt-2 text-[13px] text-destructive">{scanError}</p>}
+                </Card>
+
+                <Card>
                     <div className="mb-4 flex items-center justify-between">
                         <label className="text-[14px] font-normal text-ink">{t('pages.sales.items')}</label>
                         <Button type="button" size="sm" variant="secondary" onClick={addItem}>
@@ -172,6 +229,21 @@ export default function SaleForm({
                                             ...products.map((p) => ({ value: String(p.id), label: `${p.name} (${p.sku})` })),
                                         ]}
                                     />
+                                    {((item.product?.variants ?? []).filter((variant) => variant.status === 'active').length > 0) && (
+                                        <Select
+                                            label="Variant"
+                                            value={String(item.product_variant_id ?? '')}
+                                            onChange={(e) => setItem(index, 'product_variant_id', e.target.value)}
+                                            error={errors[`items.${index}.product_variant_id`]}
+                                            className="min-w-40"
+                                            options={[
+                                                { value: '', label: 'Select variant' },
+                                                ...item.product.variants
+                                                    .filter((variant) => variant.status === 'active')
+                                                    .map((variant) => ({ value: String(variant.id), label: variantLabel(variant) })),
+                                            ]}
+                                        />
+                                    )}
                                     <Input
                                         label={t('pages.sales.quantity')}
                                         type="number"
@@ -237,7 +309,7 @@ export default function SaleForm({
                                 </div>
                                 {item.product && (
                                     <p className="mt-2 text-[12px] text-ink-mute tabular">
-                                        {t('pages.sales.stock_available')} : {fmtNumber(availableStock(item.product))}
+                                        {t('pages.sales.stock_available')} : {fmtNumber(availableStock(item.product, item.variant))}
                                         {!selectedWarehouseId && <span> ({t('pages.sales.all_warehouses')})</span>}
                                     </p>
                                 )}

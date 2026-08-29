@@ -1,11 +1,15 @@
 <?php
 
 use App\Http\Controllers\AuditLogController;
+use App\Http\Controllers\BarcodeStockController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductOptionController;
+use App\Http\Controllers\PosController;
+use App\Http\Controllers\PosBarcodeController;
 use App\Http\Controllers\ProductionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseController;
@@ -95,6 +99,19 @@ Route::middleware('auth')->group(function () {
         ->middleware(['verified', 'permission:view_stock'])
         ->name('stock.index');
 
+    Route::get('/stock/barcode', [BarcodeStockController::class, 'page'])
+        ->middleware(['verified', 'permission:view_stock'])
+        ->name('stock.barcode');
+    Route::get('/stock/barcode/lookup', [BarcodeStockController::class, 'lookup'])
+        ->middleware(['verified', 'permission:view_stock'])
+        ->name('stock.barcode.lookup');
+    Route::post('/stock/barcode/in', [BarcodeStockController::class, 'increase'])
+        ->middleware(['verified', 'permission:manage_stock'])
+        ->name('stock.barcode.in');
+    Route::post('/stock/barcode/out', [BarcodeStockController::class, 'decrease'])
+        ->middleware(['verified', 'permission:manage_stock'])
+        ->name('stock.barcode.out');
+
     Route::controller(ProductController::class)->middleware(['verified'])->group(function () {
         Route::get('/products', 'index')->middleware('permission:view_products')->name('products.index');
         Route::get('/products/create', 'create')->middleware('permission:create_products')->name('products.create');
@@ -104,6 +121,13 @@ Route::middleware('auth')->group(function () {
         Route::put('/products/{product}', 'update')->middleware('permission:edit_products')->name('products.update');
         Route::delete('/products/{product}', 'destroy')->middleware('permission:delete_products')->name('products.destroy');
     });
+
+    Route::post('/product-options/colors', [ProductOptionController::class, 'storeColor'])
+        ->middleware('verified')
+        ->name('product-options.colors.store');
+    Route::post('/product-options/sizes', [ProductOptionController::class, 'storeSize'])
+        ->middleware('verified')
+        ->name('product-options.sizes.store');
 
     Route::controller(ProductionController::class)->middleware(['verified'])->group(function () {
         Route::get('/production', 'index')->middleware('permission:view_production')->name('production.index');
@@ -137,6 +161,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/purchases/{purchase}/receive', 'receive')->middleware('permission:receive_purchases')->name('purchases.receive');
         Route::post('/purchases/{purchase}/cancel', 'cancel')->middleware('permission:cancel_purchases')->name('purchases.cancel');
     });
+    Route::get('/purchases/barcode/lookup', [BarcodeStockController::class, 'lookup'])
+        ->middleware(['verified', 'permission:create_purchases'])
+        ->name('purchases.barcode.lookup');
 
     Route::controller(SaleController::class)->middleware(['verified'])->group(function () {
         Route::get('/sales', 'index')->middleware('permission:view_sales')->name('sales.index');
@@ -151,6 +178,22 @@ Route::middleware('auth')->group(function () {
         Route::post('/sales/{sale}/confirm', 'confirm')->middleware('permission:confirm_sales')->name('sales.confirm');
         Route::post('/sales/{sale}/cancel', 'cancel')->middleware('permission:cancel_sales')->name('sales.cancel');
     });
+    Route::get('/sales/barcode/lookup', [BarcodeStockController::class, 'lookup'])
+        ->middleware(['verified', 'permission:create_sales'])
+        ->name('sales.barcode.lookup');
+
+    Route::controller(PosController::class)->middleware(['verified'])->group(function () {
+        Route::get('/pos/create', 'create')->middleware('permission:create_sales')->name('pos.create');
+        Route::post('/pos/checkout', 'checkout')->middleware('permission:create_sales')->name('pos.checkout');
+    });
+
+    Route::controller(PosBarcodeController::class)->middleware(['verified', 'permission:create_sales'])->group(function () {
+        Route::get('/pos/barcode', 'page')->name('pos.barcode');
+        Route::get('/pos/barcode/print', 'printLabels')->name('pos.barcode.print');
+    });
+    Route::get('/pos/barcode/lookup', [BarcodeStockController::class, 'lookup'])
+        ->middleware(['verified', 'permission:create_sales'])
+        ->name('pos.barcode.lookup');
 
     Route::controller(StockMovementController::class)->middleware(['verified'])->group(function () {
         Route::get('/movements', 'index')->middleware('permission:view_movements')->name('movements.index');

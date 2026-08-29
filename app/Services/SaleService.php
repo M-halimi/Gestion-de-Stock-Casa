@@ -14,6 +14,7 @@ class SaleService
 {
     public function __construct(
         private readonly StockService $stockService,
+        private readonly ProductVariantService $variantService,
     ) {
     }
 
@@ -77,15 +78,16 @@ class SaleService
 
         DB::transaction(function () use ($sale) {
             foreach ($sale->items as $item) {
-                $product = Product::findOrFail($item->product_id);
-                $available = (float) $product->totalQuantity($sale->warehouse_id);
+                $variant = $item->variant ?? $this->variantService->resolveForProduct($item->product_id, $item->product_variant_id);
+                $variant->loadMissing('product');
+                $available = $variant->totalQuantity($sale->warehouse_id);
 
                 if ((float) $item->quantity > $available) {
                     throw new InsufficientStockException(
                         sprintf(
                             'Insufficient stock — %s (%s): available %s, requested %s.',
-                            $product->name,
-                            $product->sku,
+                            $variant->product->name,
+                            $variant->label(),
                             rtrim(rtrim(number_format($available, 3, '.', ''), '0'), '.'),
                             rtrim(rtrim(number_format((float) $item->quantity, 3, '.', ''), '0'), '.')
                         )
@@ -95,7 +97,7 @@ class SaleService
 
             foreach ($sale->items as $item) {
                 $this->stockService->decrease(
-                    $item->product_id,
+                    $item->variant ?? $this->variantService->resolveForProduct($item->product_id, $item->product_variant_id),
                     $sale->warehouse_id,
                     (float) $item->quantity,
                     'Vente ' . $sale->reference,
@@ -129,6 +131,16 @@ class SaleService
 
     private function syncItems(Sale $sale, array $items): void
     {
+        $items = array_map(function (array $item): array {
+            $product = Product::findOrFail($item['product_id']);
+            $variant = $this->variantService->resolveForProduct(
+                $product,
+                ! empty($item['product_variant_id']) ? (int) $item['product_variant_id'] : null,
+            );
+
+            return [...$item, 'product_id' => $product->id, 'product_variant_id' => $variant->id];
+        }, $items);
+
         $this->assertItemsValid($items);
 
         $sale->items()->delete();
@@ -137,6 +149,7 @@ class SaleService
             SaleItem::create([
                 'sale_id' => $sale->id,
                 'product_id' => $item['product_id'],
+                'product_variant_id' => $item['product_variant_id'],
                 'quantity' => $item['quantity'],
                 'unit_price' => $item['unit_price'],
                 'subtotal' => round((float) $item['quantity'] * (float) $item['unit_price'], 2),
@@ -171,7 +184,7 @@ class SaleService
         $seen = [];
 
         foreach ($items as $item) {
-            $productId = (int) $item['product_id'];
+            $variantId = (int) $item['product_variant_id'];
 
             if ((float) $item['quantity'] <= 0) {
                 throw new InvalidArgumentException('Line quantity must be positive.');
@@ -189,11 +202,11 @@ class SaleService
                 throw new InvalidArgumentException('Line tax must not be negative.');
             }
 
-            if (in_array($productId, $seen, true)) {
-                throw new InvalidArgumentException('Duplicate product in the sale lines.');
+            if (in_array($variantId, $seen, true)) {
+                throw new InvalidArgumentException('Duplicate product variant in the sale lines.');
             }
 
-            $seen[] = $productId;
+            $seen[] = $variantId;
         }
     }
 

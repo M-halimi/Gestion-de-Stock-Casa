@@ -91,6 +91,7 @@ export default function Dashboard({
     sales_trend,
     comparison,
     top_products,
+    top_variants,
     low_stock,
     movements,
     recent_purchases,
@@ -113,6 +114,10 @@ export default function Dashboard({
     const maxTop = useMemo(
         () => Math.max(1, ...(top_products ?? []).map((p) => (filters?.by === 'revenue' ? Number(p.total_revenue) : Number(p.total_qty)))),
         [top_products, filters?.by]
+    );
+    const maxVariantTop = useMemo(
+        () => Math.max(1, ...(top_variants ?? []).map((variant) => (filters?.by === 'revenue' ? Number(variant.total_revenue) : Number(variant.total_qty)))),
+        [top_variants, filters?.by]
     );
 
     const buildQuery = (extra = {}) => {
@@ -415,6 +420,80 @@ value={fmtMoney(kpis.stock_value)}
                                 )}
                             </Card>
                         )}
+
+                        {top_variants && (
+                            <Card
+                                title={t('dashboard.top_variants.title')}
+                                subtitle={t('dashboard.top_variants.subtitle')}
+                                className="xl:col-span-2"
+                            >
+                                {top_variants.length > 0 ? (
+                                    <>
+                                        <div className="mb-4 flex items-start gap-2 rounded-lg border border-primary/20 bg-primary-soft/40 p-3">
+                                            <svg viewBox="0 0 20 20" fill="currentColor" className="mt-0.5 h-4 w-4 shrink-0 text-primary">
+                                                <path fillRule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0ZM9.25 8.25a.75.75 0 0 1 .75-.75h.01a.75.75 0 0 1 .74.75v.01a.75.75 0 0 1-.75.74h-.01a.75.75 0 0 1-.74-.75v-.01ZM10 10a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 10Z" clipRule="evenodd" />
+                                            </svg>
+                                            <p className="text-[13px] leading-relaxed text-ink-secondary">
+                                                <span className="font-semibold text-ink">{t('dashboard.top_variants.guide_title')}</span>{' '}
+                                                {t('dashboard.top_variants.guide_description')}
+                                            </p>
+                                        </div>
+                                        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                                        {top_variants.map((variant, i) => {
+                                            const value = filters?.by === 'revenue' ? Number(variant.total_revenue) : Number(variant.total_qty);
+                                            const hasOptions = variant.color || variant.size;
+
+                                            return (
+                                                <div key={`${variant.variant_id ?? variant.product_id}-${i}`} className="rounded-lg border border-hairline bg-canvas-soft/40 p-3">
+                                                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
+                                                        <div className="flex min-w-0 items-start gap-3">
+                                                            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-canvas-cream text-[12px] font-semibold text-ink-mute2 tabular">
+                                                                {i + 1}
+                                                            </span>
+                                                            <div className="min-w-0">
+                                                                <Link href={route('products.show', variant.product_id)} className="block truncate text-[14px] font-medium text-ink hover:text-primary">
+                                                                    {variant.name}
+                                                                </Link>
+                                                                <p className="mt-0.5 truncate text-[12px] text-ink-mute">{t('dashboard.top_variants.reference')}: {variant.sku}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex shrink-0 items-center justify-between gap-3 sm:block sm:text-end">
+                                                            <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-mute">{filters?.by === 'revenue' ? t('dashboard.top_variants.revenue') : t('dashboard.top_variants.sold')}</p>
+                                                            <p className="text-[15px] font-semibold text-ink tabular">
+                                                                {filters?.by === 'revenue' ? fmtMoney(value) : fmtNumber(value)}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="mt-3 flex flex-wrap gap-2 text-[12px]">
+                                                        <span className="rounded-full bg-canvas px-2.5 py-1 text-ink-secondary">
+                                                            <span className="font-medium text-ink">{t('dashboard.top_variants.color')}:</span>{' '}
+                                                            {variant.color ?? t('dashboard.top_variants.not_specified')}
+                                                        </span>
+                                                        <span className="rounded-full bg-canvas px-2.5 py-1 text-ink-secondary">
+                                                            <span className="font-medium text-ink">{t('dashboard.top_variants.size')}:</span>{' '}
+                                                            {variant.size ?? t('dashboard.top_variants.not_specified')}
+                                                        </span>
+                                                        {!hasOptions && <span className="text-ink-mute">{t('dashboard.top_variants.no_options')}</span>}
+                                                    </div>
+                                                    <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-canvas-soft">
+                                                        <div
+                                                            className="h-full rounded-full"
+                                                            style={{
+                                                                width: `${Math.max(2, (value / maxVariantTop) * 100)}%`,
+                                                                background: i === 0 ? colors.success : colors.success + '66',
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                        </div>
+                                    </>
+                                ) : (
+                                    <SectionEmpty message={t('dashboard.top_variants.empty')} />
+                                )}
+                            </Card>
+                        )}
                     </div>
                 )}
 
@@ -501,8 +580,8 @@ value={fmtMoney(kpis.stock_value)}
                             <SearchInput placeholder={t('dashboard.low_stock_table.search_placeholder')} className="w-full max-w-sm" />
                         </div>
                         <Card flush className="overflow-hidden">
-                            <div className="overflow-x-auto">
-                                <table className="min-w-full divide-y divide-hairline">
+                            <div className="w-full max-w-full overflow-x-auto overscroll-x-contain">
+                                <table className="min-w-[760px] divide-y divide-hairline">
                                     <thead className="bg-canvas-soft">
                                         <tr>
                                             {[
@@ -571,8 +650,8 @@ value={fmtMoney(kpis.stock_value)}
                 {movements && (
                     <Card title={t('dashboard.movements.title')} subtitle={t('dashboard.movements.subtitle')} flush className="overflow-hidden">
                         {movements.length > 0 ? (
-                            <div className="overflow-x-auto">
-                                <table className="min-w-full divide-y divide-hairline">
+                            <div className="w-full max-w-full overflow-x-auto overscroll-x-contain">
+                                <table className="min-w-[900px] divide-y divide-hairline">
                                     <thead className="bg-canvas-soft">
                                         <tr>
                                             {['date', 'product', 'warehouse', 'type', 'quantity', 'reference', 'user'].map((key) => (
@@ -621,8 +700,8 @@ value={fmtMoney(kpis.stock_value)}
                     <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
                         {recent_purchases && (
                             <Card title={t('dashboard.recent_purchases.title')} flush className="overflow-hidden">
-                                <div className="overflow-x-auto">
-                                    <table className="min-w-full divide-y divide-hairline">
+                                <div className="w-full max-w-full overflow-x-auto overscroll-x-contain">
+                                    <table className="min-w-[720px] divide-y divide-hairline">
                                         <thead className="bg-canvas-soft">
                                             <tr>
                                                 {['reference', 'supplier', 'date', 'items', 'total', 'status'].map((key) => (
@@ -653,8 +732,8 @@ value={fmtMoney(kpis.stock_value)}
 
                         {recent_sales && (
                             <Card title={t('dashboard.recent_sales.title')} flush className="overflow-hidden">
-                                <div className="overflow-x-auto">
-                                    <table className="min-w-full divide-y divide-hairline">
+                                <div className="w-full max-w-full overflow-x-auto overscroll-x-contain">
+                                    <table className="min-w-[720px] divide-y divide-hairline">
                                         <thead className="bg-canvas-soft">
                                             <tr>
                                                 {['reference', 'customer', 'date', 'items', 'total', 'status'].map((key) => (

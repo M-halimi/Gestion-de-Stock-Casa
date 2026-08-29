@@ -190,8 +190,10 @@ export default function AuthenticatedLayout({ header, children }) {
             ],
         },
         {
-            label: t('nav.section_operations'),
+                label: t('nav.section_operations'),
             items: [
+                { label: 'POS', href: route('pos.create'), permission: 'create_sales', icon: icons.sales },
+                { label: 'Print Barcode', href: route('pos.barcode'), permission: 'create_sales', icon: icons.sales },
                 { label: t('nav.entries'), href: route('purchases.index'), permission: 'view_purchases', icon: icons.purchases },
                 { label: t('nav.exits'), href: route('sales.index'), permission: 'view_sales', icon: icons.sales },
                 { label: t('nav.movements'), href: route('movements.index'), permission: 'view_movements', icon: icons.movements },
@@ -252,11 +254,11 @@ export default function AuthenticatedLayout({ header, children }) {
             <div className="space-y-2 px-4 pt-4">
                 {has('create_sales') && (
                     <Link
-                        href={route('sales.create')}
+                        href={route('pos.create')}
                         className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-primary text-[14px] font-semibold text-white shadow-[0_8px_24px_-8px_rgba(212,175,94,0.55)] transition hover:bg-primary-deep"
                     >
                         {PlusIcon}
-                        {t('nav.new_sale')}
+                        POS
                     </Link>
                 )}
                 {has('create_purchases') && (

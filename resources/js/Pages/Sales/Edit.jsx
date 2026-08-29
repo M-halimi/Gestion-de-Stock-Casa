@@ -15,6 +15,7 @@ export default function SalesEdit({ sale, customers, warehouses, products }) {
         notes: sale.notes ?? '',
         items: sale.items.map((item) => ({
             product_id: String(item.product_id),
+            product_variant_id: String(item.product_variant_id ?? ''),
             quantity: String(item.quantity),
             unit_price: String(item.unit_price),
             discount: String(item.discount),

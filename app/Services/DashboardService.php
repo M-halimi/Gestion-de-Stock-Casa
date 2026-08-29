@@ -189,6 +189,61 @@ class DashboardService
     }
 
     /**
+     * Top selling product variants for the period (cancelled sales excluded).
+     *
+     * Keeping the variant in the aggregation is important for POS reporting:
+     * the same product can be sold in different sizes and colors.
+     */
+    public function getTopVariants(array $period, string $by = 'quantity'): Collection
+    {
+        $orderBy = $by === 'revenue' ? 'total_revenue' : 'total_qty';
+
+        return SaleItem::query()
+            ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
+            ->join('products', 'products.id', '=', 'sale_items.product_id')
+            ->leftJoin('product_variants', 'product_variants.id', '=', 'sale_items.product_variant_id')
+            ->leftJoin('colors', 'colors.id', '=', 'product_variants.color_id')
+            ->leftJoin('sizes', 'sizes.id', '=', 'product_variants.size_id')
+            ->where('sales.status', '!=', 'cancelled')
+            ->whereBetween('sales.date', [$period['start'], $period['end']])
+            ->selectRaw(''
+                . 'product_variants.id as variant_id, '
+                . 'products.id as product_id, '
+                . 'products.name, products.sku, '
+                . 'product_variants.variant_code, product_variants.barcode, '
+                . 'colors.name as color_name, sizes.name as size_name, '
+                . 'SUM(sale_items.quantity) as total_qty, '
+                . 'SUM(sale_items.subtotal) as total_revenue'
+            )
+            ->groupBy(
+                'product_variants.id',
+                'products.id',
+                'products.name',
+                'products.sku',
+                'product_variants.variant_code',
+                'product_variants.barcode',
+                'colors.name',
+                'sizes.name',
+            )
+            ->orderByDesc($orderBy)
+            ->limit(8)
+            ->get()
+            ->map(fn ($row) => [
+                'variant_id' => $row->variant_id ? (int) $row->variant_id : null,
+                'product_id' => (int) $row->product_id,
+                'name' => $row->name,
+                'sku' => $row->sku,
+                'variant_code' => $row->variant_code,
+                'barcode' => $row->barcode,
+                'color' => $row->color_name,
+                'size' => $row->size_name,
+                'total_qty' => round((float) $row->total_qty, 3),
+                'total_revenue' => round((float) $row->total_revenue, 2),
+            ])
+            ->values();
+    }
+
+    /**
      * Paginated "needs attention" product list (low + out of stock).
      */
     public function getLowStockProducts(

@@ -17,6 +17,7 @@ class StoreProductionOrderRequest extends FormRequest
     {
         return [
             'bill_of_material_id' => ['required', 'integer', 'exists:bill_of_materials,id'],
+            'product_variant_id' => ['nullable', 'integer', 'exists:product_variants,id'],
             'quantity' => ['required', 'numeric', 'gt:0'],
             'warehouse_id' => [
                 'required',

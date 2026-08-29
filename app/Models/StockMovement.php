@@ -21,9 +21,12 @@ class StockMovement extends Model
     public const TYPE_PRODUCTION_IN = 'production_in';
     public const TYPE_PRODUCTION_OUT = 'production_out';
     public const TYPE_INITIAL_STOCK = 'initial_stock';
+    public const TYPE_BARCODE_IN = 'barcode_in';
+    public const TYPE_BARCODE_OUT = 'barcode_out';
 
     protected $fillable = [
         'product_id',
+        'product_variant_id',
         'warehouse_id',
         'type',
         'quantity',
@@ -46,6 +49,11 @@ class StockMovement extends Model
     public function warehouse(): BelongsTo
     {
         return $this->belongsTo(Warehouse::class);
+    }
+
+    public function variant(): BelongsTo
+    {
+        return $this->belongsTo(ProductVariant::class, 'product_variant_id');
     }
 
     public function reference(): MorphTo

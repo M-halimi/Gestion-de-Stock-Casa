@@ -18,6 +18,7 @@ class ProductionService
 {
     public function __construct(
         private readonly StockService $stockService,
+        private readonly ProductVariantService $variantService,
     ) {
     }
 
@@ -78,7 +79,7 @@ class ProductionService
      */
     public function createOrder(array $data): ProductionOrder
     {
-        $bom = BillOfMaterial::with('items.component')->findOrFail($data['bill_of_material_id']);
+        $bom = BillOfMaterial::with(['items.component', 'product'])->findOrFail($data['bill_of_material_id']);
 
         if ($bom->items->isEmpty()) {
             throw new InvalidArgumentException('The bill of materials has no components.');
@@ -88,7 +89,12 @@ class ProductionService
             throw new InvalidArgumentException('Quantity must be positive.');
         }
 
-        return DB::transaction(function () use ($bom, $data) {
+        $outputVariant = $this->variantService->resolveForProduct(
+            $bom->product,
+            ! empty($data['product_variant_id']) ? (int) $data['product_variant_id'] : null,
+        );
+
+        return DB::transaction(function () use ($bom, $data, $outputVariant) {
             $quantity = (float) $data['quantity'];
             $cost = 0.0;
 
@@ -109,6 +115,7 @@ class ProductionService
                 'reference' => $this->generateReference(),
                 'bill_of_material_id' => $bom->id,
                 'product_id' => $bom->product_id,
+                'product_variant_id' => $outputVariant->id,
                 'quantity' => $quantity,
                 'material_cost' => round($cost, 2),
                 'warehouse_id' => $data['warehouse_id'],
@@ -169,8 +176,11 @@ class ProductionService
                 );
             }
 
+            $outputVariant = $order->variant
+                ?? $this->variantService->resolveForProduct($order->product_id);
+
             $this->stockService->increase(
-                $order->product_id,
+                $outputVariant,
                 $warehouse,
                 (float) $order->quantity,
                 'Production ' . $order->reference,

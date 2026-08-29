@@ -8,6 +8,8 @@ import InputError from '@/Components/InputError';
 import PageHeader from '@/Components/ui/PageHeader';
 import Select from '@/Components/ui/Select';
 import TextArea from '@/Components/ui/TextArea';
+import ProductVariantsEditor from '@/Components/ProductVariantsEditor';
+import { generateProductSku } from '@/utils/productSku';
 import {
     IconBarcode,
     IconBox,
@@ -23,7 +25,7 @@ import { Head, useForm, usePage } from '@inertiajs/react';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export default function ProductsCreate({ categories, units, warehouses = [] }) {
+export default function ProductsCreate({ categories, units, warehouses = [], colors = [], sizes = [], returnTo, returnContext, returnWarehouseId }) {
     const { t } = useTranslation();
     const permissions = usePage().props.auth.user?.permissions ?? [];
     const canManageStock = permissions.includes('manage_stock');
@@ -35,18 +37,26 @@ export default function ProductsCreate({ categories, units, warehouses = [] }) {
         unit_id: '',
         purchase_price: '',
         sale_price: '',
-        min_stock: '',
+        min_stock: '3',
         description: '',
         image: null,
         status: 'active',
+        variants: [],
         initial_stock_enabled: false,
         initial_warehouse_id: '',
         initial_quantity: '',
         initial_notes: '',
+        return_to: returnContext ?? '',
+        return_warehouse_id: returnWarehouseId ?? '',
     });
 
     const inputRef = useRef(null);
     const [preview, setPreview] = useState(null);
+
+    const generateSku = () => {
+        const category = categories.find((item) => String(item.id) === String(data.category_id));
+        setData('sku', generateProductSku({ name: data.name, categoryName: category?.name }));
+    };
 
     const handleImage = (e) => {
         const file = e.target.files?.[0];
@@ -61,7 +71,7 @@ export default function ProductsCreate({ categories, units, warehouses = [] }) {
             <PageHeader
                 title={t('pages.products.create_title')}
                 actions={
-                    <BackButton href={route('products.index')}>
+                    <BackButton href={returnTo ?? route('products.index')}>
                         {t('common.back')}
                     </BackButton>
                 }
@@ -69,10 +79,18 @@ export default function ProductsCreate({ categories, units, warehouses = [] }) {
 
             <div className="max-w-3xl">
                 <form
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        post(route('products.store'));
-                    }}
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    console.info('[WareStock] Product form submitted', {
+                        from: returnContext ?? 'products',
+                        name: data.name,
+                        sku: data.sku,
+                    });
+                    post(route('products.store'), {
+                        onSuccess: () => console.info('[WareStock] Product created successfully; returning to POS.'),
+                        onError: (formErrors) => console.error('[WareStock] Product creation failed', JSON.stringify(formErrors, null, 2)),
+                    });
+                }}
                     className="space-y-8"
                 >
                     <Card>
@@ -86,15 +104,27 @@ export default function ProductsCreate({ categories, units, warehouses = [] }) {
                                 icon={<IconTag />}
                                 autoFocus
                             />
-                            <Input
-                                id="sku"
-                                label={t('pages.products.sku')}
-                                value={data.sku}
-                                onChange={(e) => setData('sku', e.target.value)}
-                                error={errors.sku}
-                                hint={t('pages.products.sku_hint')}
-                                icon={<IconHashtag />}
-                            />
+                            <div className="flex items-start gap-2">
+                                <Input
+                                    id="sku"
+                                    label={t('pages.products.sku')}
+                                    value={data.sku}
+                                    onChange={(e) => setData('sku', e.target.value)}
+                                    error={errors.sku}
+                                    hint={t('pages.products.sku_hint')}
+                                    icon={<IconHashtag />}
+                                    wrapperClassName="min-w-0 flex-1"
+                                />
+                                <Button
+                                    type="button"
+                                    variant="secondary"
+                                    size="sm"
+                                    className="mt-0.5 h-10 shrink-0 whitespace-nowrap"
+                                    onClick={generateSku}
+                                >
+                                    {t('pages.products.generate_sku')}
+                                </Button>
+                            </div>
                             <Input
                                 id="barcode"
                                 label={t('pages.products.barcode')}
@@ -189,6 +219,15 @@ export default function ProductsCreate({ categories, units, warehouses = [] }) {
                     </Card>
 
                     <Card>
+                        <div className="mb-4">
+                            <h3 className="heading-md text-ink">Product variants</h3>
+                            <p className="mt-1 text-[13px] text-ink-mute">Generate variants by selecting reusable colors and sizes.</p>
+                        </div>
+                        <ProductVariantsEditor colors={colors} sizes={sizes} data={data} setData={setData} productSku={data.sku} productBarcode={data.barcode} editableStock={canManageStock && data.initial_stock_enabled} />
+                        {errors.variants && <InputError message={errors.variants} className="mt-3" />}
+                    </Card>
+
+                    <Card>
                         <label className="mb-3 block text-[14px] font-normal text-ink">{t('pages.products.image')}</label>
                         <div className="flex items-center gap-4">
                             <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-hairline bg-canvas-soft">
@@ -248,18 +287,20 @@ export default function ProductsCreate({ categories, units, warehouses = [] }) {
                                             })),
                                         ]}
                                     />
-                                    <Input
-                                        id="initial_quantity"
-                                        label={t('pages.products.initial_quantity')}
-                                        type="number"
-                                        step="0.01"
-                                        min="0"
-                                        value={data.initial_quantity}
-                                        onChange={(e) => setData('initial_quantity', e.target.value)}
-                                        error={errors.initial_quantity}
-                                        icon={<IconScale />}
-                                        inputClass="tabular"
-                                    />
+                                    {data.variants.length === 0 && (
+                                        <Input
+                                            id="initial_quantity"
+                                            label={t('pages.products.initial_quantity')}
+                                            type="number"
+                                            step="0.01"
+                                            min="0"
+                                            value={data.initial_quantity}
+                                            onChange={(e) => setData('initial_quantity', e.target.value)}
+                                            error={errors.initial_quantity}
+                                            icon={<IconScale />}
+                                            inputClass="tabular"
+                                        />
+                                    )}
                                     <div className="md:col-span-2">
                                         <TextArea
                                             id="initial_notes"

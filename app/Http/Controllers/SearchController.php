@@ -82,14 +82,19 @@ class SearchController extends Controller
             ->where(fn ($query) => $query
                 ->where('name', 'like', "%{$q}%")
                 ->orWhere('sku', 'like', "%{$q}%")
-                ->orWhere('barcode', 'like', "%{$q}%"))
+                ->orWhere('barcode', 'like', "%{$q}%")
+                ->orWhereHas('variants', fn ($variant) => $variant
+                    ->where('barcode', 'like', "%{$q}%")
+                    ->orWhereHas('color', fn ($color) => $color->where('name', 'like', "%{$q}%"))
+                    ->orWhereHas('size', fn ($size) => $size->where('name', 'like', "%{$q}%"))))
+            ->with(['variants.color', 'variants.size'])
             ->orderBy('name')
             ->limit($limit)
             ->get(['id', 'name', 'sku'])
             ->map(fn (Product $p) => [
                 'id' => $p->id,
                 'label' => $p->name,
-                'sublabel' => $p->sku,
+                'sublabel' => $p->sku . ($p->variants->first(fn ($variant) => str_contains((string) $variant->barcode, $q))?->label() ? ' · ' . $p->variants->first(fn ($variant) => str_contains((string) $variant->barcode, $q))->label() : ''),
                 'url' => route('products.show', $p),
             ])
             ->all();

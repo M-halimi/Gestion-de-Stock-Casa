@@ -61,7 +61,7 @@ class PurchaseController extends Controller
 
     public function show(Purchase $purchase): Response
     {
-        $purchase->load(['supplier', 'warehouse', 'items.product', 'user']);
+        $purchase->load(['supplier', 'warehouse', 'items.product', 'items.variant.color', 'items.variant.size', 'user']);
 
         return Inertia::render('Purchases/Show', [
             'purchase' => $purchase,
@@ -151,7 +151,10 @@ class PurchaseController extends Controller
         return [
             'suppliers' => Supplier::orderBy('name')->get(['id', 'name']),
             'warehouses' => Warehouse::where('is_active', true)->orderBy('name')->get(['id', 'name', 'code']),
-            'products' => Product::where('status', 'active')->orderBy('name')->get(['id', 'name', 'sku', 'purchase_price']),
+            'products' => Product::where('status', 'active')
+                ->with(['variants.color', 'variants.size', 'variants.stocks'])
+                ->orderBy('name')
+                ->get(['id', 'name', 'sku', 'purchase_price']),
         ];
     }
 }

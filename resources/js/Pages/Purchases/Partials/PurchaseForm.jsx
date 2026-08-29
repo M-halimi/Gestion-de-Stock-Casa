@@ -1,5 +1,6 @@
 ﻿import Button from '@/Components/ui/Button';
 import Card from '@/Components/ui/Card';
+import BarcodeInput from '@/Components/BarcodeInput';
 import Input from '@/Components/ui/Input';
 import Select from '@/Components/ui/Select';
 import TextArea from '@/Components/ui/TextArea';
@@ -15,6 +16,7 @@ import {
 } from '@/Components/ui/FormIcons';
 import { useTranslation } from 'react-i18next';
 import { fmtMoney } from '@/utils/format';
+import { useState } from 'react';
 
 const money = (v) => Number(v) || 0;
 
@@ -30,6 +32,40 @@ export default function PurchaseForm({
     onSubmit,
 }) {
     const { t } = useTranslation();
+    const [scanBarcode, setScanBarcode] = useState('');
+    const [scanError, setScanError] = useState('');
+
+    const addScannedItem = (resolved) => {
+        const product = products.find((candidate) => String(candidate.id) === String(resolved.product?.id));
+        if (!product) return setScanError('The scanned product is not available in this form.');
+
+        const activeVariants = (product.variants ?? []).filter((variant) => variant.status === 'active');
+        const variant = resolved.match === 'variant'
+            ? activeVariants.find((candidate) => String(candidate.id) === String(resolved.variant_id))
+            : activeVariants.length === 1 ? activeVariants[0] : null;
+
+        if (!variant) return setScanError('Scan the exact variant barcode for this product.');
+
+        const existingIndex = data.items.findIndex((item) =>
+            String(item.product_id) === String(product.id) && String(item.product_variant_id) === String(variant.id)
+        );
+        if (existingIndex >= 0) {
+            const nextItems = [...data.items];
+            nextItems[existingIndex] = { ...nextItems[existingIndex], quantity: money(nextItems[existingIndex].quantity) + 1 };
+            setData('items', nextItems);
+        } else {
+            setData('items', [...data.items, {
+                product_id: product.id,
+                product_variant_id: variant.id,
+                quantity: 1,
+                unit_price: String(product.purchase_price ?? ''),
+                discount: 0,
+                tax: 0,
+            }]);
+        }
+        setScanBarcode('');
+        setScanError('');
+    };
 
     const setItem = (index, key, value) => {
         const items = [...data.items];
@@ -40,13 +76,15 @@ export default function PurchaseForm({
             if (product && !items[index].unit_price) {
                 items[index].unit_price = String(product.purchase_price ?? '');
             }
+            const variants = (product?.variants ?? []).filter((variant) => variant.status === 'active');
+            items[index].product_variant_id = variants.length === 1 ? String(variants[0].id) : '';
         }
 
         setData('items', items);
     };
 
     const addItem = () => {
-        setData('items', [...data.items, { product_id: '', quantity: '', unit_price: '', discount: 0, tax: 0 }]);
+        setData('items', [...data.items, { product_id: '', product_variant_id: '', quantity: '', unit_price: '', discount: 0, tax: 0 }]);
     };
 
     const removeItem = (index) => {
@@ -76,6 +114,7 @@ export default function PurchaseForm({
 
     const grandTotal = totals.subtotal - totals.discount + totals.tax;
     const generalErrors = typeof errors.items === 'string' ? errors.items : null;
+    const variantLabel = (variant) => variant.is_legacy ? 'Default' : [variant.color?.name, variant.size?.name].filter(Boolean).join(' / ');
 
     return (
         <div className="max-w-4xl">
@@ -135,6 +174,20 @@ export default function PurchaseForm({
                 </Card>
 
                 <Card>
+                    <p className="text-[14px] font-medium text-ink">Scan barcode to add a purchase item</p>
+                    <div className="mt-3">
+                        <BarcodeInput
+                            endpoint={route('purchases.barcode.lookup')}
+                            value={scanBarcode}
+                            onChange={setScanBarcode}
+                            onResolved={addScannedItem}
+                            onError={setScanError}
+                        />
+                    </div>
+                    {scanError && <p className="mt-2 text-[13px] text-destructive">{scanError}</p>}
+                </Card>
+
+                <Card>
                     <div className="mb-4 flex items-center justify-between">
                         <label className="text-[14px] font-normal text-ink">{t('pages.purchases.items')}</label>
                         <Button type="button" size="sm" variant="secondary" onClick={addItem}>
@@ -158,6 +211,21 @@ export default function PurchaseForm({
                                             ...products.map((p) => ({ value: String(p.id), label: `${p.name} (${p.sku})` })),
                                         ]}
                                     />
+                                    {((item.product?.variants ?? []).filter((variant) => variant.status === 'active').length > 0) && (
+                                        <Select
+                                            label="Variant"
+                                            value={String(item.product_variant_id ?? '')}
+                                            onChange={(e) => setItem(index, 'product_variant_id', e.target.value)}
+                                            error={errors[`items.${index}.product_variant_id`]}
+                                            className="min-w-40"
+                                            options={[
+                                                { value: '', label: 'Select variant' },
+                                                ...item.product.variants
+                                                    .filter((variant) => variant.status === 'active')
+                                                    .map((variant) => ({ value: String(variant.id), label: variantLabel(variant) })),
+                                            ]}
+                                        />
+                                    )}
                                     <Input
                                         label={t('pages.purchases.quantity')}
                                         type="number"

@@ -14,6 +14,7 @@ export default function TransferCreate({ products, warehouses }) {
     const { t } = useTranslation();
     const { data, setData, post, errors, processing } = useForm({
         product_id: '',
+        product_variant_id: '',
         from_warehouse_id: '',
         to_warehouse_id: '',
         quantity: '',
@@ -24,8 +25,12 @@ export default function TransferCreate({ products, warehouses }) {
     const [toId, setToId] = useState('');
 
     const selectedProduct = products.find((p) => String(p.id) === String(data.product_id));
-    const sourceStock = selectedProduct?.stocks?.find((s) => String(s.warehouse_id) === String(fromId));
+    const variants = selectedProduct?.variants?.filter((variant) => !variant.is_legacy && variant.status === 'active') ?? [];
+    const selectedVariant = variants.find((variant) => String(variant.id) === String(data.product_variant_id));
+    const sourceStock = (selectedVariant?.stocks ?? selectedProduct?.stocks)?.find((s) => String(s.warehouse_id) === String(fromId));
     const available = sourceStock ? Number(sourceStock.quantity) : null;
+
+    const variantLabel = (variant) => [variant.color?.name, variant.size?.name].filter(Boolean).join(' / ');
 
     const submit = (e) => {
         e.preventDefault();
@@ -43,7 +48,15 @@ export default function TransferCreate({ products, warehouses }) {
                     <Select
                         label={t('pages.transfers.product')}
                         value={data.product_id}
-                        onChange={(e) => setData('product_id', e.target.value)}
+                        onChange={(e) => {
+                            const product = products.find((p) => String(p.id) === String(e.target.value));
+                            const productVariants = product?.variants?.filter((variant) => !variant.is_legacy && variant.status === 'active') ?? [];
+                            setData((current) => ({
+                                ...current,
+                                product_id: e.target.value,
+                                product_variant_id: productVariants.length === 1 ? String(productVariants[0].id) : '',
+                            }));
+                        }}
                         error={errors.product_id}
                         icon={<IconBox />}
                         options={[
@@ -51,6 +64,22 @@ export default function TransferCreate({ products, warehouses }) {
                             ...products.map((p) => ({ value: String(p.id), label: `${p.name} (${p.sku})` })),
                         ]}
                     />
+
+                    {variants.length > 0 && (
+                        <Select
+                            label="Product variant"
+                            value={data.product_variant_id}
+                            onChange={(e) => setData('product_variant_id', e.target.value)}
+                            error={errors.product_variant_id}
+                            options={[
+                                { value: '', label: 'Select variant' },
+                                ...variants.map((variant) => ({
+                                    value: String(variant.id),
+                                    label: `${variantLabel(variant)}${variant.barcode ? ` (${variant.barcode})` : ''}`,
+                                })),
+                            ]}
+                        />
+                    )}
 
                     <div className="grid gap-5 sm:grid-cols-2">
                         <Select

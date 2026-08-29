@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Purchase;
 use App\Models\PurchaseItem;
+use App\Models\Product;
 use App\Models\StockMovement;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
@@ -13,6 +14,7 @@ class PurchaseService
 {
     public function __construct(
         private readonly StockService $stockService,
+        private readonly ProductVariantService $variantService,
     ) {
     }
 
@@ -76,7 +78,7 @@ class PurchaseService
         DB::transaction(function () use ($purchase) {
             foreach ($purchase->items as $item) {
                 $this->stockService->increase(
-                    $item->product_id,
+                    $item->variant ?? $this->variantService->resolveForProduct($item->product_id, $item->product_variant_id),
                     $purchase->warehouse_id,
                     (float) $item->quantity,
                     'Achat ' . $purchase->reference,
@@ -110,6 +112,16 @@ class PurchaseService
 
     private function syncItems(Purchase $purchase, array $items): void
     {
+        $items = array_map(function (array $item): array {
+            $product = Product::findOrFail($item['product_id']);
+            $variant = $this->variantService->resolveForProduct(
+                $product,
+                ! empty($item['product_variant_id']) ? (int) $item['product_variant_id'] : null,
+            );
+
+            return [...$item, 'product_id' => $product->id, 'product_variant_id' => $variant->id];
+        }, $items);
+
         $this->assertItemsValid($items);
 
         $purchase->items()->delete();
@@ -118,6 +130,7 @@ class PurchaseService
             PurchaseItem::create([
                 'purchase_id' => $purchase->id,
                 'product_id' => $item['product_id'],
+                'product_variant_id' => $item['product_variant_id'],
                 'quantity' => $item['quantity'],
                 'unit_price' => $item['unit_price'],
                 'subtotal' => round((float) $item['quantity'] * (float) $item['unit_price'], 2),
@@ -152,7 +165,7 @@ class PurchaseService
         $seen = [];
 
         foreach ($items as $item) {
-            $productId = (int) $item['product_id'];
+            $variantId = (int) ($item['product_variant_id'] ?? 0);
 
             if ((float) $item['quantity'] <= 0) {
                 throw new InvalidArgumentException('Line quantity must be positive.');
@@ -170,11 +183,13 @@ class PurchaseService
                 throw new InvalidArgumentException('Line tax must not be negative.');
             }
 
-            if (in_array($productId, $seen, true)) {
-                throw new InvalidArgumentException('Duplicate product in the purchase lines.');
+            if ($variantId && in_array($variantId, $seen, true)) {
+                throw new InvalidArgumentException('Duplicate product variant in the purchase lines.');
             }
 
-            $seen[] = $productId;
+            if ($variantId) {
+                $seen[] = $variantId;
+            }
         }
     }
 

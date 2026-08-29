@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\Product;
+use App\Models\Color;
 use App\Models\Sale;
 use App\Models\SaleItem;
+use App\Models\Size;
 use App\Models\Stock;
 use App\Models\StockMovement;
 use App\Models\User;
@@ -105,6 +107,36 @@ class ProductInitialStockTest extends TestCase
             'type' => StockMovement::TYPE_INITIAL_STOCK,
             'quantity' => 100,
             'reason' => 'Stock initial Warehouse A',
+        ]);
+    }
+
+    public function test_product_variants_receive_their_initial_stock_at_creation(): void
+    {
+        $color = Color::create(['name' => 'Blue', 'code' => '#0000ff', 'is_active' => true]);
+        $size = Size::create(['name' => 'M', 'category' => 'Clothing', 'is_active' => true]);
+
+        $this->actingAs($this->admin)
+            ->post(route('products.store'), $this->basePayload + [
+                'initial_stock_enabled' => true,
+                'initial_warehouse_id' => $this->warehouseA->id,
+                'variants' => [[
+                    'color_id' => $color->id,
+                    'size_id' => $size->id,
+                    'barcode' => 'TEST-VARIANT-001',
+                    'initial_stock' => 25,
+                    'status' => 'active',
+                ]],
+            ])
+            ->assertRedirect(route('products.index'));
+
+        $product = Product::where('sku', 'TEST-001')->firstOrFail();
+        $variant = \App\Models\ProductVariant::where('product_id', $product->id)->firstOrFail();
+
+        $this->assertDatabaseHas('stocks', [
+            'product_id' => $product->id,
+            'product_variant_id' => $variant->id,
+            'warehouse_id' => $this->warehouseA->id,
+            'quantity' => 25,
         ]);
     }
 

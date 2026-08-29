@@ -6,7 +6,7 @@ export default function DataTable({ columns = [], rows = [], empty = {}, actions
     const { t } = useTranslation();
     return (
         <div className="overflow-hidden rounded-lg border border-hairline bg-canvas shadow-level-1">
-            <div className="overflow-x-auto">
+            <div className="w-full max-w-full overflow-x-auto overscroll-x-contain">
                 <table className="w-full min-w-[640px] divide-y divide-hairline">
                     <thead className="bg-canvas-soft">
                         <tr>
